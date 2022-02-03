@@ -42,6 +42,9 @@ FCtrt_SZ_CL=np.array(FC['FCtrt_SZ_CL'])
 FC=sio.loadmat('FCtrtDiCER1_HCCL_SCh400Nt7TianS2_vox275.mat')
 FCtrt_HC_CL=np.array(FC['FCtrt_HC_CL'])
 
+
+
+#Un comentario para probar
 #%%
 
 
