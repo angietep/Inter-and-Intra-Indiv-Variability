@@ -6,9 +6,24 @@ Created on Thu Feb  3 12:49:29 2022
 @author: angeles
 """
 
-#%%         Get DeviationFromHealthy as corr(FC_subji_Sess1, meanFC_group_Sess1)
 
-def getDevfHC(*args): #(FCtrt,FCtrtHC)
+#%% Import and define
+
+import pandas as pd
+import scipy.io as sio
+import os
+import numpy as np
+import matlab.engine
+import matplotlib.pyplot as plt
+import seaborn as sns
+import statsmodels.api as sm
+from statsmodels.stats import multitest
+import statsmodels.formula.api as smf
+#from statannot import add_stat_annotation
+from scipy import stats
+
+
+def getDevfHC(*args): #(FCtrt,FCtrtHC) corr(FC_subji_Sess1, meanFC_group_Sess1)
 
     FCtrt = args[0]
         
@@ -23,46 +38,41 @@ def getDevfHC(*args): #(FCtrt,FCtrtHC)
         idxG1=[x for x in np.arange(0,FCtrtHC.shape[2],2)]
         idxG2=[x for x in np.arange(1,FCtrtHC.shape[2],2)]    
         
-        FC_HCS1 = np.arctanh(FCtrtHC[:,:, idxG1])
-        FC_HCS2 = np.arctanh(FCtrtHC[:,:, idxG2])
+        FC_HCS1 = FCtrtHC[:,:, idxG1]
+        FC_HCS2 = FCtrtHC[:,:, idxG2]
         
         refFC_groupS1=np.mean(FC_HCS1,axis=2) #mean FC sess 1
         refFC_groupS2=np.mean(FC_HCS2,axis=2) #mean FC sess 2 
 
         for i,subject in enumerate(np.arange(0,FCtrt.shape[2],2)):
            
-            FC_sess1=np.arctanh(FCtrt[:,:,subject])
-            FC_sess2=np.arctanh(FCtrt[:,:,subject+1])
+            FC_sess1 = FCtrt[:,:,subject]
+            FC_sess2 = FCtrt[:,:,subject+1]
                
-            DevFromHealth_S1[i]=np.tanh(1- np.corrcoef(FC_sess1[maskut],refFC_groupS1[maskut])[0,1])
-            DevFromHealth_S2[i]=np.tanh(1- np.corrcoef(FC_sess2[maskut],refFC_groupS2[maskut])[0,1])
+            DevFromHealth_S1[i]=1- np.corrcoef(FC_sess1[maskut],refFC_groupS1[maskut])[0,1]
+            DevFromHealth_S2[i]=1- np.corrcoef(FC_sess2[maskut],refFC_groupS2[maskut])[0,1]
     
     elif len(args)==1:
         
         for i,subject in enumerate(np.arange(0,FCtrt.shape[2],2)):
                 
-                FC_sess1=np.arctanh(FCtrt[:,:,subject])
-                FC_sess2=np.arctanh(FCtrt[:,:,subject+1])
+                FC_sess1 = FCtrt[:,:,subject]
+                FC_sess2 = FCtrt[:,:,subject+1]
 
                 idxG1=[x for x in np.arange(0,FCtrt.shape[2],2) if x != subject] 
                 idxG2=[x for x in np.arange(1,FCtrt.shape[2],2) if x != subject+1]    
                
-                FC_S1 = np.arctanh(FCtrt[:,:, idxG1])
-                FC_S2 = np.arctanh(FCtrt[:,:, idxG2])
+                FC_S1 = FCtrt[:,:, idxG1]
+                FC_S2 = FCtrt[:,:, idxG2]
                 refFC_groupS1=np.mean(FC_S1,axis=2) #mean FC sess 1
                 refFC_groupS2=np.mean(FC_S2,axis=2) #mean FC sess 2     
               
-                DevFromHealth_S1[i]=np.tanh(1- np.corrcoef(FC_sess1[maskut],refFC_groupS1[maskut])[0,1])
-                DevFromHealth_S2[i]=np.tanh(1- np.corrcoef(FC_sess2[maskut],refFC_groupS2[maskut])[0,1])
+                DevFromHealth_S1[i]=1- np.corrcoef(FC_sess1[maskut],refFC_groupS1[maskut])[0,1]
+                DevFromHealth_S2[i]=1- np.corrcoef(FC_sess2[maskut],refFC_groupS2[maskut])[0,1]
                 
     return DevFromHealth_S1, DevFromHealth_S2
 
-
-
-
-#%%         Get Iothers as mean(corr(FC_subji_sess1,FC_subjk_sess1))
-
-def getIothers(FCtrt):
+def getIothers(FCtrt):  #mean(corr(FC_subji_sess1,FC_subjk_sess1))
 
     maskut=np.triu_indices(FCtrt.shape[0],k=1)
     
@@ -73,8 +83,8 @@ def getIothers(FCtrt):
 
     for i,subject in enumerate(np.arange(0,FCtrt.shape[2],2)):
             
-            FC_sess1=np.arctanh(FCtrt[:,:,subject])
-            FC_sess2=np.arctanh(FCtrt[:,:,subject+1])
+            FC_sess1=FCtrt[:,:,subject]
+            FC_sess2=FCtrt[:,:,subject+1]
            
             #idxG1 all sess1 but excluding this subject 
             idxG1=[x for x in np.arange(0,FCtrt.shape[2],2) if x != subject] 
@@ -82,33 +92,24 @@ def getIothers(FCtrt):
             idxG2=[x for x in np.arange(1,FCtrt.shape[2],2) if x != subject+1]    
                       
             for k, other in enumerate(idxG1):
-                FC_other=np.arctanh(FCtrt[:,:,other])
+                FC_other=FCtrt[:,:,other]
                 corrS1[k]=np.corrcoef(FC_sess1[maskut],FC_other[maskut])[0,1]
             for k, other in enumerate(idxG2):
-                FC_other=np.arctanh(FCtrt[:,:,other])
+                FC_other=FCtrt[:,:,other]
                 corrS2[k]=np.corrcoef(FC_sess2[maskut],FC_other[maskut])[0,1]
            
-            IothersS1[i]=np.tanh(corrS1.mean())
-            IothersS2[i]=np.tanh(corrS2.mean())
+            IothersS1[i]=corrS1.mean()
+            IothersS2[i]=corrS2.mean()
             
     return IothersS1, IothersS2
 
+def fisher(FC): # Fisher's z inf in diag get assigned = 3
+    return np.nan_to_num(np.arctanh(FC),posinf=3)
+   
+def fisher_inv(FC):
+    return np.tanh(FC)
 
-#%% Import 
-
-import pandas as pd
-import scipy.io as sio
-import os
-import numpy as np
-import matlab.engine
-import matplotlib.pyplot as plt
-import seaborn as sns
-import statsmodels.api as sm
-from statsmodels.stats import multitest
-import statsmodels.formula.api as smf
-#from statannot import add_stat_annotation
-from scipy import stats
-#%% Initialize and load data frame
+#%% Initialize and load data 
 
 #TO RUN matlab .m functions
 eng = matlab.engine.start_matlab()
@@ -156,8 +157,7 @@ ATLAS={'VIS': np.ix_(np.concatenate((np.arange(0,31,1),np.arange(200,230,1))),np
        'DMN': np.ix_(np.concatenate((np.arange(148,200,1),np.arange(361,400,1))),np.concatenate((np.arange(148,200,1),np.arange(361,400,1)))), #[149:200,362:400];
        'subcort': np.ix_(np.concatenate((np.arange(400,416,1),np.arange(416,432,1))),np.concatenate((np.arange(400,416,1),np.arange(416,432,1)))), #[401:416,417:432]; 
        }
-    
-#%% Load data
+
 HC_df= table_CL.loc[table_CL['ID'].isin(subjHC_CL)].reset_index()
 SZ_df=table_CL.loc[table_CL['ID'].isin(subjSZ_CL)].reset_index()
 del table_CL
@@ -170,10 +170,11 @@ SZ_df.loc[:,'Group'] = 'SZ'
 
 FC=sio.loadmat('FCtrtDiCER1_SZCL_SCh400Nt7TianS2_vox275.mat')
 FCtrt_SZ_CL=np.array(FC['FCtrt_SZ_CL'])
+FCtrt_SZ_CL= fisher(FCtrt_SZ_CL)
 
 FC=sio.loadmat('FCtrtDiCER1_HCCL_SCh400Nt7TianS2_vox275.mat')
 FCtrt_HC_CL=np.array(FC['FCtrt_HC_CL'])
-
+FCtrt_HC_CL= fisher(FCtrt_HC_CL)
 
 #%% Deviation from Healthy FC and Iothers WB   
 
@@ -184,7 +185,7 @@ FCtrt_HC_CL=np.array(FC['FCtrt_HC_CL'])
 [Iothers_S1_HC, Iothers_S2_HC] =getIothers(FCtrt_HC_CL)              
 [Iothers_S1_SZ, Iothers_S2_SZ] =getIothers(FCtrt_SZ_CL)              
 
-      
+    
 HC_df.loc[:,'DevFromHealth_S1'] = DevFromHealth_S1_HC.tolist() 
 HC_df.loc[:,'DevFromHealth_S2'] = DevFromHealth_S2_HC.tolist()
 SZ_df.loc[:,'DevFromHealth_S1'] = DevFromHealth_S1_SZ.tolist()
