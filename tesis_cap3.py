@@ -21,7 +21,7 @@ from statsmodels.stats import multitest
 import statsmodels.formula.api as smf
 #from statannot import add_stat_annotation
 from scipy import stats
-
+import plotnine as pn
 
 def getDevfHC(*args): #(FCtrt,FCtrtHC) corr(FC_subji_Sess1, meanFC_group_Sess1)
 
@@ -103,8 +103,8 @@ def getIothers(FCtrt):  #mean(corr(FC_subji_sess1,FC_subjk_sess1))
             
     return IothersS1, IothersS2
 
-def fisher(FC): # Fisher's z inf in diag get assigned = 3
-    return np.nan_to_num(np.arctanh(FC),posinf=3)
+def fisher(FC): # Fisher's z inf in diag get assigned = 0
+    return np.nan_to_num(np.arctanh(FC),posinf=0)
    
 def fisher_inv(FC):
     return np.tanh(FC)
@@ -169,13 +169,41 @@ SZ_df.loc[:,"FDmax"] = SZ_df.loc[:,("FD1", "FD2")].max(axis=1)
 SZ_df.loc[:,'Group'] = 'SZ'
 
 FC=sio.loadmat('FCtrtDiCER1_SZCL_SCh400Nt7TianS2_vox275.mat')
-FCtrt_SZ_CL=np.array(FC['FCtrt_SZ_CL'])
-FCtrt_SZ_CL= fisher(FCtrt_SZ_CL)
+FCtrt_SZ_CL_nofish=np.array(FC['FCtrt_SZ_CL'])
+FCtrt_SZ_CL= fisher(FCtrt_SZ_CL_nofish)
 
 FC=sio.loadmat('FCtrtDiCER1_HCCL_SCh400Nt7TianS2_vox275.mat')
-FCtrt_HC_CL=np.array(FC['FCtrt_HC_CL'])
-FCtrt_HC_CL= fisher(FCtrt_HC_CL)
+FCtrt_HC_CL_nofish=np.array(FC['FCtrt_HC_CL'])
+FCtrt_HC_CL= fisher(FCtrt_HC_CL_nofish)
 
+
+# maskut=np.triu_indices(FCtrt_SZ_CL.shape[0],k=1)
+
+# allFC_SZ_fish=np.reshape(FCtrt_SZ_CL[maskut], (432*431//2)*60) # N(N-1)/2 * Nsubjects
+# allFC_HC_fish=np.reshape(FCtrt_HC_CL[maskut], (432*431//2)*64)
+
+# allFC_SZ_nofish=np.reshape(FCtrt_SZ_CL_nofish[maskut], (432*431//2)*60)
+# allFC_HC_nofish=np.reshape(FCtrt_HC_CL_nofish[maskut], (432*431//2)*64)
+
+# stats.kstest(allFC_HC_fish,"norm")
+# stats.kstest(allFC_HC_nofish,"norm")
+# stats.kstest(allFC_SZ_fish,"norm")
+# stats.kstest(allFC_SZ_nofish,"norm")
+
+# stats.shapiro(FCtrt_HC_CL_nofish)
+# stats.shapiro(FCtrt_HC_CL)
+# stats.shapiro(FCtrt_SZ_CL_nofish)
+# stats.shapiro(FCtrt_SZ_CL)
+
+# fig = sm.qqplot(allFC_HC_fish, line='45')
+# plt.show()
+
+# plt.figure()
+# sns.histplot(allFC_SZ_nofish,color="m")
+# sns.histplot(allFC_HC_nofish, color="c")
+# sns.histplot(allFC_SZ_fish,color="r")
+# sns.histplot(allFC_HC_fish)
+# plt.show()
 #%% Deviation from Healthy FC and Iothers WB   
 
 
@@ -185,7 +213,13 @@ FCtrt_HC_CL= fisher(FCtrt_HC_CL)
 [Iothers_S1_HC, Iothers_S2_HC] =getIothers(FCtrt_HC_CL)              
 [Iothers_S1_SZ, Iothers_S2_SZ] =getIothers(FCtrt_SZ_CL)              
 
-    
+plt.figure()
+sns.histplot(Iothers_S1_SZ,color="m")
+sns.histplot(Iothers_S1_HC, color="c")
+sns.histplot(fisher_inv(Iothers_S1_HC), color="b")
+sns.histplot(fisher_inv(Iothers_S1_SZ),color="r")
+plt.show()   
+
 HC_df.loc[:,'DevFromHealth_S1'] = DevFromHealth_S1_HC.tolist() 
 HC_df.loc[:,'DevFromHealth_S2'] = DevFromHealth_S2_HC.tolist()
 SZ_df.loc[:,'DevFromHealth_S1'] = DevFromHealth_S1_SZ.tolist()
@@ -197,6 +231,10 @@ HC_df.loc[:,'Iothers_S2_WB'] = Iothers_S2_HC.tolist()
 SZ_df.loc[:,'Iothers_S1_WB'] = Iothers_S1_SZ.tolist()
 SZ_df.loc[:,'Iothers_S2_WB'] = Iothers_S2_SZ.tolist()
 del Iothers_S1_HC, Iothers_S2_HC, Iothers_S1_SZ, Iothers_S2_SZ 
+
+
+
+
 
 #%% Iothers subnetworks 
 
@@ -381,6 +419,15 @@ SZ_RepeatedMeasures_df= RepeatedMeasures_df[(RepeatedMeasures_df.Group == "SZ")]
 SZ_RepeatedMeasures_df=SZ_RepeatedMeasures_df.dropna(axis = 0, how ='any')    
 
 
+#%%
+
+p = (
+    pn.ggplot(SZandHC_df)
+    + pn.aes(x="Group", y= "Iothers_S1_WB")
+    + pn.labs(title="Iothers Sess1 by Group")
+    + pn.geom_boxplot()
+)
+p.draw(show=True)
 
 
 #%% Iself GLM:  
