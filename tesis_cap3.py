@@ -226,7 +226,10 @@ FCtrt_HC_CL= fisher(FCtrt_HC_CL_nofish)
 [DevFromHealth_S1_SZ, DevFromHealth_S2_SZ] =getDevfHC(FCtrt_SZ_CL, FCtrt_HC_CL)              
 
 [Iothers_S1_HC, Iothers_S2_HC] =getIothers(FCtrt_HC_CL)              
-[Iothers_S1_SZ, Iothers_S2_SZ] =getIothers(FCtrt_SZ_CL)              
+[Iothers_S1_SZ, Iothers_S2_SZ] =getIothers(FCtrt_SZ_CL)          
+
+Iselfs_SZ =getIself(FCtrt_SZ_CL)          
+Iselfs_HC =getIself(FCtrt_HC_CL)          
 
 plt.figure()
 sns.histplot(Iothers_S1_SZ,color="m")
@@ -247,85 +250,39 @@ SZ_df.loc[:,'Iothers_S1_WB'] = Iothers_S1_SZ.tolist()
 SZ_df.loc[:,'Iothers_S2_WB'] = Iothers_S2_SZ.tolist()
 del Iothers_S1_HC, Iothers_S2_HC, Iothers_S1_SZ, Iothers_S2_SZ 
 
-
-
-
-
-#%% Iothers subnetworks 
+HC_df.loc[:,'Iself_WB'] = Iselfs_HC.tolist()        
+SZ_df.loc[:,'Iself_WB'] = Iselfs_SZ.tolist()
+del Iselfs_HC, Iselfs_SZ
+#%% Iothers and Iselfs subnetworks 
 
 for idx, network in enumerate(ATLAS.keys()):
-    print (f'Computing Iothers {network}')
+    print (f'Subnetwork {network}')
     FCtrt_HC_ntw=FCtrt_HC_CL[ATLAS[network]]
     FCtrt_SZ_ntw=FCtrt_SZ_CL[ATLAS[network]]
     #Plot para verificar FC subnetworks
     #plt.figure()
     #plt.imshow(FC_HC_ntw[:,:,0])
 
-
     name_s1='Iothers_S1_'+network
     name_s2='Iothers_S2_'+network
+    name_Iself='Iself_'+network
     
     #HC
     [Iothers_S1_HC, Iothers_S2_HC] =getIothers(FCtrt_HC_ntw)   
-    #SZ   
+    Iself_HC_ntw=getIself(FCtrt_HC_ntw)
+    #SZ
     [Iothers_S1_SZ, Iothers_S2_SZ] =getIothers(FCtrt_SZ_ntw)              
-           
+    Iself_SZ_ntw=getIself(FCtrt_SZ_ntw)
+       
     HC_df.loc[:,name_s1] = Iothers_S1_HC.tolist()
     HC_df.loc[:,name_s2] = Iothers_S2_HC.tolist()
+    HC_df.loc[:,name_Iself] = Iself_HC_ntw.tolist()
+    SZ_df.loc[:,name_Iself] = Iself_SZ_ntw.tolist()
     SZ_df.loc[:,name_s1] = Iothers_S1_SZ.tolist()
     SZ_df.loc[:,name_s2] = Iothers_S2_SZ.tolist()
-    del Iothers_S1_HC, Iothers_S2_HC, Iothers_S1_SZ, Iothers_S2_SZ, name_s1, name_s2, FCtrt_HC_ntw, FCtrt_SZ_ntw
+    
+    del Iself_HC_ntw, Iself_SZ_ntw, Iothers_S1_HC, Iothers_S2_HC, Iothers_S1_SZ, Iothers_S2_SZ, name_s1, name_s2, name_Iself, FCtrt_HC_ntw, FCtrt_SZ_ntw
 del idx, network
-#%%         GET Iself's (matlab function)
-
-plots=0
-raw_or_opt=2 # 2 = raw; 3 = optimize with PCA-toolbox
-
-#HCfg contains:
-  #HCfg[0]=HCCLdata.Idiff_orig, 
-  #HCfg[1]=HCCLdata.Idiff_opt,
-  #HCfg[2]=HCCLdata.Ident_mat_orig, 
-  #HCfg[3]=HCCLdata.Ident_mat_opt
-
-HCfg = eng.f_PCAtoolbox(matlab.double(FCtrt_HC_CL.tolist()),plots,nargout=4)
-SZfg = eng.f_PCAtoolbox(matlab.double(FCtrt_SZ_CL.tolist()),plots,nargout=4)
-
-HC_Identmat_wb = HCfg[raw_or_opt]
-HC_Iself_wb = np.diagonal(HC_Identmat_wb, axis1=0, axis2=1)
-
-SZ_Identmat_wb = SZfg[raw_or_opt]
-SZ_Iself_wb = np.diagonal(SZ_Identmat_wb, axis1=0, axis2=1)
-
-HC_df.loc[:,'Iself_WB'] = HC_Iself_wb.tolist()
-SZ_df.loc[:,'Iself_WB'] = SZ_Iself_wb.tolist()
-
-del HC_Iself_wb, HC_Identmat_wb, SZ_Iself_wb, SZ_Identmat_wb
-
-# subnetworks
-HC_Identmat_ntw=np.zeros((len(subjHC_CL),len(subjHC_CL),len(ATLAS.keys())))
-SZ_Identmat_ntw=np.zeros((len(subjSZ_CL),len(subjSZ_CL),len(ATLAS.keys())))
-
-for idx, network in enumerate(ATLAS.keys()):
-    print (f'Computing fingerprint {network}')
-    FC_HC_ntw=FCtrt_HC_CL[ATLAS[network]]
-    FC_SZ_ntw=FCtrt_SZ_CL[ATLAS[network]]
-
-    HCfg = eng.f_PCAtoolbox(matlab.double(FC_HC_ntw.tolist()),plots,nargout=4)
-    SZfg = eng.f_PCAtoolbox(matlab.double(FC_SZ_ntw.tolist()),plots,nargout=4)
-
-    HC_Identmat_ntw[:,:,idx]=HCfg[raw_or_opt]  
-    SZ_Identmat_ntw[:,:,idx]=SZfg[raw_or_opt]  
- 
-    HC_Iself = np.diagonal(HC_Identmat_ntw[:,:,idx], axis1=0, axis2=1)
-    SZ_Iself = np.diagonal(SZ_Identmat_ntw[:,:,idx], axis1=0, axis2=1)
-    
-    name='Iself_'+network
-    HC_df.loc[:,name] = HC_Iself.tolist()
-    SZ_df.loc[:,name] = SZ_Iself.tolist()
-    
-    del HC_Iself, SZ_Iself, FC_HC_ntw, FC_SZ_ntw
-#
-del HC_Identmat_ntw, SZ_Identmat_ntw, idx, network, name 
 
 #%%         Combine DataFrames
 
@@ -335,7 +292,6 @@ SZandHC_df.loc[:,"Age2"] = SZandHC_df.Age*SZandHC_df.Age
 SZandHC_df.loc[:,"deltaPANSS"] = abs(SZandHC_df.TPANSS2-SZandHC_df.TPANSS)
 SZandHC_df.loc[:,"deltaATP"] = abs(SZandHC_df.ATPdose2-SZandHC_df.ATPdose)
 #SZandHC_df.loc[:,"deltaTP"] = abs(SZandHC_df.TP-SZandHC_df.TP2)
-
 
 ## DEMEAN ESTÁ HECHO CON EL PROMEDIO DE AMBOS GRUPOS!!! PERO EL ANÁLISIS ES INTRA GRUPOS!
 agemean = SZandHC_df['Age'].mean()
@@ -379,10 +335,10 @@ SZ_Iselfs_z = SZ_Iselfs.apply(stats.zscore)
 SZ_only_zscore = pd.concat([SZ_Iselfs_z,SZ_covar_z, SZ_only[["Sex"]]], axis=1)
 
 #####################
-### IOTHERS HC vs SZ
+### IRepeated measures HC vs SZ
 #####################
 
-#DF CON DOS IOTHERS POR SUJETO: 
+#Dos IOTHERS/DevfHC POR SUJETO: 
     #ID     Yvar
     #C01    IothersS1
     #C01    IothersS2
@@ -426,7 +382,7 @@ for idx, network in enumerate(ATLAS.keys()):
  
 
 ######################
-#### IOTHERS clinical var
+#### SZ Clinical var
 ######################
 
 SZ_RepeatedMeasures_df= RepeatedMeasures_df[(RepeatedMeasures_df.Group == "SZ")]  
@@ -991,8 +947,6 @@ for idx, network in enumerate(ATLAS.keys()):
 """
 
 
-
-
 #%%         Get Iothers as corr(FC_subji_Sess1, meanFC_group_Sess1)
 """
 maskut=np.triu_indices(len(FCtrt_HC_CL),k=1)
@@ -1069,69 +1023,3 @@ SZ_df.loc[:,'Iothers_S2'] = IothersS2_SZ.tolist()
 """
 
 
-#%%         Get Individual variability as mean(1 - corr(FC_subji_sess1,FC_subjk_sess1))
-"""
-FCtrt_all=np.arctanh(np.concatenate((FCtrt_HC_CL,FCtrt_SZ_CL),axis=2))
-FCs1_all=FCtrt_all[:,:,np.arange(0,FCtrt_all.shape[2],2)]
-FCs2_all=FCtrt_all[:,:,np.arange(1,FCtrt_all.shape[2],2)]
-
-
-maskut=np.triu_indices(len(FCtrt_all),k=1)
-
-#HC
-varS1=np.zeros(len(subjHC_CL) + len(subjSZ_CL))
-varS2=np.zeros(len(subjHC_CL) + len(subjSZ_CL))
-
-corrdistS1=np.zeros([len(subjHC_CL) + len(subjSZ_CL), len(subjHC_CL) + len(subjSZ_CL) -1])
-corrdistS2=np.zeros([len(subjHC_CL) + len(subjSZ_CL), len(subjHC_CL) + len(subjSZ_CL) -1])
-
-for i,subject in enumerate(np.arange(0,FCtrt_all.shape[2],2)):
-        
-        FCsubj_sess1=FCtrt_all[:,:,subject]
-        FCsubj_sess2=FCtrt_all[:,:,subject+1]
-       
-        #idxG1 all sess1 but excluding this subject 
-        idxG1=[x for x in np.arange(0,FCtrt_all.shape[2],2) if x != subject] 
-        #idxG2 all sess1 but excluding this subject
-        idxG2=[x for x in np.arange(1,FCtrt_all.shape[2],2) if x != subject+1]    
-                  
-        for k, other in enumerate(idxG1):
-            corrdistS1[i,k]=1-np.corrcoef(FCsubj_sess1[maskut],FCtrt_all[:,:,other][maskut])[0,1]
-        for k, other in enumerate(idxG2):
-            corrdistS2[i,k]=1-np.corrcoef(FCsubj_sess2[maskut],FCtrt_all[:,:,other][maskut])[0,1]
-       
-        varS1[i]=np.tanh(corrdistS1[i,:].mean())
-        varS2[i]=np.tanh(corrdistS2[i,:].mean())
-   
-HC_df.loc[:,'IndivVar_S1'] = varS1[np.arange(len(subjHC_CL))].tolist()
-HC_df.loc[:,'IndivVar_S2'] = varS2[np.arange(len(subjHC_CL))].tolist()
-
-SZ_df.loc[:,'IndivVar_S1'] = varS1[np.arange(len(subjHC_CL),len(subjHC_CL)+len(subjSZ_CL))].tolist()
-SZ_df.loc[:,'IndivVar_S2'] = varS2[np.arange(len(subjHC_CL),len(subjHC_CL)+len(subjSZ_CL))].tolist()
-  
-
-#PLOTS?
-fig, axes = plt.subplots(1, 2, sharex=True, figsize=(10,5))
-fig.suptitle('Individual variability')
-axes[0].set_title('Session 1')
-axes[1].set_title('Session 2')
-sns.violinplot(data= SZandHC_df,y="IndivVar_S1", x="Group", ax=axes[0])
-sns.violinplot(data= SZandHC_df, y="IndivVar_S2", x="Group", ax=axes[1])
-
-fig, (ax1,ax2) = plt.subplots(1, 2, sharex=True, figsize=(10,5))
-fig.suptitle('Individual Variability')
-ax1.set_title('Session 1')
-ax2.set_title('Session 2')
-bins=[.2,.225,.25,.275,.3,.325,.35,.375,.4,.425,.45,.475,.50,.525,.55,.575,.60,.625,.65,.675,.70]
-sns.histplot(SZandHC_df, x="IndivVar_S1", hue="Group", bins=bins, kde=True,ax=ax1)
-sns.histplot(SZandHC_df, x="IndivVar_S2", hue="Group", bins=bins, kde=True, ax=ax2)
-
-#HCsess1 - SZsess1 
-stats.ttest_ind(SZandHC_df.IndivVar_S1[SZandHC_df.Group=='HC'],SZandHC_df.IndivVar_S1[SZandHC_df.Group=='SZ'])
-#HCsess2 - SZsess2 
-stats.ttest_ind(SZandHC_df.IndivVar_S2[SZandHC_df.Group=='HC'],SZandHC_df.IndivVar_S2[SZandHC_df.Group=='SZ'])
-#HCsess1 - HCsess2
-stats.ttest_ind(SZandHC_df.IndivVar_S1[SZandHC_df.Group=='HC'],SZandHC_df.IndivVar_S2[SZandHC_df.Group=='HC'])
-#SZsess1 - SZsess2
-stats.ttest_ind(SZandHC_df.IndivVar_S1[SZandHC_df.Group=='SZ'],SZandHC_df.IndivVar_S2[SZandHC_df.Group=='SZ'])
-"""
