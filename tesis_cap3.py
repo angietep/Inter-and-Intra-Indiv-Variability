@@ -426,48 +426,42 @@ SZ_RepeatedMeasures_df= RepeatedMeasures_df[(RepeatedMeasures_df.Group == "SZ")]
 #Model doesnt work with nan values (2 subjects have nan ATPdose2)    
 SZ_RepeatedMeasures_df=SZ_RepeatedMeasures_df.dropna(axis = 0, how ='any')    
 
-
-#%%
-
-p = (
-    pn.ggplot(SZandHC_df)
-    + pn.aes(x="Group", y= "DevFromHealth_S2")
-    + pn.labs(title="by Group")
-    + pn.geom_boxplot()
-)
-p.draw(show=True)
-
-p = (
-    pn.ggplot(SZ_df)
-    + pn.aes(x="TPANSS", y= "Iself_WB")
-    + pn.labs(title="LinReg")
-    + pn.geom_point()
-)
-p.draw(show=True)
-
-
 #%% Iself GLM:  
 #%%     # Model 1: Iself_subnetworks ~ age + sex + maxFD + Group
 
-
-##%% Make text file with model summaries (including Group as variable)    
+# Make text file with model summaries (including Group as variable)    
 uncorrected_p=np.zeros(9)
-f = open("ISELFs_GLM_FDmaxdemeaned.txt", "w")
+uncorrected_p_PANSS=np.zeros(9)
+uncorrected_p_ATP=np.zeros(9)
+
+f = open("Iselfs_GLM.txt", "w")
 
 name = 'Iself_WB'
 model = smf.ols((name +' ~ Age_demeaned + Sex + FDmax_demeaned + Group'), data=df_zscore).fit()
 uncorrected_p[0]=model.pvalues["Group[T.SZ]"]
 print(model.summary(), file = f)
 
+model = smf.ols((name +' ~ Age_demeaned_byGroup + Sex + FDmax_demeaned_byGroup + deltaATP + deltaPANSS'), data=SZ_only_zscore).fit()  #
+uncorrected_p_PANSS[0]=model.pvalues["deltaPANSS"]
+uncorrected_p_ATP[0]=model.pvalues["deltaATP"]
+print(model.summary(), file = f) 
+
 for idx, network in enumerate(ATLAS.keys()):
     name = 'Iself_' + network
     model = smf.ols( (name +' ~ Age_demeaned + Sex + FDmax_demeaned + Group'), data=df_zscore).fit()
     uncorrected_p[idx+1]=model.pvalues["Group[T.SZ]"]
     print(model.summary(), file = f)
+    
+    model = smf.ols( (name +' ~ Age_demeaned_byGroup + Sex + FDmax_demeaned_byGroup +  deltaATP + deltaPANSS'), data=SZ_only_zscore).fit()
+    uncorrected_p_PANSS[idx+1]=model.pvalues["deltaPANSS"]
+    uncorrected_p_ATP[idx+1]=model.pvalues["deltaATP"]
+    print(model.summary(), file = f) 
         
 f.close()
 
 p_corr=multitest.fdrcorrection(uncorrected_p[1:], alpha=0.05, method='indep', is_sorted=False)[1]
+p_corrPANSS=multitest.fdrcorrection(uncorrected_p_PANSS[1:], alpha=0.05, method='indep', is_sorted=False)[1]
+p_corrATP=multitest.fdrcorrection(uncorrected_p_ATP[1:], alpha=0.05, method='indep', is_sorted=False)[1]
 
 #%%     # Plot residuals (model without Group as variable)
 
@@ -515,31 +509,6 @@ for idx, network in enumerate(ATLAS.keys()):
 filename = '/Users/angeles/Desktop/Iself_plot1000.jpg'
 plt.savefig(filename, dpi=1000)
     # plt.show()
-#%%     # Model 2: # Iself_subnetworks ~ age + sex + maxFD + deltaATP + deltaPANSS       
-
-f = open("Clinicalvars_CovDemeaned.txt", "w")
-
-uncorrected_p_PANSS=np.zeros(9)
-uncorrected_p_ATP=np.zeros(9)
-
-name = 'Iself_WB'
-model = smf.ols((name +' ~ Age_demeaned_byGroup + Sex + FDmax_demeaned_byGroup + deltaATP + deltaPANSS'), data=SZ_only_zscore).fit()  #
-uncorrected_p_PANSS[0]=model.pvalues["deltaPANSS"]
-uncorrected_p_ATP[0]=model.pvalues["deltaATP"]
-print(model.summary(), file = f) 
-
-for idx, network in enumerate(ATLAS.keys()):
-    name = 'Iself_' + network
-    model = smf.ols( (name +' ~ Age_demeaned_byGroup + Sex + FDmax_demeaned_byGroup +  deltaATP + deltaPANSS'), data=SZ_only_zscore).fit()
-    uncorrected_p_PANSS[idx+1]=model.pvalues["deltaPANSS"]
-    uncorrected_p_ATP[idx+1]=model.pvalues["deltaATP"]
-    print(model.summary(), file = f) 
-        
-f.close()
-
-p_corrPANSS=multitest.fdrcorrection(uncorrected_p_PANSS[1:], alpha=0.05, method='indep', is_sorted=False)[1]
-p_corrATP=multitest.fdrcorrection(uncorrected_p_ATP[1:], alpha=0.05, method='indep', is_sorted=False)[1]
-
 
 #%% Iothers GLM:
 #%%    # Mixed effects: random variable (2 Iothers per subject)
@@ -548,13 +517,11 @@ uncorrected_p_GROUP=np.zeros(9)
 uncorrected_p_PANSS=np.zeros(9)
 uncorrected_p_ATP=np.zeros(9)
 
-
-    #model: smf.mixedlm (Yvar ~ Age + ... + Group, data = Iothers_df, groups=Iothers_df["ID"])
+#model: smf.mixedlm (Yvar ~ Age + ... + Group, data = Iothers_df, groups=Iothers_df["ID"])
     
-f = open("Iothers_timevaryingCov.txt", "w")
+f = open("Iothers_GLM.txt", "w")
+
 print("MODEL: Iothers_WB ~ Age_demeaned + Sex + FD_demeaned + Group + (1|subject) \n", file = f)
-
-
 md = smf.mixedlm("Iothers_WB ~ Age_demeaned + Sex + FD_demeaned + Group", \
                  data= RepeatedMeasures_df, groups=RepeatedMeasures_df["ID"])
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
@@ -562,11 +529,8 @@ print(mdf.summary(),file=f)
 uncorrected_p_GROUP[0]=mdf.pvalues["Group[T.SZ]"]
 
 
-
 print("MODEL: Iothers_WB ~ Age + Sex +FD + TPANSS+ + ATPdose + \n \
-       (1|subject) dropped NaN ATPdose2 \n", file = f)
-
-
+       (1|subject) \n", file = f)
 md = smf.mixedlm("Iothers_WB ~ Age_demeaned_byGroup + Sex + FD_demeaned_byGroup + TPANSS + ATPdose", \
                  data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
@@ -574,38 +538,18 @@ print(mdf.summary(), file =f )
 uncorrected_p_PANSS[0]=mdf.pvalues["TPANSS"]
 uncorrected_p_ATP[0]=mdf.pvalues["ATPdose"]
 
-
-
-print("MODEL: Iothers_WB ~ Age_demeaned_byGroup + Sex + FD_demeaned_byGroup + \n \
-      Sess + (1|subject) dropped NaN ATPdose2 \n", file = f)
-
-
-md = smf.mixedlm("Iothers_WB ~ Age_demeaned_byGroup + Sex + FD_demeaned_byGroup + Sess", \
-                 data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
-mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
-print(mdf.summary(), file =f )
-
-#Iothers_type en el modelo seria como agregar Sess1 vs Sess2 (tampoco tiene efecto significativo)
-f.close()
-
-#%%    # Iothers SUBNETWORKS: Mixed effects: random variable (2 Iothers per subject)
-
 for idx, network in enumerate(ATLAS.keys()):
-      
-    f = open("Iothers_"+network+".txt", "w")
-    print("MODEL: Iothers_"+network+" ~ Age_demeaned + Sex + FD_demeaned + Group + (1|subject) \n", file = f)
-
+    name = 'Iothers_' + network
+    
+    print("MODEL: "+name+" ~ Age_demeaned + Sex + FD_demeaned + Group + (1|subject) \n", file = f)
     md = smf.mixedlm("Iothers_"+network+" ~ Age_demeaned + Sex + FD_demeaned + Group", \
                  data= RepeatedMeasures_df, groups=RepeatedMeasures_df["ID"])
     mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
     print(mdf.summary(),file=f)
     uncorrected_p_GROUP[idx+1]=mdf.pvalues["Group[T.SZ]"]
 
-
-    print("MODEL: Iothers_"+network+" ~ Agedemeaned_byGroup + + Sex + FDdemeaned_byGroup + TPANSS+ + ATPdose + \n \
-       (1|subject) dropped NaN ATPdose2 \n", file = f)
-
-
+    print("MODEL: "+name+" ~ Agedemeaned_byGroup + + Sex + FDdemeaned_byGroup + TPANSS+ + ATPdose + \n \
+       (1|subject) \n", file = f)
     md = smf.mixedlm("Iothers_"+network+" ~ Age_demeaned_byGroup + Sex + FD_demeaned_byGroup + TPANSS + ATPdose", \
                      data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
     mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
@@ -613,10 +557,7 @@ for idx, network in enumerate(ATLAS.keys()):
     uncorrected_p_PANSS[idx+1]=mdf.pvalues["TPANSS"]
     uncorrected_p_ATP[idx+1]=mdf.pvalues["ATPdose"]
 
-    
-    #Iothers_type en el modelo seria como agregar Sess1 vs Sess2 (tampoco tiene efecto significativo)
-    f.close()
-    
+f.close()
 
 p_corrGROUP=multitest.fdrcorrection(uncorrected_p_GROUP[1:], alpha=0.05, method='indep', is_sorted=False)[1]
 p_corrPANSS=multitest.fdrcorrection(uncorrected_p_PANSS[1:], alpha=0.05, method='indep', is_sorted=False)[1]
@@ -680,10 +621,9 @@ plt.savefig(filename, dpi=1000)
 
     #model: smf.mixedlm (Yvar ~ Age + ... + Group, data = Iothers_df, groups=Iothers_df["ID"])
     
-f = open("DevfromHealth_FDdemeaned.txt", "w")
+f = open("DevfHC_GLM.txt", "w")
+
 print("MODEL: DevfromHealth_value ~ Age_demeaned + FD_demeaned + Sex + Group + (1|subject) \n", file = f)
-
-
 md = smf.mixedlm("DevfromHealth_value ~ Age_demeaned + Sex + FD_demeaned + Group", \
                  data= RepeatedMeasures_df, groups=RepeatedMeasures_df["ID"])
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
@@ -692,19 +632,8 @@ print(mdf.summary(),file=f)
 
 
 print("MODEL: DevfromHealth_value ~ Age_demeaned_byGroup + Sex + FD_demeaned_byGroup + TPANSS+ + ATPdose + \n \
-       (1|subject) dropped NaN ATPdose2 \n", file = f)
-
-
+       (1|subject) \n", file = f)
 md = smf.mixedlm("DevfromHealth_value ~ Age_demeaned_byGroup + Sex + FD_demeaned_byGroup + TPANSS + ATPdose ", \
-                 data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
-mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
-print(mdf.summary(), file =f )
-
-print("MODEL: DevfromHealth_value ~ Age_demeaned_byGroup + Sex + FD_demeaned_byGroup + \n \
-      Sess + (1|subject) dropped NaN ATPdose2 \n", file = f)
-
-
-md = smf.mixedlm("DevfromHealth_value ~ Age_demeaned_byGroup + Sex + FD_demeaned_byGroup + Sess", \
                  data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary(), file =f )
@@ -746,6 +675,25 @@ stats.ttest_ind(SZandHC_df.DevFromHealth_S1[SZandHC_df.Group=='SZ'],SZandHC_df.D
 
 
 stats.ttest_ind(DevFromHealth_S1_HC,DevFromHealth_S1_SZ)
+
+#%% GGplot
+
+p = (
+    pn.ggplot(SZandHC_df)
+    + pn.aes(x="Group", y= "DevFromHealth_S2")
+    + pn.labs(title="by Group")
+    + pn.geom_boxplot()
+)
+p.draw(show=True)
+
+p = (
+    pn.ggplot(SZ_df)
+    + pn.aes(x="TANSS", y= "Iself_WB")
+    + pn.labs(title="LinReg")
+    + pn.geom_smooth(method='lm')
+    + pn.geom_point()
+)
+p.draw(show=True)
 #%% PLOTS NUEVOS
 
 name = 'Iothers_WB'
