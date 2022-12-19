@@ -109,6 +109,21 @@ def fisher(FC): # Fisher's z inf in diag get assigned = 0
 def fisher_inv(FC):
     return np.tanh(FC)
 
+def getIself(FCtrt):
+    maskut=np.triu_indices(FCtrt.shape[0],k=1)
+    
+    Iselfs=np.zeros(FCtrt.shape[2]//2)
+
+    for i,subject in enumerate(np.arange(0,FCtrt.shape[2],2)):
+            
+            FC_sess1=FCtrt[:,:,subject]
+            FC_sess2=FCtrt[:,:,subject+1]
+                                 
+            Iselfs[i]=np.corrcoef(FC_sess1[maskut],FC_sess2[maskut])[0,1]
+            
+    return Iselfs
+    
+
 #%% Initialize and load data 
 
 #TO RUN matlab .m functions
