@@ -1,0 +1,44 @@
+MODEL: DevfromHealth_value ~ Age_demeaned + FD_demeaned + Sex + Group + (1|subject) 
+
+              Mixed Linear Model Regression Results
+=================================================================
+Model:            MixedLM Dependent Variable: DevfromHealth_value
+No. Observations: 124     Method:             REML               
+No. Groups:       62      Scale:              0.0019             
+Min. group size:  2       Log-Likelihood:     177.1768           
+Max. group size:  2       Converged:          Yes                
+Mean group size:  2.0                                            
+-------------------------------------------------------------------
+               Coef.    Std.Err.     z      P>|z|   [0.025   0.975]
+-------------------------------------------------------------------
+Intercept       0.400      0.011   36.735   0.000    0.379    0.421
+Sex[T.M]       -0.009      0.012   -0.792   0.428   -0.032    0.014
+Group[T.SZ]     0.025      0.012    2.003   0.045    0.001    0.049
+Age_demeaned    0.000      0.002    0.139   0.890   -0.003    0.004
+FD_demeaned     0.005      0.041    0.125   0.901   -0.075    0.085
+Group Var       0.001      0.011                                   
+=================================================================
+
+MODEL: DevfromHealth_value ~ Age_demeaned_byGroup + Sex + FD_demeaned_byGroup + TPANSS+ + ATPdose + 
+        (1|subject) 
+
+              Mixed Linear Model Regression Results
+=================================================================
+Model:            MixedLM Dependent Variable: DevfromHealth_value
+No. Observations: 58      Method:             REML               
+No. Groups:       30      Scale:              0.0022             
+Min. group size:  1       Log-Likelihood:     66.9338            
+Max. group size:  2       Converged:          Yes                
+Mean group size:  1.9                                            
+-----------------------------------------------------------------
+                       Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+-----------------------------------------------------------------
+Intercept               0.376    0.024 15.946 0.000  0.330  0.422
+Sex[T.M]               -0.021    0.015 -1.378 0.168 -0.050  0.009
+Age_demeaned_byGroup    0.002    0.002  0.702 0.483 -0.003  0.007
+FD_demeaned_byGroup    -0.057    0.052 -1.098 0.272 -0.159  0.045
+TPANSS                  0.001    0.000  1.717 0.086 -0.000  0.001
+ATPdose                 0.000    0.000  1.934 0.053 -0.000  0.000
+Group Var               0.000    0.009                           
+=================================================================
+
