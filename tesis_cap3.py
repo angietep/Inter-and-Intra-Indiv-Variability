@@ -21,7 +21,8 @@ from statsmodels.stats import multitest
 import statsmodels.formula.api as smf
 #from statannot import add_stat_annotation
 from scipy import stats
-import plotnine as pn
+from plotnine import * #to plot with ggplot
+import patchworklib as pw  #to make subplots
 
 def getDevfHC(*args): #(FCtrt,FCtrtHC) corr(FC_subji_Sess1, meanFC_group_Sess1)
 
@@ -71,6 +72,67 @@ def getDevfHC(*args): #(FCtrt,FCtrtHC) corr(FC_subji_Sess1, meanFC_group_Sess1)
                 DevFromHealth_S2[i]=1- np.corrcoef(FC_sess2[maskut],refFC_groupS2[maskut])[0,1]
                 
     return DevFromHealth_S1, DevFromHealth_S2
+
+def getDevfHC_new(*args): #(FCtrt,FCtrtHC) #mean(corr(FC_subji_sess1,FC_subjk_sess1))
+ #Iothers against HC group
+    FCtrt = args[0]
+        
+    maskut=np.triu_indices(FCtrt.shape[0],k=1)
+        
+    DevFromHealth_S1=np.zeros(FCtrt.shape[2]//2)
+    DevFromHealth_S2=np.zeros(FCtrt.shape[2]//2)
+
+    if len(args)==2: #FCtrt vs FCtrtHC
+        FCtrtHC= args[1]
+        
+        corrS1=np.zeros(FCtrtHC.shape[2]//2)
+        corrS2=np.zeros(FCtrtHC.shape[2]//2)
+        
+        for i,subject in enumerate(np.arange(0,FCtrt.shape[2],2)):
+
+            FC_sess1 = FCtrt[:,:,subject]
+            FC_sess2 = FCtrt[:,:,subject+1]
+            
+            idxG1_HC=[x for x in np.arange(0,FCtrtHC.shape[2],2)]
+            idxG2_HC=[x for x in np.arange(1,FCtrtHC.shape[2],2)]    
+            
+            for k, other in enumerate(idxG1_HC):
+                FC_HCother=FCtrtHC[:,:,other]
+                corrS1[k]=np.corrcoef(FC_sess1[maskut],FC_HCother[maskut])[0,1]
+           
+            for k, other in enumerate(idxG2_HC):
+                FC_HCother=FCtrtHC[:,:,other]
+                corrS2[k]=np.corrcoef(FC_sess2[maskut],FC_HCother[maskut])[0,1] 
+                         
+            DevFromHealth_S1[i]=1- corrS1.mean()
+            DevFromHealth_S2[i]=1- corrS2.mean()
+    
+    elif len(args)==1:  #FCtrt = FCtrtHC
+    
+        corrS1=np.zeros(FCtrt.shape[2]//2 - 1)
+        corrS2=np.zeros(FCtrt.shape[2]//2 - 1)
+        
+        for i,subject in enumerate(np.arange(0,FCtrt.shape[2],2)):
+                
+            FC_sess1 = FCtrt[:,:,subject]
+            FC_sess2 = FCtrt[:,:,subject+1]
+
+            idxG1=[x for x in np.arange(0,FCtrt.shape[2],2) if x != subject] 
+            idxG2=[x for x in np.arange(1,FCtrt.shape[2],2) if x != subject+1]    
+               
+            for k, other in enumerate(idxG1):
+                FC_other=FCtrt[:,:,other]
+                corrS1[k]=np.corrcoef(FC_sess1[maskut],FC_other[maskut])[0,1]
+                
+            for k, other in enumerate(idxG2):
+                FC_other=FCtrt[:,:,other]
+                corrS2[k]=np.corrcoef(FC_sess2[maskut],FC_other[maskut])[0,1] 
+              
+            DevFromHealth_S1[i]=1- corrS1.mean()
+            DevFromHealth_S2[i]=1- corrS2.mean()
+
+    return DevFromHealth_S1, DevFromHealth_S2
+
 
 def getIothers(FCtrt):  #mean(corr(FC_subji_sess1,FC_subjk_sess1))
 
@@ -219,11 +281,15 @@ FCtrt_HC_CL= fisher(FCtrt_HC_CL_nofish)
 # sns.histplot(allFC_SZ_fish,color="r")
 # sns.histplot(allFC_HC_fish)
 # plt.show()
-#%% Deviation from Healthy FC and Iothers WB   
+#%% get Iselfs, Iothers and DevfHC (Whole Brain)  
 
 
 [DevFromHealth_S1_HC, DevFromHealth_S2_HC] =getDevfHC(FCtrt_HC_CL)              
 [DevFromHealth_S1_SZ, DevFromHealth_S2_SZ] =getDevfHC(FCtrt_SZ_CL, FCtrt_HC_CL)              
+
+[DevFromHealth_new_S1_HC, DevFromHealth_new_S2_HC] =getDevfHC_new(FCtrt_HC_CL)              
+[DevFromHealth_new_S1_SZ, DevFromHealth_new_S2_SZ] =getDevfHC_new(FCtrt_SZ_CL, FCtrt_HC_CL)    
+
 
 [Iothers_S1_HC, Iothers_S2_HC] =getIothers(FCtrt_HC_CL)              
 [Iothers_S1_SZ, Iothers_S2_SZ] =getIothers(FCtrt_SZ_CL)          
@@ -231,17 +297,33 @@ FCtrt_HC_CL= fisher(FCtrt_HC_CL_nofish)
 Iselfs_SZ =getIself(FCtrt_SZ_CL)          
 Iselfs_HC =getIself(FCtrt_HC_CL)          
 
+"""
+plt.figure()
+sns.histplot(DevFromHealth_S1_HC,color="m")
+sns.histplot(DevFromHealth_new_S1_HC, color="c")
+sns.histplot(DevFromHealth_S2_HC, color="b")
+sns.histplot(DevFromHealth_new_S2_HC,color="r")
+plt.show()   
+
+plt.figure()
+sns.histplot(DevFromHealth_S1_SZ,color="m")
+sns.histplot(DevFromHealth_new_S1_SZ, color="c")
+sns.histplot(DevFromHealth_S2_SZ, color="b")
+sns.histplot(DevFromHealth_new_S2_SZ,color="r")
+plt.show()   
+
 plt.figure()
 sns.histplot(Iothers_S1_SZ,color="m")
 sns.histplot(Iothers_S1_HC, color="c")
 sns.histplot(fisher_inv(Iothers_S1_HC), color="b")
 sns.histplot(fisher_inv(Iothers_S1_SZ),color="r")
 plt.show()   
+"""
 
-HC_df.loc[:,'DevFromHealth_S1'] = DevFromHealth_S1_HC.tolist() 
-HC_df.loc[:,'DevFromHealth_S2'] = DevFromHealth_S2_HC.tolist()
-SZ_df.loc[:,'DevFromHealth_S1'] = DevFromHealth_S1_SZ.tolist()
-SZ_df.loc[:,'DevFromHealth_S2'] = DevFromHealth_S2_SZ.tolist()
+HC_df.loc[:,'DevFromHealth_S1'] = DevFromHealth_new_S1_HC.tolist() 
+HC_df.loc[:,'DevFromHealth_S2'] = DevFromHealth_new_S2_HC.tolist()
+SZ_df.loc[:,'DevFromHealth_S1'] = DevFromHealth_new_S1_SZ.tolist()
+SZ_df.loc[:,'DevFromHealth_S2'] = DevFromHealth_new_S2_SZ.tolist()
 del DevFromHealth_S1_HC, DevFromHealth_S2_HC, DevFromHealth_S1_SZ, DevFromHealth_S2_SZ
 
 HC_df.loc[:,'Iothers_S1_WB'] = Iothers_S1_HC.tolist() #Whole Brain
@@ -427,8 +509,7 @@ SZ_RepeatedMeasures_df= RepeatedMeasures_df[(RepeatedMeasures_df.Group == "SZ")]
 SZ_RepeatedMeasures_df=SZ_RepeatedMeasures_df.dropna(axis = 0, how ='any')    
 
 #%% Iself GLM:  
-#%%     # Model 1: Iself_subnetworks ~ age + sex + maxFD + Group
-
+    
 # Make text file with model summaries (including Group as variable)    
 uncorrected_p=np.zeros(9)
 uncorrected_p_PANSS=np.zeros(9)
@@ -467,16 +548,19 @@ p_corrATP=multitest.fdrcorrection(uncorrected_p_ATP[1:], alpha=0.05, method='ind
 
 name = 'Iself_WB'
 model = smf.ols((name +' ~ Age_demeaned + Sex + FDmax_demeaned '), data=SZandHC_df).fit()
-fig = plt.figure(figsize=(20,20),dpi=100)
+fig = plt.figure(figsize=(35,40))#,dpi=300)
+
 #plt.title("My title")
 plot_opts = {
         #"cutoff_val": 0.3,
         #"cutoff_type": "abs",
-        "label_fontsize": "x-large",
+        "label_fontsize": "xx-large",
         "label_rotation": 0,
         #"bean_color": "#FF6F00",
         #"bean_mean_color": "#009D91",
         'bean_show_median':False,
+        'jitter_marker_size':8, #default 4
+        'violin_lw': 3, #default 1
         }
 labels = ["HC","FEP"]
 
@@ -484,11 +568,21 @@ Resid = [model.resid[SZandHC_df.Group == id] for id in SZandHC_df.Group.unique()
 Text=stats.ttest_ind(Resid[0], Resid[1])
 print(name + 'p-val: ' + str(Text[1]))
 
-ax = fig.add_subplot(3,3,9)
+meanHC = Resid[0].mean()
+meanSZ = Resid[1].mean()
+errHC = Resid[0].std()/len(Resid[0])
+errSZ = Resid[1].std()/len(Resid[1])
+
+ax = fig.add_subplot(3,3,1)
 sm.graphics.beanplot(Resid, ax=ax, labels=labels, plot_opts=plot_opts, jitter=True)
-ax.set_xlabel("Group")
-ax.set_ylabel("Residuals")
-ax.set_title("Iself_WholeBrain")
+
+plt.errorbar((1,2), (meanHC,meanSZ), (errHC,errSZ), ecolor='r', linestyle='None', marker='^',mec='r', mfc='r')
+
+ax.set_xlabel("Group", fontsize=25)
+ax.set_ylabel("Residuals", fontsize=25)
+ax.set_title("Iself_WholeBrain", fontsize=30)
+ax.tick_params(axis='both', which='major', labelsize=20)
+
 #ax.text(.5,.5,"p value: {:.3f}".format(Text[1]))  
 #SE ME PONE EL TEXTO EN CUALQUIER LADO. NDEAH!
 
@@ -499,19 +593,28 @@ for idx, network in enumerate(ATLAS.keys()):
     Resid = [model.resid[SZandHC_df.Group == id ] for id in SZandHC_df.Group.unique()]   
     Text=stats.ttest_ind(Resid[0], Resid[1])
     print(name + ' p-val: ' + str(Text[1]))
+    meanHC = Resid[0].mean()
+    meanSZ = Resid[1].mean()
+    errHC = Resid[0].std()/len(Resid[0])
+    errSZ = Resid[1].std()/len(Resid[1])
+
     
-    ax = fig.add_subplot(3,3,idx+1)
+    ax = fig.add_subplot(3,3,idx+2)
     sm.graphics.beanplot(Resid, ax=ax, labels=labels, plot_opts=plot_opts, jitter=True)
-    ax.set_xlabel("Group")
-    ax.set_ylabel("Residuals")
-    ax.set_title(name)
+    plt.errorbar((1,2), (meanHC,meanSZ), (errHC,errSZ), ecolor='r', linestyle='None', marker='^',mec='r', mfc='r')
+
+    ax.set_xlabel("Group", fontsize=25)
+    ax.set_ylabel("Residuals", fontsize=25)
+    ax.set_title(name, fontsize=30)
+    ax.tick_params(axis='both', which='major', labelsize=20)
+
 
 filename = '/Users/angeles/Desktop/Iself_plot1000.jpg'
-plt.savefig(filename, dpi=1000)
-    # plt.show()
+#plt.savefig(filename, dpi=1000)
+#plt.show()
+plt.show()
 
 #%% Iothers GLM:
-#%%    # Mixed effects: random variable (2 Iothers per subject)
 
 uncorrected_p_GROUP=np.zeros(9)
 uncorrected_p_PANSS=np.zeros(9)
@@ -571,16 +674,18 @@ md = smf.mixedlm(name+" ~ Age_demeaned + Sex + FD_demeaned", \
                data= RepeatedMeasures_df, groups=RepeatedMeasures_df["ID"])    
 mdf = md.fit()
 
-fig = plt.figure(figsize=(20,20),dpi=100)
+fig = plt.figure(figsize=(35,40))#,dpi=100)
 #plt.title("My title")
 plot_opts = {
         #"cutoff_val": 0.3,
         #"cutoff_type": "abs",
-        "label_fontsize": "x-large",
+        "label_fontsize": "xx-large",
         "label_rotation": 0,
         #"bean_color": "#FF6F00",
         #"bean_mean_color": "#009D91",
         'bean_show_median':False,
+        'jitter_marker_size':8, #default 4
+        'violin_lw': 3, #default 1
         }
 labels = ["HC","FEP"]
 
@@ -588,11 +693,20 @@ Resid = [mdf.resid[RepeatedMeasures_df.Group == id] for id in RepeatedMeasures_d
 Text=stats.ttest_ind(Resid[0], Resid[1])
 print(name + ' p-val: ' + str(Text[1]))
 
-ax = fig.add_subplot(3,3,9)
+meanHC = Resid[0].mean()
+meanSZ = Resid[1].mean()
+errHC = Resid[0].std()/len(Resid[0])
+errSZ = Resid[1].std()/len(Resid[1])
+
+ax = fig.add_subplot(3,3,1)
 sm.graphics.beanplot(Resid, ax=ax, labels=labels, plot_opts=plot_opts, jitter=True)
-ax.set_xlabel("Group")
-ax.set_ylabel("Residuals")
-ax.set_title("Iothers_WholeBrain")
+#plt.errorbar((1,2), (meanHC,meanSZ), (errHC,errSZ), ecolor='r', linestyle='None', marker='^',mec='r', mfc='r')
+
+ax.set_xlabel("Group", fontsize=25)
+ax.set_ylabel("Residuals", fontsize=25)
+ax.set_title("Iothers_WholeBrain", fontsize=30)
+ax.tick_params(axis='both', which='major', labelsize=20)
+
 #ax.text(.5,.5,"p value: {:.3f}".format(Text[1]))  
 #SE ME PONE EL TEXTO EN CUALQUIER LADO. NDEAH!
 
@@ -606,18 +720,27 @@ for idx, network in enumerate(ATLAS.keys()):
     Text=stats.ttest_ind(Resid[0], Resid[1])
     print(name + ' p-val: ' + str(Text[1]))
     
-    ax = fig.add_subplot(3,3,idx+1)
+    meanHC = Resid[0].mean()
+    meanSZ = Resid[1].mean()
+    errHC = Resid[0].std()/len(Resid[0])
+    errSZ = Resid[1].std()/len(Resid[1])
+    
+    ax = fig.add_subplot(3,3,idx+2)
     sm.graphics.beanplot(Resid, ax=ax, labels=labels, plot_opts=plot_opts, jitter=True)
-    ax.set_xlabel("Group")
-    ax.set_ylabel("Residuals")
-    ax.set_title(name)
+    #plt.errorbar((1,2), (meanHC,meanSZ), (errHC,errSZ), ecolor='r', linestyle='None', marker='^',mec='r', mfc='r')
+
+    ax.set_xlabel("Group", fontsize=25)
+    ax.set_ylabel("Residuals", fontsize=25)
+    ax.set_title(name, fontsize=30)
+    ax.tick_params(axis='both', which='major', labelsize=20)
+
 
     # plt.show()
 filename = '/Users/angeles/Desktop/Iothers_plot1000.jpg'
-plt.savefig(filename, dpi=1000)
+#plt.savefig(filename, dpi=1000)
 
-#%% Dev from Healthy FC:
-#%%    # Mixed effects: two measures per subject
+#%% DevfHC GLM:
+ # Mixed effects: two measures per subject
 
     #model: smf.mixedlm (Yvar ~ Age + ... + Group, data = Iothers_df, groups=Iothers_df["ID"])
     
@@ -674,26 +797,81 @@ stats.ttest_ind(SZandHC_df.DevFromHealth_S1[SZandHC_df.Group=='HC'],SZandHC_df.D
 stats.ttest_ind(SZandHC_df.DevFromHealth_S1[SZandHC_df.Group=='SZ'],SZandHC_df.DevFromHealth_S2[SZandHC_df.Group=='SZ'])
 
 
-stats.ttest_ind(DevFromHealth_S1_HC,DevFromHealth_S1_SZ)
+#stats.ttest_ind(DevFromHealth_S1_HC,DevFromHealth_S1_SZ)
 
 #%% GGplot
 
-p = (
-    pn.ggplot(SZandHC_df)
-    + pn.aes(x="Group", y= "DevFromHealth_S2")
-    + pn.labs(title="by Group")
-    + pn.geom_boxplot()
-)
-p.draw(show=True)
+name = 'Iself_WB'
+model = smf.ols((name +' ~ Age_demeaned + Sex + FDmax_demeaned '), data=SZandHC_df).fit()
 
-p = (
-    pn.ggplot(SZ_df)
-    + pn.aes(x="TANSS", y= "Iself_WB")
-    + pn.labs(title="LinReg")
-    + pn.geom_smooth(method='lm')
-    + pn.geom_point()
+Resid = [model.resid[SZandHC_df.Group == id] for id in SZandHC_df.Group.unique()]
+Text=stats.ttest_ind(Resid[0], Resid[1])
+print(name + 'p-val: ' + str(Text[1]))
+
+r0=np.concatenate((Resid[0].to_numpy(),Resid[1].to_numpy()))
+
+p0 = (
+    ggplot(data=SZandHC_df)
+    + aes(x='Group', y='r0')
+    + geom_jitter(alpha=0.2)
+    + geom_boxplot(alpha=0.)
 )
-p.draw(show=True)
+
+#p0.draw(show=True)
+
+
+for idx, network in enumerate(ATLAS.keys()):
+    name = 'Iself_' + network
+    model= smf.ols( (name +' ~ Age_demeaned + Sex + FDmax_demeaned '), data=SZandHC_df).fit()
+       
+    Resid = [model.resid[SZandHC_df.Group == id ] for id in SZandHC_df.Group.unique()]   
+    Text=stats.ttest_ind(Resid[0], Resid[1])
+    print(name + ' p-val: ' + str(Text[1]))
+    
+    r=np.concatenate((Resid[0].to_numpy(),Resid[1].to_numpy()))
+
+
+
+
+p1 = (
+      ggplot(data=SZandHC_df)
+      + aes(x='Group', y='r')
+      + geom_jitter(alpha=0.2)
+      + geom_boxplot(alpha=0.)
+    )
+    
+p0 = pw.load_ggplot(p0, figsize=(3,3))
+p1 = pw.load_ggplot(p1, figsize=(3,3))
+
+p12 = (p0/p1)
+p12.savefig() 
+
+
+
+
+p1 = (
+    ggplot(SZandHC_df)
+    + aes(x="Group", y= "DevFromHealth_S2")
+    + labs(title="by Group")
+    + geom_boxplot()
+)
+p1.draw(show=True)
+
+p2 = (
+    ggplot(SZ_df)
+    + aes(x="TPANSS", y= "Iself_WB")
+    + labs(title="LinReg")
+    + geom_smooth(method='lm')
+    + geom_point()
+)
+p2.draw(show=True)
+
+
+p1 = pw.load_ggplot(p1, figsize=(3,3))
+p2 = pw.load_ggplot(p2, figsize=(3,3))
+
+g1234 = (p1/p2)
+g1234.savefig()
 #%% PLOTS NUEVOS
 
 name = 'Iothers_WB'
