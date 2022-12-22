@@ -10,10 +10,10 @@ Created on Thu Feb  3 12:49:29 2022
 #%% Import and define
 
 import pandas as pd
-import scipy.io as sio
+import scipy.io as sio   #to import matlab data
 import os
 import numpy as np
-import matlab.engine
+#import matlab.engine
 import matplotlib.pyplot as plt
 import seaborn as sns
 import statsmodels.api as sm
@@ -189,9 +189,9 @@ def getIself(FCtrt):
 #%% Initialize and load data 
 
 #TO RUN matlab .m functions
-eng = matlab.engine.start_matlab()
-path = '/Volumes/WD_Elements/CODE/Functions'# specify your path
-eng.addpath(path, nargout= 0)
+#eng = matlab.engine.start_matlab()
+#path = '/Volumes/WD_Elements/CODE/Functions'# specify your path
+#eng.addpath(path, nargout= 0)
 
 os.chdir('/Volumes/WD_Elements/CODE/Part2_Fingerprint/1_INDIVIDUAL_fingerprint')
 
@@ -283,17 +283,16 @@ FCtrt_HC_CL= fisher(FCtrt_HC_CL_nofish)
 # plt.show()
 #%% get Iselfs, Iothers and DevfHC (Whole Brain)  
 
-
+print("DevfHC")
 [DevFromHealth_S1_HC, DevFromHealth_S2_HC] =getDevfHC(FCtrt_HC_CL)              
 [DevFromHealth_S1_SZ, DevFromHealth_S2_SZ] =getDevfHC(FCtrt_SZ_CL, FCtrt_HC_CL)              
-
+print("DevfHC new")
 [DevFromHealth_new_S1_HC, DevFromHealth_new_S2_HC] =getDevfHC_new(FCtrt_HC_CL)              
 [DevFromHealth_new_S1_SZ, DevFromHealth_new_S2_SZ] =getDevfHC_new(FCtrt_SZ_CL, FCtrt_HC_CL)    
-
-
+print("Iothers")
 [Iothers_S1_HC, Iothers_S2_HC] =getIothers(FCtrt_HC_CL)              
 [Iothers_S1_SZ, Iothers_S2_SZ] =getIothers(FCtrt_SZ_CL)          
-
+print("Iselfs")
 Iselfs_SZ =getIself(FCtrt_SZ_CL)          
 Iselfs_HC =getIself(FCtrt_HC_CL)          
 
@@ -325,6 +324,7 @@ HC_df.loc[:,'DevFromHealth_S2'] = DevFromHealth_new_S2_HC.tolist()
 SZ_df.loc[:,'DevFromHealth_S1'] = DevFromHealth_new_S1_SZ.tolist()
 SZ_df.loc[:,'DevFromHealth_S2'] = DevFromHealth_new_S2_SZ.tolist()
 del DevFromHealth_S1_HC, DevFromHealth_S2_HC, DevFromHealth_S1_SZ, DevFromHealth_S2_SZ
+del DevFromHealth_new_S1_HC, DevFromHealth_new_S1_SZ, DevFromHealth_new_S2_HC, DevFromHealth_new_S2_SZ
 
 HC_df.loc[:,'Iothers_S1_WB'] = Iothers_S1_HC.tolist() #Whole Brain
 HC_df.loc[:,'Iothers_S2_WB'] = Iothers_S2_HC.tolist()        
@@ -368,91 +368,32 @@ del idx, network
 
 #%%         Combine DataFrames
 
-#DEMEAN BY group
-SZ_df.loc[:,"Age2"] = SZ_df.Age*SZ_df.Age
-
-agemean_SZ = SZ_df['Age'].mean()
-age2mean_SZ = SZ_df['Age2'].mean()
-FDmaxmean_SZ = SZ_df['FDmax'].mean()
-FD1mean_SZ = SZ_df['FD1'].mean()
-FD2mean_SZ = SZ_df['FD2'].mean()
-
-SZ_df.loc[:,"Age_demeaned_byGroup"] = SZ_df['Age'].sub(agemean_SZ)
-SZ_df.loc[:,"Age2_demeaned_byGroup"] = SZ_df['Age2'].sub(age2mean_SZ)
-SZ_df.loc[:,"FDmax_demeaned_byGroup"] = SZ_df['FDmax'].sub(FDmaxmean_SZ)
-SZ_df.loc[:,"FD1_demeaned_byGroup"] = SZ_df['FD1'].sub(FD1mean_SZ)
-SZ_df.loc[:,"FD2_demeaned_byGroup"] = SZ_df['FD2'].sub(FD2mean_SZ)
-del agemean_SZ, age2mean_SZ, FDmaxmean_SZ, FD1mean_SZ, FD2mean_SZ
-
-HC_df.loc[:,"Age2"] = HC_df.Age*HC_df.Age
-
-agemean_HC = HC_df['Age'].mean()
-age2mean_HC = HC_df['Age2'].mean()
-FDmaxmean_HC = HC_df['FDmax'].mean()
-FD1mean_HC = HC_df['FD1'].mean()
-FD2mean_HC = HC_df['FD2'].mean()
-
-HC_df.loc[:,"Age_demeaned_byGroup"] = HC_df['Age'].sub(agemean_HC)
-HC_df.loc[:,"Age2_demeaned_byGroup"] = HC_df['Age2'].sub(age2mean_HC)
-HC_df.loc[:,"FDmax_demeaned_byGroup"] = HC_df['FDmax'].sub(FDmaxmean_HC)
-HC_df.loc[:,"FD1_demeaned_byGroup"] = HC_df['FD1'].sub(FD1mean_HC)
-HC_df.loc[:,"FD2_demeaned_byGroup"] = HC_df['FD2'].sub(FD2mean_HC)
-del agemean_HC, age2mean_HC, FDmaxmean_HC, FD1mean_HC, FD2mean_HC
-
-
 #CONCATENATE DF
 
 SZandHC_df = pd.concat([HC_df,SZ_df])
+SZandHC_df=SZandHC_df.reset_index()
+del SZ_df, HC_df
 
 SZandHC_df.loc[:,"deltaPANSS"] = abs(SZandHC_df.TPANSS2-SZandHC_df.TPANSS)
 SZandHC_df.loc[:,"deltaATP"] = abs(SZandHC_df.ATPdose2-SZandHC_df.ATPdose)
-#SZandHC_df.loc[:,"deltaTP"] = abs(SZandHC_df.TP-SZandHC_df.TP2)
+SZandHC_df.rename(columns = {'DaysBetweenSessions':'DBS'}, inplace = True)
+ 
 
-## DEMEAN_ALL
-agemean = SZandHC_df['Age'].mean()
-age2mean = SZandHC_df['Age2'].mean()
-FDmaxmean = SZandHC_df['FDmax'].mean()
-FD1mean = SZandHC_df['FD1'].mean()
-FD2mean = SZandHC_df['FD2'].mean()
+SZandHC_df = SZandHC_df.drop(columns=['MATRICS1', 'MATRICS2', 'IQ', 'Education','index','level_0'])
+SZandHC_df = SZandHC_df.drop(SZandHC_df[SZandHC_df.DBS.isna()].index)
 
-SZandHC_df.loc[:,"Age_demeaned"] = SZandHC_df['Age'].sub(agemean)
-SZandHC_df.loc[:,"Age2_demeaned"] = SZandHC_df['Age2'].sub(age2mean)
-SZandHC_df.loc[:,"FDmax_demeaned"] = SZandHC_df['FDmax'].sub(FDmaxmean)
-SZandHC_df.loc[:,"FD1_demeaned"] = SZandHC_df['FD1'].sub(FD1mean)
-SZandHC_df.loc[:,"FD2_demeaned"] = SZandHC_df['FD2'].sub(FD2mean)
-del agemean, age2mean, FDmaxmean, FD1mean, FD2mean
+# SZ only
+
+SZ_only = SZandHC_df[(SZandHC_df.Group == 'SZ')] 
+SZ_only = SZ_only.drop(SZ_only[SZ_only.deltaATP.isna()].index)
 
 
-SZandHC_df=SZandHC_df.reset_index()
-SZandHC_df = SZandHC_df.drop(columns=['level_0'])
-#    SZandHC_df.to_csv('SZandHC_dataframe.csv', index=False)
-
-#%% One dataframe for each model
-
-#ISELF HC vs SZ
-
-Iselfs_cols=SZandHC_df.filter(regex='^Iself',axis=1)
-Iselfs_cols_zscore = Iselfs_cols.apply(stats.zscore)
-
-Covars_zscore = SZandHC_df[["Age","Age2","Age_demeaned","Age2_demeaned","FDmax", "FDmax_demeaned"]].apply(stats.zscore)
-df_zscore = pd.concat([Iselfs_cols_zscore,Covars_zscore, SZandHC_df[["Group","Sex"]]], axis=1)
-
-#ISELF clinical variables
-
-SZ_only=SZandHC_df[(SZandHC_df.Group == 'SZ')] #& (SZandHC_df.FDmax<0.5)]
-
-SZ_covar=SZ_only[["Age_demeaned_byGroup","FDmax_demeaned_byGroup","deltaPANSS","deltaATP"]]
-SZ_covar_z = SZ_covar.dropna().apply(stats.zscore)
-
-SZ_Iselfs=SZ_only.filter(regex='^Iself',axis=1)
-SZ_Iselfs_z = SZ_Iselfs.apply(stats.zscore)
-
-SZ_only_zscore = pd.concat([SZ_Iselfs_z,SZ_covar_z, SZ_only[["Sex"]]], axis=1)
+#%% Create Repeated Measures DF
 
 #####################
-### IRepeated measures HC vs SZ
+### Repeated measures HC vs SZ
 #####################
-
+"""
 #Dos IOTHERS/DevfHC POR SUJETO: 
     #ID     Yvar
     #C01    IothersS1
@@ -460,33 +401,21 @@ SZ_only_zscore = pd.concat([SZ_Iselfs_z,SZ_covar_z, SZ_only[["Sex"]]], axis=1)
     #C02    IothersS1
     #C02    IothersS2
     # ....
-
-Iothers_df= pd.melt(SZandHC_df, id_vars=["ID","Age", "Age_demeaned", "Age_demeaned_byGroup", "Sex", "Group"], \
+"""
+Iothers_rep = pd.melt(SZandHC_df, id_vars=["ID","Age", "DBS", "Sex", "Group"], \
                              value_vars=["Iothers_S1_WB","Iothers_S2_WB"], \
-                             var_name = "Sess", value_name= "Iothers_WB" )
+                             var_name = "Sess", value_name= "Iothers_WB" )    
     
-DevHealth_df= pd.melt(SZandHC_df, id_vars=["ID"], \
-                             value_vars=["DevFromHealth_S1","DevFromHealth_S2"], \
+DevHealth_rep = pd.melt(SZandHC_df, id_vars=["ID"], 
+                             value_vars=["DevFromHealth_S1","DevFromHealth_S2"], 
                              var_name = "Sess", value_name= "DevfromHealth_value" )    
     
-FD_covar= pd.melt(SZandHC_df, id_vars=["ID"], \
-                                 value_vars=["FD1_demeaned","FD2_demeaned"], \
-                                 var_name = "FDsess", value_name= "FD_demeaned" )
+FD_rep = pd.melt(SZandHC_df, id_vars=["ID"], 
+                                 value_vars=["FD1","FD2"], 
+                                 var_name = "FDsess", value_name= "FD" )
 
-FD_covar_byGroup= pd.melt(SZandHC_df, id_vars=["ID"], \
-                                 value_vars=["FD1_demeaned_byGroup","FD2_demeaned_byGroup"], \
-                                 var_name = "FDsess_byGroup", value_name= "FD_demeaned_byGroup" )
-    
-PANSS_covar= pd.melt(SZandHC_df, id_vars=["ID"], \
-                                 value_vars=["TPANSS","TPANSS2"], \
-                                 var_name = "TPANSSsess", value_name= "TPANSS" )
-
-ATP_covar= pd.melt(SZandHC_df, id_vars=["ID"], \
-                                 value_vars=["ATPdose","ATPdose2"], \
-                                 var_name = "ATPsess", value_name= "ATPdose" )
-    
-    
-RepeatedMeasures_df = pd.concat([Iothers_df, DevHealth_df["DevfromHealth_value"] ,FD_covar["FD_demeaned"],FD_covar_byGroup["FD_demeaned_byGroup"], PANSS_covar["TPANSS"], ATP_covar["ATPdose"]],axis=1)
+RepeatedMeasures_df = pd.concat([Iothers_rep, DevHealth_rep["DevfromHealth_value"] ,
+                                 FD_rep["FD"]],axis=1)
 
 
 for idx, network in enumerate(ATLAS.keys()):
@@ -499,14 +428,93 @@ for idx, network in enumerate(ATLAS.keys()):
     
     RepeatedMeasures_df = pd.concat([RepeatedMeasures_df,Iothers_subnet_df["Iothers_"+network]],axis=1)
  
+    
 
-######################
-#### SZ Clinical var
-######################
+del Iothers_rep, DevHealth_rep, FD_rep, Iothers_subnet_df
 
-SZ_RepeatedMeasures_df= RepeatedMeasures_df[(RepeatedMeasures_df.Group == "SZ")]  
-#Model doesnt work with nan values (2 subjects have nan ATPdose2)    
-SZ_RepeatedMeasures_df=SZ_RepeatedMeasures_df.dropna(axis = 0, how ='any')    
+#################
+#### SZ ONLY
+#################
+
+Iothers_rep = pd.melt(SZ_only, id_vars=["ID","Age", "DBS", "Sex", "Group"], \
+                             value_vars=["Iothers_S1_WB","Iothers_S2_WB"], \
+                             var_name = "Sess", value_name= "Iothers_WB" )
+    
+DevHealth_rep = pd.melt(SZ_only, id_vars=["ID"], 
+                             value_vars=["DevFromHealth_S1","DevFromHealth_S2"], 
+                             var_name = "Sess", value_name= "DevfromHealth_value" )    
+    
+FD_rep = pd.melt(SZ_only, id_vars=["ID"], 
+                                 value_vars=["FD1","FD2"], 
+                                 var_name = "FDsess", value_name= "FD" )
+    
+PANSS_rep = pd.melt(SZ_only, id_vars=["ID"], \
+                                 value_vars=["TPANSS","TPANSS2"], \
+                                 var_name = "TPANSSsess", value_name= "TPANSS" )
+
+TP_rep = pd.melt(SZ_only, id_vars=["ID"], \
+                                 value_vars=["TP","TP2"], \
+                                 var_name = "TPsess", value_name= "TP" )
+TN_rep = pd.melt(SZ_only, id_vars=["ID"], \
+                                 value_vars=["TN","TN2"], \
+                                 var_name = "TNsess", value_name= "TN" )
+
+TG_rep = pd.melt(SZ_only, id_vars=["ID"], \
+                             value_vars=["TG","TG2"], \
+                             var_name = "TGsess", value_name= "TG" )
+
+ATP_rep = pd.melt(SZ_only, id_vars=["ID"], \
+                                 value_vars=["ATPdose","ATPdose2"], \
+                                 var_name = "ATPsess", value_name= "ATPdose" )
+    
+    
+SZ_RepeatedMeasures_df = pd.concat([Iothers_rep, DevHealth_rep["DevfromHealth_value"] ,
+                                 FD_rep["FD"], PANSS_rep["TPANSS"],
+                                 TN_rep["TN"], TP_rep["TP"], TG_rep["TG"],
+                                 ATP_rep["ATPdose"]],axis=1)
+
+for idx, network in enumerate(ATLAS.keys()):
+    name_s1='Iothers_S1_'+network
+    name_s2='Iothers_S2_'+network
+ 
+    Iothers_subnet_df= pd.melt(SZ_only, id_vars=["ID"], \
+                             value_vars=[name_s1,name_s2], \
+                             var_name = "Sess", value_name= "Iothers_"+network )
+    
+    SZ_RepeatedMeasures_df = pd.concat([SZ_RepeatedMeasures_df,Iothers_subnet_df["Iothers_"+network]],axis=1)
+ 
+
+del Iothers_rep, DevHealth_rep, FD_rep, PANSS_rep, 
+del TP_rep, TN_rep, TG_rep, ATP_rep, Iothers_subnet_df
+
+
+#%% Standardize dataframes
+# HC and SZ
+Numvars_z = SZandHC_df.drop(columns=["Group","ID","Sex"]
+                           +list(SZandHC_df.filter(regex='^ATP')) #ATPdose, ATPdose2
+                           +list(SZandHC_df.filter(regex='^delta')) # deltaPANSS,deltaATP
+                           +list(SZandHC_df.filter(regex='^T')) #TPANSS, TN, TG, TP
+                           ).apply(stats.zscore)
+                                                        
+SZandHC_df_zscore = pd.concat([SZandHC_df[["Group","ID","Sex"]], Numvars_z], axis=1)
+del Numvars_z
+
+
+Numvars_z = SZ_only.drop(columns=["Group","ID","Sex"]).apply(stats.zscore)
+SZ_only_zscore = pd.concat([SZ_only[["Group","ID","Sex"]], Numvars_z], axis=1)
+del Numvars_z
+
+
+Numvars_z = RepeatedMeasures_df.drop(columns=["Group","ID","Sex","Sess"]).apply(stats.zscore)
+RepeatedMeasures_df_zscore = pd.concat([RepeatedMeasures_df[["Group","ID","Sex","Sess"]], Numvars_z], axis=1)
+del Numvars_z
+
+Numvars_z = SZ_RepeatedMeasures_df.drop(columns=["Group","ID","Sex","Sess"]).apply(stats.zscore)
+SZ_RepeatedMeasures_df_zscore = pd.concat([SZ_RepeatedMeasures_df[["Group","ID","Sex","Sess"]], Numvars_z], axis=1)
+del Numvars_z
+
+
+
 
 #%% Iself GLM:  
     
@@ -515,29 +523,30 @@ uncorrected_p=np.zeros(9)
 uncorrected_p_PANSS=np.zeros(9)
 uncorrected_p_ATP=np.zeros(9)
 
-f = open("Iselfs_GLM.txt", "w")
+f = open("Iselfs_GLM_stand.txt", "w")
 
 name = 'Iself_WB'
-model = smf.ols((name +' ~ Age_demeaned + Sex + FDmax_demeaned + Group'), data=df_zscore).fit()
+model = smf.ols((name +' ~ Age + Sex + FDmax + DBS + Group'), data=SZandHC_df_zscore).fit()
 uncorrected_p[0]=model.pvalues["Group[T.SZ]"]
 print(model.summary(), file = f)
 
-model = smf.ols((name +' ~ Age_demeaned_byGroup + Sex + FDmax_demeaned_byGroup + deltaATP + deltaPANSS'), data=SZ_only_zscore).fit()  #
+model = smf.ols((name +' ~ Age + Sex + FDmax + DBS + deltaATP + deltaPANSS'), data=SZ_only_zscore).fit()  #
 uncorrected_p_PANSS[0]=model.pvalues["deltaPANSS"]
 uncorrected_p_ATP[0]=model.pvalues["deltaATP"]
 print(model.summary(), file = f) 
 
 for idx, network in enumerate(ATLAS.keys()):
     name = 'Iself_' + network
-    model = smf.ols( (name +' ~ Age_demeaned + Sex + FDmax_demeaned + Group'), data=df_zscore).fit()
+    model = smf.ols( (name +' ~ Age + Sex + FDmax + DBS + Group'), data=SZandHC_df_zscore).fit()
     uncorrected_p[idx+1]=model.pvalues["Group[T.SZ]"]
     print(model.summary(), file = f)
     
-    model = smf.ols( (name +' ~ Age_demeaned_byGroup + Sex + FDmax_demeaned_byGroup +  deltaATP + deltaPANSS'), data=SZ_only_zscore).fit()
+    model = smf.ols( (name +' ~ Age + Sex + FDmax + DBS + deltaATP + deltaPANSS'), data=SZ_only_zscore).fit()
     uncorrected_p_PANSS[idx+1]=model.pvalues["deltaPANSS"]
     uncorrected_p_ATP[idx+1]=model.pvalues["deltaATP"]
     print(model.summary(), file = f) 
-        
+
+    
 f.close()
 
 p_corr=multitest.fdrcorrection(uncorrected_p[1:], alpha=0.05, method='indep', is_sorted=False)[1]
@@ -547,7 +556,7 @@ p_corrATP=multitest.fdrcorrection(uncorrected_p_ATP[1:], alpha=0.05, method='ind
 #%%     # Plot residuals (model without Group as variable)
 
 name = 'Iself_WB'
-model = smf.ols((name +' ~ Age_demeaned + Sex + FDmax_demeaned '), data=SZandHC_df).fit()
+model = smf.ols((name +' ~ Age + Sex + FDmax + DBS '), data=SZandHC_df_zscore).fit()
 fig = plt.figure(figsize=(35,40))#,dpi=300)
 
 #plt.title("My title")
@@ -564,7 +573,7 @@ plot_opts = {
         }
 labels = ["HC","FEP"]
 
-Resid = [model.resid[SZandHC_df.Group == id] for id in SZandHC_df.Group.unique()]
+Resid = [model.resid[SZandHC_df_zscore.Group == id] for id in SZandHC_df_zscore.Group.unique()]
 Text=stats.ttest_ind(Resid[0], Resid[1])
 print(name + 'p-val: ' + str(Text[1]))
 
@@ -576,21 +585,21 @@ errSZ = Resid[1].std()/len(Resid[1])
 ax = fig.add_subplot(3,3,1)
 sm.graphics.beanplot(Resid, ax=ax, labels=labels, plot_opts=plot_opts, jitter=True)
 
-plt.errorbar((1,2), (meanHC,meanSZ), (errHC,errSZ), ecolor='r', linestyle='None', marker='^',mec='r', mfc='r')
+#plt.errorbar((1,2), (meanHC,meanSZ), (errHC,errSZ), ecolor='r', linestyle='None', marker='^',mec='r', mfc='r')
 
-ax.set_xlabel("Group", fontsize=25)
-ax.set_ylabel("Residuals", fontsize=25)
+ax.set_xlabel("Group", fontsize=30)
+ax.set_ylabel("Residuals", fontsize=30)
 ax.set_title("Iself_WholeBrain", fontsize=30)
-ax.tick_params(axis='both', which='major', labelsize=20)
+ax.tick_params(axis='both', which='major', labelsize=25)
 
 #ax.text(.5,.5,"p value: {:.3f}".format(Text[1]))  
 #SE ME PONE EL TEXTO EN CUALQUIER LADO. NDEAH!
 
 for idx, network in enumerate(ATLAS.keys()):
     name = 'Iself_' + network
-    model= smf.ols( (name +' ~ Age_demeaned + Sex + FDmax_demeaned '), data=SZandHC_df).fit()
+    model= smf.ols( (name +' ~ Age + Sex + FDmax + DBS '), data=SZandHC_df_zscore).fit()
        
-    Resid = [model.resid[SZandHC_df.Group == id ] for id in SZandHC_df.Group.unique()]   
+    Resid = [model.resid[SZandHC_df_zscore.Group == id ] for id in SZandHC_df_zscore.Group.unique()]   
     Text=stats.ttest_ind(Resid[0], Resid[1])
     print(name + ' p-val: ' + str(Text[1]))
     meanHC = Resid[0].mean()
@@ -601,12 +610,12 @@ for idx, network in enumerate(ATLAS.keys()):
     
     ax = fig.add_subplot(3,3,idx+2)
     sm.graphics.beanplot(Resid, ax=ax, labels=labels, plot_opts=plot_opts, jitter=True)
-    plt.errorbar((1,2), (meanHC,meanSZ), (errHC,errSZ), ecolor='r', linestyle='None', marker='^',mec='r', mfc='r')
+    #plt.errorbar((1,2), (meanHC,meanSZ), (errHC,errSZ), ecolor='r', linestyle='None', marker='^',mec='r', mfc='r')
 
-    ax.set_xlabel("Group", fontsize=25)
-    ax.set_ylabel("Residuals", fontsize=25)
+    ax.set_xlabel("Group", fontsize=30)
+    ax.set_ylabel("Residuals", fontsize=30)
     ax.set_title(name, fontsize=30)
-    ax.tick_params(axis='both', which='major', labelsize=20)
+    ax.tick_params(axis='both', which='major', labelsize=25)
 
 
 filename = '/Users/angeles/Desktop/Iself_plot1000.jpg'
@@ -622,20 +631,19 @@ uncorrected_p_ATP=np.zeros(9)
 
 #model: smf.mixedlm (Yvar ~ Age + ... + Group, data = Iothers_df, groups=Iothers_df["ID"])
     
-f = open("Iothers_GLM.txt", "w")
+f = open("Iothers_GLM_stand.txt", "w")
 
-print("MODEL: Iothers_WB ~ Age_demeaned + Sex + FD_demeaned + Group + (1|subject) \n", file = f)
-md = smf.mixedlm("Iothers_WB ~ Age_demeaned + Sex + FD_demeaned + Group", \
-                 data= RepeatedMeasures_df, groups=RepeatedMeasures_df["ID"])
+print("MODEL: Iothers_WB ~ Age + Sex + FD + DBS + Group + (1|subject) \n", file = f)
+md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + DBS + Group", \
+                 data= RepeatedMeasures_df_zscore, groups=RepeatedMeasures_df_zscore["ID"])
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary(),file=f)
 uncorrected_p_GROUP[0]=mdf.pvalues["Group[T.SZ]"]
 
 
-print("MODEL: Iothers_WB ~ Age + Sex +FD + TPANSS+ + ATPdose + \n \
-       (1|subject) \n", file = f)
-md = smf.mixedlm("Iothers_WB ~ Age_demeaned_byGroup + Sex + FD_demeaned_byGroup + TPANSS + ATPdose", \
-                 data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
+print("MODEL: Iothers_WB ~ Age + Sex + FD + TPANSS+ ATPdose + DBS + (1|subject) \n", file = f)
+md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + DBS + TPANSS + ATPdose", \
+                 data= SZ_RepeatedMeasures_df_zscore, groups=SZ_RepeatedMeasures_df_zscore["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary(), file =f )
 uncorrected_p_PANSS[0]=mdf.pvalues["TPANSS"]
@@ -644,17 +652,16 @@ uncorrected_p_ATP[0]=mdf.pvalues["ATPdose"]
 for idx, network in enumerate(ATLAS.keys()):
     name = 'Iothers_' + network
     
-    print("MODEL: "+name+" ~ Age_demeaned + Sex + FD_demeaned + Group + (1|subject) \n", file = f)
-    md = smf.mixedlm("Iothers_"+network+" ~ Age_demeaned + Sex + FD_demeaned + Group", \
-                 data= RepeatedMeasures_df, groups=RepeatedMeasures_df["ID"])
+    print("MODEL: "+name+" ~ Age + Sex + FD + DBS + Group + (1|subject) \n", file = f)
+    md = smf.mixedlm("Iothers_"+network+" ~ Age + Sex + FD + DBS + Group", \
+                 data= RepeatedMeasures_df_zscore, groups=RepeatedMeasures_df_zscore["ID"])
     mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
     print(mdf.summary(),file=f)
     uncorrected_p_GROUP[idx+1]=mdf.pvalues["Group[T.SZ]"]
 
-    print("MODEL: "+name+" ~ Agedemeaned_byGroup + + Sex + FDdemeaned_byGroup + TPANSS+ + ATPdose + \n \
-       (1|subject) \n", file = f)
-    md = smf.mixedlm("Iothers_"+network+" ~ Age_demeaned_byGroup + Sex + FD_demeaned_byGroup + TPANSS + ATPdose", \
-                     data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
+    print("MODEL: "+name+" ~ Age + Sex + FD + DBS + TPANSS + ATPdose + (1|subject) \n", file = f)
+    md = smf.mixedlm("Iothers_"+network+" ~ Age + Sex + FD + DBS + TPANSS + ATPdose", \
+                     data= SZ_RepeatedMeasures_df_zscore, groups=SZ_RepeatedMeasures_df_zscore["ID"])  
     mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
     print(mdf.summary(), file =f )
     uncorrected_p_PANSS[idx+1]=mdf.pvalues["TPANSS"]
@@ -670,8 +677,8 @@ p_corrATP=multitest.fdrcorrection(uncorrected_p_ATP[1:], alpha=0.05, method='ind
 #%%     # Plot residuals (model without Group as variable)
 
 name = 'Iothers_WB'
-md = smf.mixedlm(name+" ~ Age_demeaned + Sex + FD_demeaned", \
-               data= RepeatedMeasures_df, groups=RepeatedMeasures_df["ID"])    
+md = smf.mixedlm(name+" ~ Age + Sex + FD + DBS", \
+               data= RepeatedMeasures_df_zscore, groups=RepeatedMeasures_df_zscore["ID"])    
 mdf = md.fit()
 
 fig = plt.figure(figsize=(35,40))#,dpi=100)
@@ -689,7 +696,7 @@ plot_opts = {
         }
 labels = ["HC","FEP"]
 
-Resid = [mdf.resid[RepeatedMeasures_df.Group == id] for id in RepeatedMeasures_df.Group.unique()]
+Resid = [mdf.resid[RepeatedMeasures_df_zscore.Group == id] for id in RepeatedMeasures_df_zscore.Group.unique()]
 Text=stats.ttest_ind(Resid[0], Resid[1])
 print(name + ' p-val: ' + str(Text[1]))
 
@@ -702,21 +709,21 @@ ax = fig.add_subplot(3,3,1)
 sm.graphics.beanplot(Resid, ax=ax, labels=labels, plot_opts=plot_opts, jitter=True)
 #plt.errorbar((1,2), (meanHC,meanSZ), (errHC,errSZ), ecolor='r', linestyle='None', marker='^',mec='r', mfc='r')
 
-ax.set_xlabel("Group", fontsize=25)
-ax.set_ylabel("Residuals", fontsize=25)
+ax.set_xlabel("Group", fontsize=30)
+ax.set_ylabel("Residuals", fontsize=30)
 ax.set_title("Iothers_WholeBrain", fontsize=30)
-ax.tick_params(axis='both', which='major', labelsize=20)
+ax.tick_params(axis='both', which='major', labelsize=25)
 
 #ax.text(.5,.5,"p value: {:.3f}".format(Text[1]))  
 #SE ME PONE EL TEXTO EN CUALQUIER LADO. NDEAH!
 
 for idx, network in enumerate(ATLAS.keys()):
     name = 'Iothers_' + network
-    md= smf.mixedlm( (name +' ~ Age_demeaned + Sex + FD_demeaned '), \
-                   data= RepeatedMeasures_df, groups=RepeatedMeasures_df["ID"])    
+    md= smf.mixedlm( (name +' ~ Age + Sex + FD + DBS '), \
+                   data= RepeatedMeasures_df_zscore, groups=RepeatedMeasures_df_zscore["ID"])    
     mdf = md.fit()
     
-    Resid = [mdf.resid[RepeatedMeasures_df.Group == id ] for id in RepeatedMeasures_df.Group.unique()]   
+    Resid = [mdf.resid[RepeatedMeasures_df_zscore.Group == id ] for id in RepeatedMeasures_df_zscore.Group.unique()]   
     Text=stats.ttest_ind(Resid[0], Resid[1])
     print(name + ' p-val: ' + str(Text[1]))
     
@@ -729,10 +736,10 @@ for idx, network in enumerate(ATLAS.keys()):
     sm.graphics.beanplot(Resid, ax=ax, labels=labels, plot_opts=plot_opts, jitter=True)
     #plt.errorbar((1,2), (meanHC,meanSZ), (errHC,errSZ), ecolor='r', linestyle='None', marker='^',mec='r', mfc='r')
 
-    ax.set_xlabel("Group", fontsize=25)
-    ax.set_ylabel("Residuals", fontsize=25)
+    ax.set_xlabel("Group", fontsize=30)
+    ax.set_ylabel("Residuals", fontsize=30)
     ax.set_title(name, fontsize=30)
-    ax.tick_params(axis='both', which='major', labelsize=20)
+    ax.tick_params(axis='both', which='major', labelsize=25)
 
 
     # plt.show()
@@ -744,20 +751,19 @@ filename = '/Users/angeles/Desktop/Iothers_plot1000.jpg'
 
     #model: smf.mixedlm (Yvar ~ Age + ... + Group, data = Iothers_df, groups=Iothers_df["ID"])
     
-f = open("DevfHC_GLM.txt", "w")
+f = open("DevfHC_GLM_stand.txt", "w")
 
-print("MODEL: DevfromHealth_value ~ Age_demeaned + FD_demeaned + Sex + Group + (1|subject) \n", file = f)
-md = smf.mixedlm("DevfromHealth_value ~ Age_demeaned + Sex + FD_demeaned + Group", \
-                 data= RepeatedMeasures_df, groups=RepeatedMeasures_df["ID"])
+print("MODEL: DevfromHealth_value ~ Age + FD + Sex + DBS + Group + (1|subject) \n", file = f)
+md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD + DBS + Group", \
+                 data= RepeatedMeasures_df_zscore, groups=RepeatedMeasures_df_zscore["ID"])
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary(),file=f)
 
 
 
-print("MODEL: DevfromHealth_value ~ Age_demeaned_byGroup + Sex + FD_demeaned_byGroup + TPANSS+ + ATPdose + \n \
-       (1|subject) \n", file = f)
-md = smf.mixedlm("DevfromHealth_value ~ Age_demeaned_byGroup + Sex + FD_demeaned_byGroup + TPANSS + ATPdose ", \
-                 data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
+print("MODEL: DevfromHealth_value ~ Age + Sex + FD + DBS +TPANSS+ + ATPdose + (1|subject) \n", file = f)
+md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD + DBS + TPANSS + ATPdose ", \
+                 data= SZ_RepeatedMeasures_df_zscore, groups=SZ_RepeatedMeasures_df_zscore["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary(), file =f )
 
@@ -802,7 +808,7 @@ stats.ttest_ind(SZandHC_df.DevFromHealth_S1[SZandHC_df.Group=='SZ'],SZandHC_df.D
 #%% GGplot
 
 name = 'Iself_WB'
-model = smf.ols((name +' ~ Age_demeaned + Sex + FDmax_demeaned '), data=SZandHC_df).fit()
+model = smf.ols((name +' ~ Age + Sex + FDmax '), data=SZandHC_df).fit()
 
 Resid = [model.resid[SZandHC_df.Group == id] for id in SZandHC_df.Group.unique()]
 Text=stats.ttest_ind(Resid[0], Resid[1])
@@ -822,7 +828,7 @@ p0 = (
 
 for idx, network in enumerate(ATLAS.keys()):
     name = 'Iself_' + network
-    model= smf.ols( (name +' ~ Age_demeaned + Sex + FDmax_demeaned '), data=SZandHC_df).fit()
+    model= smf.ols( (name +' ~ Age + Sex + FDmax'), data=SZandHC_df).fit()
        
     Resid = [model.resid[SZandHC_df.Group == id ] for id in SZandHC_df.Group.unique()]   
     Text=stats.ttest_ind(Resid[0], Resid[1])
@@ -858,7 +864,7 @@ p1 = (
 p1.draw(show=True)
 
 p2 = (
-    ggplot(SZ_df)
+    ggplot(SZ_only)
     + aes(x="TPANSS", y= "Iself_WB")
     + labs(title="LinReg")
     + geom_smooth(method='lm')
@@ -875,7 +881,7 @@ g1234.savefig()
 #%% PLOTS NUEVOS
 
 name = 'Iothers_WB'
-md = smf.mixedlm(name+" ~ Age_demeaned + Sex + FD_demeaned", \
+md = smf.mixedlm(name+" ~ Age + Sex + DBS + FD", \
                data= RepeatedMeasures_df, groups=RepeatedMeasures_df["ID"])    
 mdf = md.fit()
 
@@ -902,7 +908,7 @@ ax = fig.add_subplot(3,3,9)
 sm.graphics.beanplot(Resid, ax=ax, labels=labels, plot_opts=plot_opts,  \
                      jitter=True)
 ax.set_xlabel("Group")
-ax.set_ylabel("Residuals \n (Iothers ~ Age + Sex + FD)")
+ax.set_ylabel("Residuals \n (Iothers ~ Age + Sex + FD + DBS)")
 ax.set_title("Iothers_WholeBrain")
 #ax.text(.5,.5,"p value: {:.3f}".format(Text[1]))  
 #SE ME PONE EL TEXTO EN CUALQUIER LADO. NDEAH!
@@ -912,12 +918,7 @@ ax.set_title("Iothers_WholeBrain")
 #plt.savefig(filename, dpi=1000)
 
 
-SZ_RepeatedMeasures_df= RepeatedMeasures_df[(RepeatedMeasures_df.Group == "SZ")]    
-#Model doesnt work with nan values (2 subjects have nan ATPdose2)    
-SZ_RepeatedMeasures_df=SZ_RepeatedMeasures_df.dropna(axis = 0, how ='any')    
-#  
-
-md = smf.mixedlm("Iothers_WB ~ Age_demeaned + Sex + FD_demeaned + ATPdose", \
+md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + DBS +  ATPdose", \
                  data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary())
@@ -927,11 +928,11 @@ x=SZ_RepeatedMeasures_df.TPANSS
 y= mdf.resid
 ax=sns.regplot(x, y)
 ax.set_xlabel("PANSS total")
-ax.set_ylabel("Residuals \n (Iothers ~ Age + Sex + FD + APdose)")
+ax.set_ylabel("Residuals \n (Iothers ~ Age + Sex + FD + DBS + APdose)")
 ax.set_title("Iothers vs PANSS")
 
 
-md = smf.mixedlm("Iothers_WB ~ Age_demeaned + Sex + FD_demeaned + TPANSS", \
+md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + DBS + TPANSS", \
                  data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary())
@@ -941,14 +942,14 @@ x=SZ_RepeatedMeasures_df.ATPdose
 y= mdf.resid
 ax=sns.regplot(x, y)
 ax.set_xlabel("AP Dose")
-ax.set_ylabel("Residuals \n (Iothers ~ Age + Sex + FD + TPANSS)")
+ax.set_ylabel("Residuals \n (Iothers ~ Age + Sex + FD + DBS + TPANSS)")
 ax.set_title("Iothers vs AP dose")
 
 
 
 
 name = 'Iself_WB'
-model = smf.ols((name +' ~ Age_demeaned + Sex + FDmax_demeaned '), data=SZandHC_df).fit()
+model = smf.ols((name +' ~ Age + Sex + FDmax + DBS '), data=SZandHC_df).fit()
 fig = plt.figure(figsize=(20,20),dpi=100)
 #plt.title("My title")
 plot_opts = {
@@ -970,41 +971,41 @@ ax = fig.add_subplot(3,3,9)
 sm.graphics.beanplot(Iself, ax=ax, labels=labels, plot_opts=plot_opts, \
                      jitter=True)
 ax.set_xlabel("Group")
-ax.set_ylabel("Residuals \n (Iself ~ Age + Sex + FD)")
+ax.set_ylabel("Residuals \n (Iself ~ Age + Sex + FD + DBS)")
 ax.set_title("Iself_WholeBrain")
 #ax.text(.5,.5,"p value: {:.3f}".format(Text[1]))  
 #SE ME PONE EL TEXTO EN CUALQUIER LADO. NDEAH!
 
 name = 'Iself_WB'
-model = smf.ols((name +' ~ Age_demeaned + Sex + FDmax_demeaned + deltaPANSS'), data=SZ_only).fit()  #
+model = smf.ols((name +' ~ Age + Sex + FDmax + DBS + deltaPANSS'), data=SZ_only).fit()  #
 
 fig = plt.figure()
 x=SZ_only.deltaATP
 y= model.resid
 ax=sns.regplot(x, y)
 ax.set_xlabel("delta AP Dose")
-ax.set_ylabel("Residuals \n (Iself ~ Age + Sex + FD + deltaPANSS)")
+ax.set_ylabel("Residuals \n (Iself ~ Age + Sex + FD + DBS + deltaPANSS)")
 ax.set_title("Iself vs delta AP dose")
 
 
 SZ_only28=SZ_only[~SZ_only.ATPdose2.isna()]  
 
 name = 'Iself_WB'
-model = smf.ols((name +' ~ Age_demeaned + Sex + FDmax_demeaned + deltaATP'), data=SZ_only28).fit()  #
+model = smf.ols((name +' ~ Age + Sex + FDmax + DBS + deltaATP'), data=SZ_only28).fit()  #
 
 fig = plt.figure()
 x=SZ_only28.deltaPANSS
 y= model.resid
 ax=sns.regplot(x, y)
 ax.set_xlabel("delta PANSS")
-ax.set_ylabel("Residuals \n (Iself ~ Age + Sex + FD + deltaATP)")
+ax.set_ylabel("Residuals \n (Iself ~ Age + Sex + FD + DBS + deltaATP)")
 ax.set_title("Iself vs delta PANSS")
 
 
 
 
 name='DevfromHealth_value'
-md = smf.mixedlm(name+" ~ Age_demeaned + Sex + FD_demeaned", \
+md = smf.mixedlm(name+" ~ Age + Sex + DBS +  FD", \
                  data= RepeatedMeasures_df, groups=RepeatedMeasures_df["ID"])
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary())
@@ -1031,18 +1032,12 @@ ax = fig.add_subplot(3,3,9)
 sm.graphics.beanplot(Resid, ax=ax, labels=labels, plot_opts=plot_opts,  \
                      jitter=True)
 ax.set_xlabel("Group")
-ax.set_ylabel("Residuals \n (DevfromHealthyFC ~ Age + Sex + FD)")
+ax.set_ylabel("Residuals \n (DevfromHealthyFC ~ Age + Sex + FD + DBS)")
 ax.set_title("Dev from healthy FC")
 
 
 
-SZ_RepeatedMeasures_df= RepeatedMeasures_df[(RepeatedMeasures_df.Group == "SZ")]
-  
-#Model doesnt work with nan values (2 subjects have nan ATPdose2)    
-SZ_RepeatedMeasures_df=SZ_RepeatedMeasures_df.dropna(axis = 0, how ='any')    
-
-
-md = smf.mixedlm("DevfromHealth_value ~ Age_demeaned + Sex + FD_demeaned + TPANSS ", \
+md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD + DBS + TPANSS ", \
                  data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary())
@@ -1052,11 +1047,11 @@ x=SZ_RepeatedMeasures_df.ATPdose
 y= mdf.resid
 ax=sns.regplot(x, y)
 ax.set_xlabel("AP dose")
-ax.set_ylabel("Residuals \n (DevHFC~ Age + Sex + FD + TPANSS)")
+ax.set_ylabel("Residuals \n (DevHFC~ Age + Sex + FD + DBS + TPANSS)")
 ax.set_title("DevHFC vs AP dose")
 
 
-md = smf.mixedlm("DevfromHealth_value ~ Age_demeaned + Sex + FD_demeaned + ATPdose ", \
+md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD + DBS + ATPdose ", \
                  data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary())
@@ -1066,7 +1061,7 @@ x=SZ_RepeatedMeasures_df.TPANSS
 y= mdf.resid
 ax=sns.regplot(x, y)
 ax.set_xlabel("TPANSS")
-ax.set_ylabel("Residuals \n (DevHFC~ Age + Sex + FD + APdose)")
+ax.set_ylabel("Residuals \n (DevHFC~ Age + Sex + FD + DBS + APdose)")
 ax.set_title("DevHFC vs PANSS total")
 
 
@@ -1117,80 +1112,5 @@ for idx, network in enumerate(ATLAS.keys()):
     
 """
 
-
-#%%         Get Iothers as corr(FC_subji_Sess1, meanFC_group_Sess1)
-"""
-maskut=np.triu_indices(len(FCtrt_HC_CL),k=1)
-
-#HC
-IothersS1_HC=np.zeros(len(subjHC_CL))
-IothersS2_HC=np.zeros(len(subjHC_CL))
-
-for i,subject in enumerate(np.arange(0,FCtrt_HC_CL.shape[2],2)):
-        
-        FC_sess1=np.arctanh(FCtrt_HC_CL[:,:,subject])
-        FC_sess2=np.arctanh(FCtrt_HC_CL[:,:,subject+1])
-       
-        #idxG1 all sess1 but excluding this subject 
-        #AND different sex subjects: 
-        idxG1=[x for x in np.arange(0,FCtrt_HC_CL.shape[2],2) if x != subject] 
-        #idxG2 all sess1 but excluding this subject
-        idxG2=[x for x in np.arange(1,FCtrt_HC_CL.shape[2],2) if x != subject+1]    
-       
-        idx_samesex = (HC_df[HC_df["Sex"]==HC_df["Sex"][i]].index).tolist()
-        idx_samesexS1 = [element * 2 for element in idx_samesex]
-        idx_samesexS2 = [element * 2 + 1 for element in idx_samesex]
-       
-        idx_finalS1=[value for value in idxG1 if value in idx_samesexS1]
-        idx_finalS2=[value for value in idxG2 if value in idx_samesexS2]
-       
-        FC_groupS1 = np.arctanh(FCtrt_HC_CL[:,:, idx_finalS1])  #for all subjects in group use idxG1 instead of idx_finalS1
-        FC_groupS2 = np.arctanh(FCtrt_HC_CL[:,:, idx_finalS2])
-      
-        mFC_groupS1=np.mean(FC_groupS1,axis=2) #mean FC sess 1
-        mFC_groupS2=np.mean(FC_groupS2,axis=2) #mean FC sess 2
-       
-       
-        IothersS1_HC[i]=np.tanh(np.corrcoef(FC_sess1[maskut],mFC_groupS1[maskut])[0,1])
-        IothersS2_HC[i]=np.tanh(np.corrcoef(FC_sess2[maskut],mFC_groupS2[maskut])[0,1])
-   
-HC_df.loc[:,'Iothers_S1'] = IothersS1_HC.tolist()
-HC_df.loc[:,'Iothers_S2'] = IothersS2_HC.tolist()
- 
-#SZ   
-IothersS1_SZ=np.zeros(len(subjSZ_CL))
-IothersS2_SZ=np.zeros(len(subjSZ_CL))
-
-for i,subject in enumerate(np.arange(0,FCtrt_SZ_CL.shape[2],2)):
-   
-    FC_sess1=np.arctanh(FCtrt_SZ_CL[:,:,subject])
-    FC_sess2=np.arctanh(FCtrt_SZ_CL[:,:,subject+1])
-   
-    #idxG1 all sess1 but excluding this subject
-    idxG1=[x for x in np.arange(0,FCtrt_SZ_CL.shape[2],2) if x != subject] 
-    #idxG2 all sess1 but excluding this subject
-    idxG2=[x for x in np.arange(1,FCtrt_SZ_CL.shape[2],2) if x != subject+1]    
-   
-    idx_samesex = (SZ_df[SZ_df["Sex"]==SZ_df["Sex"][i]].index).tolist()
-    idx_samesexS1 = [element * 2 for element in idx_samesex]
-    idx_samesexS2 = [element * 2 + 1 for element in idx_samesex]
-       
-    idx_finalS1=[value for value in idxG1 if value in idx_samesexS1]
-    idx_finalS2=[value for value in idxG2 if value in idx_samesexS2]    
-  
-    FC_groupS1 = np.arctanh(FCtrt_SZ_CL[:,:, idx_finalS1])  #for all subjects in group use idxG1 instead of idx_finalS1
-    FC_groupS2 = np.arctanh(FCtrt_SZ_CL[:,:, idx_finalS2])
-  
-    mFC_groupS1=np.mean(FC_groupS1,axis=2) #mean FC sess 1
-    mFC_groupS2=np.mean(FC_groupS2,axis=2) #mean FC sess 2
-      
-    IothersS1_SZ[i]=np.tanh(np.corrcoef(FC_sess1[maskut],mFC_groupS1[maskut])[0,1])
-    IothersS2_SZ[i]=np.tanh(np.corrcoef(FC_sess2[maskut],mFC_groupS2[maskut])[0,1])
-
-
-SZ_df.loc[:,'Iothers_S1'] = IothersS1_SZ.tolist()
-SZ_df.loc[:,'Iothers_S2'] = IothersS2_SZ.tolist()
-
-"""
 
 
