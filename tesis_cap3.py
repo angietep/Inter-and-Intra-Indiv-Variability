@@ -23,6 +23,10 @@ import statsmodels.formula.api as smf
 from scipy import stats
 from plotnine import * #to plot with ggplot
 import patchworklib as pw  #to make subplots
+# statmodels functions to get VIF 
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+from statsmodels.tools.tools import add_constant
+
 
 def getDevfHC(*args): #(FCtrt,FCtrtHC) corr(FC_subji_Sess1, meanFC_group_Sess1)
 
@@ -366,16 +370,29 @@ for idx, network in enumerate(ATLAS.keys()):
     del Iself_HC_ntw, Iself_SZ_ntw, Iothers_S1_HC, Iothers_S2_HC, Iothers_S1_SZ, Iothers_S2_SZ, name_s1, name_s2, name_Iself, FCtrt_HC_ntw, FCtrt_SZ_ntw
 del idx, network
 
-#%%         Combine DataFrames
+#%% Combine DataFrames
 
 #CONCATENATE DF
 
 SZandHC_df = pd.concat([HC_df,SZ_df])
 SZandHC_df=SZandHC_df.reset_index()
-del SZ_df, HC_df
 
 SZandHC_df.loc[:,"deltaPANSS"] = abs(SZandHC_df.TPANSS2-SZandHC_df.TPANSS)
+SZandHC_df.loc[:,"deltaTP"] = abs(SZandHC_df.TP2-SZandHC_df.TP)
+SZandHC_df.loc[:,"deltaTN"] = abs(SZandHC_df.TN2-SZandHC_df.TN)
+SZandHC_df.loc[:,"deltaTG"] = abs(SZandHC_df.TG2-SZandHC_df.TG)
+
 SZandHC_df.loc[:,"deltaATP"] = abs(SZandHC_df.ATPdose2-SZandHC_df.ATPdose)
+
+#SESS1 - SESS2
+SZandHC_df.loc[:,"deltaDevfHC_signed"] = SZandHC_df.DevFromHealth_S1-SZandHC_df.DevFromHealth_S2
+SZandHC_df.loc[:,"deltaPANSS_signed"] = SZandHC_df.TPANSS-SZandHC_df.TPANSS2
+SZandHC_df.loc[:,"deltaTP_signed"] = SZandHC_df.TP-SZandHC_df.TP2
+SZandHC_df.loc[:,"deltaTN_signed"] = SZandHC_df.TN-SZandHC_df.TN2
+SZandHC_df.loc[:,"deltaTG_signed"] = SZandHC_df.TG-SZandHC_df.TG2
+SZandHC_df.loc[:,"deltaATP_signed"] = SZandHC_df.ATPdose-SZandHC_df.ATPdose2
+
+
 SZandHC_df.rename(columns = {'DaysBetweenSessions':'DBS'}, inplace = True)
  
 
@@ -494,7 +511,9 @@ Numvars_z = SZandHC_df.drop(columns=["Group","ID","Sex"]
                            +list(SZandHC_df.filter(regex='^ATP')) #ATPdose, ATPdose2
                            +list(SZandHC_df.filter(regex='^delta')) # deltaPANSS,deltaATP
                            +list(SZandHC_df.filter(regex='^T')) #TPANSS, TN, TG, TP
-                           ).apply(stats.zscore)
+                           )
+deltaDevfHC=SZandHC_df["deltaDevfHC_signed"]
+Numvars_z = Numvars_z.join(deltaDevfHC).apply(stats.zscore)
                                                         
 SZandHC_df_zscore = pd.concat([SZandHC_df[["Group","ID","Sex"]], Numvars_z], axis=1)
 del Numvars_z
@@ -513,8 +532,203 @@ Numvars_z = SZ_RepeatedMeasures_df.drop(columns=["Group","ID","Sex","Sess"]).app
 SZ_RepeatedMeasures_df_zscore = pd.concat([SZ_RepeatedMeasures_df[["Group","ID","Sex","Sess"]], Numvars_z], axis=1)
 del Numvars_z
 
+#%% Clinical heterogeneity?
+
+df_sess1=SZ_only[["TP","TN","TG","TPANSS"]]
+df_sess2=SZ_only[["TP2","TN2","TG2","TPANSS2"]]
+df_repmes=SZ_RepeatedMeasures_df[["TP","TN","TG","Sess"]]
 
 
+# set figure size
+
+plt.figure(figsize=(10,7))
+
+
+# Generate a mask to onlyshow the upper triangle
+mask = np.tril(np.ones_like(df_sess2.corr(), dtype=bool))
+# generate heatmap
+sns.heatmap(df_sess2.corr(), annot=True, mask=mask, vmin=-1, vmax=1)
+
+# Generate a mask to onlyshow the bottom triangle
+mask = np.triu(np.ones_like(df_sess1.corr(), dtype=bool))
+# generate heatmap
+sns.heatmap(df_sess1.corr(), annot=True, mask=mask, vmin=-1, vmax=1, cbar= False)
+
+
+plt.title('Pearson\'s correlations of PANSS subscales \n Session 1 bottom / Session 2 top')
+plt.show()
+
+
+
+
+# compute the vif for all given features
+def compute_vif(considered_features):
+    
+    X = df_sess2[considered_features]
+    # the calculation of variance inflation requires a constant
+    X['intercept'] = 1
+    
+    # create dataframe to store vif values
+    vif = pd.DataFrame()
+    vif["Variable"] = X.columns
+    vif["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+    vif = vif[vif['Variable']!='intercept']
+    return vif
+
+# features to consider removing
+considered_features = ['TP2', 'TN2', 'TG2']
+
+
+# compute vif 
+vif = compute_vif(considered_features).sort_values('VIF', ascending=False)
+
+#%% deltaPANSS vs DBS
+
+p = ( ggplot (SZ_only) +
+ aes(x="DBS", y="deltaPANSS") +
+ labs(x="Days Between Sessions", y="deltaPANSS (Total score)") +
+ geom_smooth(method= 'lm') +
+ geom_point()
+ )
+p.draw(show=True)
+
+(r, pval)=stats.pearsonr(SZ_only.DBS, SZ_only.deltaPANSS)
+
+
+p = ( ggplot (SZ_only) +
+ aes(x="DBS", y="deltaATP") +
+ labs(x="Days Between Sessions", y="deltaAP") +
+ geom_smooth(method= 'lm') +
+ geom_point()
+ )
+p.draw(show=True)
+
+(r,pval)=stats.pearsonr(SZ_only.DBS, SZ_only.deltaATP)
+
+
+
+def compute_vif(considered_features):
+    
+    X = SZ_only[considered_features]
+    # the calculation of variance inflation requires a constant
+    X['intercept'] = 1
+    
+    # create dataframe to store vif values
+    vif = pd.DataFrame()
+    vif["Variable"] = X.columns
+    vif["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+    vif = vif[vif['Variable']!='intercept']
+    return vif
+
+
+considered_features = ['deltaPANSS', 'deltaATP', 'DBS','Age','FDmax']
+vif = compute_vif(considered_features).sort_values('VIF', ascending=False)
+
+
+
+#%% Significant corr PLOTs
+
+p = ( ggplot (SZ_RepeatedMeasures_df) +
+ aes(x="TPANSS", y="Iothers_WB") +
+ labs(x="PANSS Total Score") +
+ geom_smooth(method= 'lm') +
+ geom_point()
+ )
+p.draw(show=True)
+
+
+p = ( ggplot (SZ_RepeatedMeasures_df) +
+ aes(x="ATPdose", y="Iothers_WB") +
+ labs(x="AP dose (CPZ eq)") +
+ geom_smooth(method= 'lm') +
+ geom_point()
+ )
+p.draw(show=True)
+
+
+#%% Iothers per subject plots
+p = ( ggplot (SZ_RepeatedMeasures_df) +
+ aes(x="ID", y="Iothers_WB", color="Sex") +
+ geom_point() +
+ geom_boxplot()
+ )
+p.draw(show=True)
+
+
+
+
+#%% Pairplots 
+def corrfunc(x, y, **kws):
+    (r, p) = stats.pearsonr(x, y)  
+    ax = plt.gca()
+    print(ax.get_position().ymax)
+    ax.annotate("r = {:.2f} ".format(r),
+                xy=(.05, .8), xycoords=ax.transAxes)
+    ax.annotate("p = {:.3f}".format(p),
+                xy=(.05, .6), xycoords=ax.transAxes)
+  
+sns.set(font_scale=2)
+g = sns.pairplot(df_repmes, kind="reg", diag_kind="hist", hue = "Sess", markers=["o", "D"])
+#g.map(corrfunc)
+
+ax=plt.gca()
+
+new_title = ''
+g._legend.set_title(new_title)
+# replace labels
+new_labels = ['Session 1', 'Session 2']
+for t, l in zip(g._legend.texts, new_labels):
+    t.set_text(l)
+
+
+
+
+#plt.show()    
+    
+
+p = stats.pearsonr(SZ_only.TP, SZ_only.TN)
+print (f"TP-TN: {p}")
+p = stats.pearsonr(SZ_only.TP, SZ_only.TG)
+print (f"TP-TG: {p}")
+p = stats.pearsonr(SZ_only.TP, SZ_only.TPANSS)
+print (f"TP-Total: {p}")
+p = stats.pearsonr(SZ_only.TN, SZ_only.TG)
+print (f"TN-TG: {p}")
+p = stats.pearsonr(SZ_only.TN, SZ_only.TPANSS)
+print (f"TN-Total: {p}")
+p = stats.pearsonr(SZ_only.TG, SZ_only.TPANSS)
+print (f"TG-Total: {p}")
+
+p = stats.pearsonr(SZ_only.TP2, SZ_only.TN2)
+print (f"TP2-TN2: {p}")
+p = stats.pearsonr(SZ_only.TP2, SZ_only.TG2)
+print (f"TP2-TG2: {p}")
+p = stats.pearsonr(SZ_only.TP2, SZ_only.TPANSS2)
+print (f"TP2-Total2: {p}")
+p = stats.pearsonr(SZ_only.TN2, SZ_only.TG2)
+print (f"TN2-TG2: {p}")
+p = stats.pearsonr(SZ_only.TN2, SZ_only.TPANSS2)
+print (f"TN2-Total2: {p}")
+p = stats.pearsonr(SZ_only.TG2, SZ_only.TPANSS2)
+print (f"TG2-Total2: {p}")
+
+
+
+
+#%% Results table: Iselfs & Iothers
+
+mIself_SZ = SZ_df.Iself_WB.mean()
+stdIself_SZ = SZ_df.Iself_WB.std()
+
+mIself_HC = HC_df.Iself_WB.mean()
+stdIself_HC = HC_df.Iself_WB.std()
+
+mDevfHC_S1_SZ = SZ_df.DevFromHealth_S1.mean()
+stdDevfHC_S1_SZ = SZ_df.DevFromHealth_S1.std()
+
+
+stats.ttest_ind(SZ_df.Iself_WB,HC_df.Iself_WB)
+stats.ttest_ind(SZ_df.DevFromHealth_S2,HC_df.DevFromHealth_S2)
 
 #%% Iself GLM:  
     
@@ -523,7 +737,7 @@ uncorrected_p=np.zeros(9)
 uncorrected_p_PANSS=np.zeros(9)
 uncorrected_p_ATP=np.zeros(9)
 
-f = open("Iselfs_GLM_stand.txt", "w")
+f = open("Iselfs_modelresults.txt", "w")
 
 name = 'Iself_WB'
 model = smf.ols((name +' ~ Age + Sex + FDmax + DBS + Group'), data=SZandHC_df_zscore).fit()
@@ -535,6 +749,10 @@ uncorrected_p_PANSS[0]=model.pvalues["deltaPANSS"]
 uncorrected_p_ATP[0]=model.pvalues["deltaATP"]
 print(model.summary(), file = f) 
 
+model = smf.ols((name +' ~ Age + Sex + FDmax + DBS + deltaATP + deltaTP + deltaTN + deltaTG'), data=SZ_only_zscore).fit()  #
+print(model.summary(), file = f) 
+
+
 for idx, network in enumerate(ATLAS.keys()):
     name = 'Iself_' + network
     model = smf.ols( (name +' ~ Age + Sex + FDmax + DBS + Group'), data=SZandHC_df_zscore).fit()
@@ -545,8 +763,10 @@ for idx, network in enumerate(ATLAS.keys()):
     uncorrected_p_PANSS[idx+1]=model.pvalues["deltaPANSS"]
     uncorrected_p_ATP[idx+1]=model.pvalues["deltaATP"]
     print(model.summary(), file = f) 
-
     
+    model = smf.ols( (name +' ~ Age + Sex + FDmax + DBS + deltaATP + deltaTP + deltaTN + deltaTG'), data=SZ_only_zscore).fit()
+    print(model.summary(), file = f) 
+
 f.close()
 
 p_corr=multitest.fdrcorrection(uncorrected_p[1:], alpha=0.05, method='indep', is_sorted=False)[1]
@@ -620,7 +840,6 @@ for idx, network in enumerate(ATLAS.keys()):
 
 filename = '/Users/angeles/Desktop/Iself_plot1000.jpg'
 #plt.savefig(filename, dpi=1000)
-#plt.show()
 plt.show()
 
 #%% Iothers GLM:
@@ -631,41 +850,53 @@ uncorrected_p_ATP=np.zeros(9)
 
 #model: smf.mixedlm (Yvar ~ Age + ... + Group, data = Iothers_df, groups=Iothers_df["ID"])
     
-f = open("Iothers_GLM_stand.txt", "w")
+f = open("Iothers_modelsresults.txt", "w")
 
-print("MODEL: Iothers_WB ~ Age + Sex + FD + DBS + Group + (1|subject) \n", file = f)
-md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + DBS + Group", \
+print("MODEL: Iothers_WB ~ Age + Sex + FD + Group + (1|subject) \n", file = f)
+md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + Group", \
                  data= RepeatedMeasures_df_zscore, groups=RepeatedMeasures_df_zscore["ID"])
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary(),file=f)
 uncorrected_p_GROUP[0]=mdf.pvalues["Group[T.SZ]"]
 
 
-print("MODEL: Iothers_WB ~ Age + Sex + FD + TPANSS+ ATPdose + DBS + (1|subject) \n", file = f)
-md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + DBS + TPANSS + ATPdose", \
+print("MODEL: Iothers_WB ~ Age + Sex + FD + TPANSS + ATPdose + (1|subject) \n", file = f)
+md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + TPANSS + ATPdose", \
                  data= SZ_RepeatedMeasures_df_zscore, groups=SZ_RepeatedMeasures_df_zscore["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary(), file =f )
 uncorrected_p_PANSS[0]=mdf.pvalues["TPANSS"]
 uncorrected_p_ATP[0]=mdf.pvalues["ATPdose"]
 
+print("MODEL: Iothers_WB ~ Age + Sex + FD + TP + TN + TG + ATPdose + (1|subject) \n", file = f)
+md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + TP + TN + TG + ATPdose", \
+                 data= SZ_RepeatedMeasures_df_zscore, groups=SZ_RepeatedMeasures_df_zscore["ID"])  
+mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
+print(mdf.summary(), file =f )
+
 for idx, network in enumerate(ATLAS.keys()):
     name = 'Iothers_' + network
     
-    print("MODEL: "+name+" ~ Age + Sex + FD + DBS + Group + (1|subject) \n", file = f)
-    md = smf.mixedlm("Iothers_"+network+" ~ Age + Sex + FD + DBS + Group", \
+    print("MODEL: "+name+" ~ Age + Sex + FD + Group + (1|subject) \n", file = f)
+    md = smf.mixedlm("Iothers_"+network+" ~ Age + Sex + FD + Group", \
                  data= RepeatedMeasures_df_zscore, groups=RepeatedMeasures_df_zscore["ID"])
     mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
     print(mdf.summary(),file=f)
     uncorrected_p_GROUP[idx+1]=mdf.pvalues["Group[T.SZ]"]
 
-    print("MODEL: "+name+" ~ Age + Sex + FD + DBS + TPANSS + ATPdose + (1|subject) \n", file = f)
-    md = smf.mixedlm("Iothers_"+network+" ~ Age + Sex + FD + DBS + TPANSS + ATPdose", \
+    print("MODEL: "+name+" ~ Age + Sex + FD + TPANSS + ATPdose + (1|subject) \n", file = f)
+    md = smf.mixedlm("Iothers_"+network+" ~ Age + Sex + FD + TPANSS + ATPdose", \
                      data= SZ_RepeatedMeasures_df_zscore, groups=SZ_RepeatedMeasures_df_zscore["ID"])  
     mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
     print(mdf.summary(), file =f )
     uncorrected_p_PANSS[idx+1]=mdf.pvalues["TPANSS"]
     uncorrected_p_ATP[idx+1]=mdf.pvalues["ATPdose"]
+    
+    print("MODEL: "+name+" ~ Age + Sex + FD + TP + TN + TG + ATPdose + (1|subject) \n", file = f)
+    md = smf.mixedlm("Iothers_"+network+" ~ Age + Sex + FD + TP + TN + TG + ATPdose", \
+                     data= SZ_RepeatedMeasures_df_zscore, groups=SZ_RepeatedMeasures_df_zscore["ID"])  
+    mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
+    print(mdf.summary(), file =f )
 
 f.close()
 
@@ -677,7 +908,7 @@ p_corrATP=multitest.fdrcorrection(uncorrected_p_ATP[1:], alpha=0.05, method='ind
 #%%     # Plot residuals (model without Group as variable)
 
 name = 'Iothers_WB'
-md = smf.mixedlm(name+" ~ Age + Sex + FD + DBS", \
+md = smf.mixedlm(name+" ~ Age + Sex + FD ", \
                data= RepeatedMeasures_df_zscore, groups=RepeatedMeasures_df_zscore["ID"])    
 mdf = md.fit()
 
@@ -714,12 +945,9 @@ ax.set_ylabel("Residuals", fontsize=30)
 ax.set_title("Iothers_WholeBrain", fontsize=30)
 ax.tick_params(axis='both', which='major', labelsize=25)
 
-#ax.text(.5,.5,"p value: {:.3f}".format(Text[1]))  
-#SE ME PONE EL TEXTO EN CUALQUIER LADO. NDEAH!
-
 for idx, network in enumerate(ATLAS.keys()):
     name = 'Iothers_' + network
-    md= smf.mixedlm( (name +' ~ Age + Sex + FD + DBS '), \
+    md= smf.mixedlm( (name +' ~ Age + Sex + FD '), \
                    data= RepeatedMeasures_df_zscore, groups=RepeatedMeasures_df_zscore["ID"])    
     mdf = md.fit()
     
@@ -742,146 +970,91 @@ for idx, network in enumerate(ATLAS.keys()):
     ax.tick_params(axis='both', which='major', labelsize=25)
 
 
-    # plt.show()
+    
 filename = '/Users/angeles/Desktop/Iothers_plot1000.jpg'
 #plt.savefig(filename, dpi=1000)
-
-#%% DevfHC GLM:
+plt.show()
+#%% DevfHC Repeated measures GLM:
  # Mixed effects: two measures per subject
 
     #model: smf.mixedlm (Yvar ~ Age + ... + Group, data = Iothers_df, groups=Iothers_df["ID"])
     
-f = open("DevfHC_GLM_stand.txt", "w")
+f = open("DevfHC_modelsresults.txt", "w")
 
-print("MODEL: DevfromHealth_value ~ Age + FD + Sex + DBS + Group + (1|subject) \n", file = f)
-md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD + DBS + Group", \
+print("MODEL: DevfromHealth_value ~ Age + FD + Sex + Group + (1|subject) \n", file = f)
+md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD + Group", \
                  data= RepeatedMeasures_df_zscore, groups=RepeatedMeasures_df_zscore["ID"])
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary(),file=f)
 
 
+print("MODEL: DevfromHealth_value ~ Age + Sex + FD + TPANSS + ATPdose + (1|subject) \n", file = f)
+md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD + TPANSS + ATPdose ", \
+                 data= SZ_RepeatedMeasures_df_zscore, groups=SZ_RepeatedMeasures_df_zscore["ID"])  
+mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
+print(mdf.summary(), file =f )
 
-print("MODEL: DevfromHealth_value ~ Age + Sex + FD + DBS +TPANSS+ + ATPdose + (1|subject) \n", file = f)
-md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD + DBS + TPANSS + ATPdose ", \
+
+print("MODEL: DevfromHealth_value ~ Age + Sex + FD + TP + TN + TG + ATPdose + (1|subject) \n", file = f)
+md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD + TP + TN + TG + ATPdose ", \
                  data= SZ_RepeatedMeasures_df_zscore, groups=SZ_RepeatedMeasures_df_zscore["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary(), file =f )
 
 f.close()
 
-#%% Plots: Deviation from healthy FC
 
-fig, axes = plt.subplots(1, 2, sharex=True, figsize=(10,5))
-fig.suptitle('Deviation from Healthy FC')
-axes[0].set_title('Session 1')
-axes[1].set_title('Session 2')
-sns.violinplot(data= SZandHC_df,y="DevFromHealth_S1", x="Group", ax=axes[0])
-sns.violinplot(data= SZandHC_df, y="DevFromHealth_S2", x="Group", ax=axes[1])
+p = ( ggplot (SZ_RepeatedMeasures_df) +
+ aes(x="TN", y="DevfromHealth_value") +
+ labs() +
+ geom_smooth(method= 'lm') +
+ geom_point()
+ )
+p.draw(show=True)
 
-
-fig, (ax1,ax2) = plt.subplots(1, 2, sharex=True, figsize=(10,5))
-fig.suptitle('Deviation from Healthy FC')
-ax1.set_title('Session 1')
-ax2.set_title('Session 2')
-bins=[.2,.225,.25,.275,.3,.325,.35,.375,.4,.425,.45,.475,.50,.525,.55,.575,.60,.625,.65,.675,.70]
-sns.histplot(SZandHC_df, x="DevFromHealth_S1", hue="Group", bins=bins, kde=True,ax=ax1)
-sns.histplot(SZandHC_df, x="DevFromHealth_S2", hue="Group", bins=bins, kde=True, ax=ax2)
-
-sns.displot(x=SZandHC_df.DevFromHealth_S1[SZandHC_df.Group=='HC'], kind= "kde", fill=True)
-
-#HCsess1 - SZsess1 
-stats.ttest_ind(SZandHC_df.DevFromHealth_S1[SZandHC_df.Group=='HC'],SZandHC_df.DevFromHealth_S1[SZandHC_df.Group=='SZ'])
-#HCsess2 - SZsess1
-stats.ttest_ind(SZandHC_df.DevFromHealth_S1[SZandHC_df.Group=='HC'],SZandHC_df.DevFromHealth_S2[SZandHC_df.Group=='SZ'])
-#HCsess1 - SZsess2 
-stats.ttest_ind(SZandHC_df.DevFromHealth_S1[SZandHC_df.Group=='HC'],SZandHC_df.DevFromHealth_S2[SZandHC_df.Group=='SZ'])
-#HCsess2 - SZsess2 
-stats.ttest_ind(SZandHC_df.DevFromHealth_S2[SZandHC_df.Group=='HC'],SZandHC_df.DevFromHealth_S2[SZandHC_df.Group=='SZ'])
-#HCsess1 - HCsess2
-stats.ttest_ind(SZandHC_df.DevFromHealth_S1[SZandHC_df.Group=='HC'],SZandHC_df.DevFromHealth_S2[SZandHC_df.Group=='HC'])
-#SZsess1 - SZsess2
-stats.ttest_ind(SZandHC_df.DevFromHealth_S1[SZandHC_df.Group=='SZ'],SZandHC_df.DevFromHealth_S2[SZandHC_df.Group=='SZ'])
-
-
-#stats.ttest_ind(DevFromHealth_S1_HC,DevFromHealth_S1_SZ)
-
-#%% GGplot
-
-name = 'Iself_WB'
-model = smf.ols((name +' ~ Age + Sex + FDmax '), data=SZandHC_df).fit()
-
-Resid = [model.resid[SZandHC_df.Group == id] for id in SZandHC_df.Group.unique()]
-Text=stats.ttest_ind(Resid[0], Resid[1])
-print(name + 'p-val: ' + str(Text[1]))
-
-r0=np.concatenate((Resid[0].to_numpy(),Resid[1].to_numpy()))
-
-p0 = (
-    ggplot(data=SZandHC_df)
-    + aes(x='Group', y='r0')
-    + geom_jitter(alpha=0.2)
-    + geom_boxplot(alpha=0.)
-)
-
-#p0.draw(show=True)
-
-
-for idx, network in enumerate(ATLAS.keys()):
-    name = 'Iself_' + network
-    model= smf.ols( (name +' ~ Age + Sex + FDmax'), data=SZandHC_df).fit()
-       
-    Resid = [model.resid[SZandHC_df.Group == id ] for id in SZandHC_df.Group.unique()]   
-    Text=stats.ttest_ind(Resid[0], Resid[1])
-    print(name + ' p-val: ' + str(Text[1]))
+#%% delta DevfHC GLM:  
     
-    r=np.concatenate((Resid[0].to_numpy(),Resid[1].to_numpy()))
+# Make text file with model summaries (including Group as variable)    
 
+f = open("deltaDevfHC_modelsresults.txt", "w")
 
+name = 'deltaDevfHC_signed'
+model = smf.ols((name +' ~ Age + Sex + FDmax + Group'), data=SZandHC_df_zscore).fit()
+print(model.summary(), file = f)
 
+model = smf.ols((name +' ~ Age + Sex + FDmax + deltaATP_signed + deltaPANSS_signed'), data=SZ_only_zscore).fit()  #
+print(model.summary(), file = f) 
 
-p1 = (
-      ggplot(data=SZandHC_df)
-      + aes(x='Group', y='r')
-      + geom_jitter(alpha=0.2)
-      + geom_boxplot(alpha=0.)
-    )
+model = smf.ols((name +' ~ Age + Sex + FDmax + deltaATP_signed + deltaTP_signed + deltaTN_signed + deltaTG_signed'), data=SZ_only_zscore).fit()  #
+print(model.summary(), file = f) 
     
-p0 = pw.load_ggplot(p0, figsize=(3,3))
-p1 = pw.load_ggplot(p1, figsize=(3,3))
-
-p12 = (p0/p1)
-p12.savefig() 
+f.close()
 
 
+p = ( ggplot (SZ_only) +
+ aes(x="deltaPANSS_signed", y="deltaDevfHC_signed") +
+ labs(y="deltaDevfHC") +
+ geom_smooth(method= 'lm') +
+ geom_point()
+ )
+p.draw(show=True)
 
 
-p1 = (
-    ggplot(SZandHC_df)
-    + aes(x="Group", y= "DevFromHealth_S2")
-    + labs(title="by Group")
-    + geom_boxplot()
-)
-p1.draw(show=True)
-
-p2 = (
-    ggplot(SZ_only)
-    + aes(x="TPANSS", y= "Iself_WB")
-    + labs(title="LinReg")
-    + geom_smooth(method='lm')
-    + geom_point()
-)
-p2.draw(show=True)
+p = ( ggplot (SZ_only) +
+ aes(x="deltaTN_signed", y="deltaDevfHC_signed") +
+ labs() +
+ geom_smooth(method= 'lm') +
+ geom_point()
+ )
+p.draw(show=True)
 
 
-p1 = pw.load_ggplot(p1, figsize=(3,3))
-p2 = pw.load_ggplot(p2, figsize=(3,3))
 
-g1234 = (p1/p2)
-g1234.savefig()
-#%% PLOTS NUEVOS
+#%% PLOTS: corr con variables clinicas
+labels = ["HC","FEP"]
 
 name = 'Iothers_WB'
-md = smf.mixedlm(name+" ~ Age + Sex + DBS + FD", \
+md = smf.mixedlm(name+" ~ Age + Sex + FD", \
                data= RepeatedMeasures_df, groups=RepeatedMeasures_df["ID"])    
 mdf = md.fit()
 
@@ -908,7 +1081,7 @@ ax = fig.add_subplot(3,3,9)
 sm.graphics.beanplot(Resid, ax=ax, labels=labels, plot_opts=plot_opts,  \
                      jitter=True)
 ax.set_xlabel("Group")
-ax.set_ylabel("Residuals \n (Iothers ~ Age + Sex + FD + DBS)")
+ax.set_ylabel("Residuals \n (Iothers ~ Age + Sex + FD)")
 ax.set_title("Iothers_WholeBrain")
 #ax.text(.5,.5,"p value: {:.3f}".format(Text[1]))  
 #SE ME PONE EL TEXTO EN CUALQUIER LADO. NDEAH!
@@ -918,7 +1091,7 @@ ax.set_title("Iothers_WholeBrain")
 #plt.savefig(filename, dpi=1000)
 
 
-md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + DBS +  ATPdose", \
+md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD +  ATPdose", \
                  data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary())
@@ -928,11 +1101,11 @@ x=SZ_RepeatedMeasures_df.TPANSS
 y= mdf.resid
 ax=sns.regplot(x, y)
 ax.set_xlabel("PANSS total")
-ax.set_ylabel("Residuals \n (Iothers ~ Age + Sex + FD + DBS + APdose)")
+ax.set_ylabel("Residuals \n (Iothers ~ Age + Sex + FD + APdose)")
 ax.set_title("Iothers vs PANSS")
 
 
-md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + DBS + TPANSS", \
+md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + TPANSS", \
                  data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary())
@@ -942,7 +1115,7 @@ x=SZ_RepeatedMeasures_df.ATPdose
 y= mdf.resid
 ax=sns.regplot(x, y)
 ax.set_xlabel("AP Dose")
-ax.set_ylabel("Residuals \n (Iothers ~ Age + Sex + FD + DBS + TPANSS)")
+ax.set_ylabel("Residuals \n (Iothers ~ Age + Sex + FD + TPANSS)")
 ax.set_title("Iothers vs AP dose")
 
 
@@ -1005,7 +1178,7 @@ ax.set_title("Iself vs delta PANSS")
 
 
 name='DevfromHealth_value'
-md = smf.mixedlm(name+" ~ Age + Sex + DBS +  FD", \
+md = smf.mixedlm(name+" ~ Age + Sex + FD", \
                  data= RepeatedMeasures_df, groups=RepeatedMeasures_df["ID"])
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary())
@@ -1032,12 +1205,12 @@ ax = fig.add_subplot(3,3,9)
 sm.graphics.beanplot(Resid, ax=ax, labels=labels, plot_opts=plot_opts,  \
                      jitter=True)
 ax.set_xlabel("Group")
-ax.set_ylabel("Residuals \n (DevfromHealthyFC ~ Age + Sex + FD + DBS)")
+ax.set_ylabel("Residuals \n (DevfromHealthyFC ~ Age + Sex + FD )")
 ax.set_title("Dev from healthy FC")
 
 
 
-md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD + DBS + TPANSS ", \
+md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD + TPANSS ", \
                  data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary())
@@ -1047,11 +1220,11 @@ x=SZ_RepeatedMeasures_df.ATPdose
 y= mdf.resid
 ax=sns.regplot(x, y)
 ax.set_xlabel("AP dose")
-ax.set_ylabel("Residuals \n (DevHFC~ Age + Sex + FD + DBS + TPANSS)")
+ax.set_ylabel("Residuals \n (DevHFC~ Age + Sex + FD + TPANSS)")
 ax.set_title("DevHFC vs AP dose")
 
 
-md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD + DBS + ATPdose ", \
+md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD  + ATPdose ", \
                  data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
 mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
 print(mdf.summary())
@@ -1061,56 +1234,10 @@ x=SZ_RepeatedMeasures_df.TPANSS
 y= mdf.resid
 ax=sns.regplot(x, y)
 ax.set_xlabel("TPANSS")
-ax.set_ylabel("Residuals \n (DevHFC~ Age + Sex + FD + DBS + APdose)")
+ax.set_ylabel("Residuals \n (DevHFC~ Age + Sex + FD + APdose)")
 ax.set_title("DevHFC vs PANSS total")
 
 
-#%% (TO EXCLUDE OR NOT TO EXCLUDE subjects with fdmax >0.5)
-"""
-fig1= plt.figure(figsize=(20,20));
-ax1=fig1.add_subplot(10,1,1)
-plt.plot(SZandHC_df.index,SZandHC_df.Iself_WB)
-plt.plot(SZandHC_df.index,[x * SZandHC_df.Iself_WB.mean() for x in np.ones(len(SZandHC_df))],'--')
-xcoords = SZandHC_df.index[SZandHC_df.FDmax>0.5]
-for xc in xcoords:
-    plt.axvline(x=xc,color='r', linestyle = '--', linewidth=1)
-ax1.set_title('Iselfs ~  FDmax ')
-ax1.set_ylabel('Iself WB')
-ax2=fig1.add_subplot(10,1,10)
-plt.plot(SZandHC_df.index,SZandHC_df.FDmax)
-plt.plot(SZandHC_df.index,[x * 0.5 for x in np.ones(len(SZandHC_df))],'--r')
-ax2.set_ylabel("FDmax")
-
-for idx, network in enumerate(ATLAS.keys()):
-    name = 'Iself_' + network
-    ax=fig1.add_subplot(10,1,idx+2)
-    plt.plot(SZandHC_df.index,SZandHC_df[name])
-    plt.plot(SZandHC_df.index,[x * SZandHC_df[name].mean() for x in np.ones(len(SZandHC_df))],'--')
-    ax.set_ylabel(name)
-    xcoords = SZandHC_df.index[SZandHC_df.FDmax>0.5]
-    for xc in xcoords:
-        plt.axvline(x=xc,color='r', linestyle = '--', linewidth=1)
- 
-    
-corrFD=stats.pearsonr(SZandHC_df.FDmax,SZandHC_df["Iself_WB"])
-print(f'FDmax_corr_IselfWB: \n Pearson r: {corrFD[0]:.3f} \t p-val: {corrFD[1]:.3f}')
-        
-for idx, network in enumerate(ATLAS.keys()):
-    name = 'Iself_' + network
-    corrFD=stats.pearsonr(SZandHC_df.FDmax,SZandHC_df[name])
-    print(f'FDmax_corr_{name}: \n Pearson r: {corrFD[0]:.3f} \t p-val: {corrFD[1]:.3f}')
- 
-    
-print(" \n Excluding fdmax > 0.5") 
-corrFD=stats.pearsonr(SZandHC_df.FDmax[SZandHC_df.FDmax<0.5],SZandHC_df.Iself_WB[SZandHC_df.FDmax<0.5])
-print(f'FDmax_corr_IselfWB: \n Pearson r: {corrFD[0]:.3f} \t p-val: {corrFD[1]:.3f}')
-        
-for idx, network in enumerate(ATLAS.keys()):
-    name = 'Iself_' + network
-    corrFD=stats.pearsonr(SZandHC_df.FDmax[SZandHC_df.FDmax<0.5],SZandHC_df[name][SZandHC_df.FDmax<0.5])
-    print(f'FDmax_corr_{name}: \n Pearson r: {corrFD[0]:.3f} \t p-val: {corrFD[1]:.3f}')
-    
-"""
 
 
 
