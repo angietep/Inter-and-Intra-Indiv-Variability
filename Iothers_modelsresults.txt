@@ -1,0 +1,603 @@
+MODEL: Iothers_WB ~ Age + Sex + FD + Group + (1|subject) 
+
+         Mixed Linear Model Regression Results
+========================================================
+Model:            MixedLM Dependent Variable: Iothers_WB
+No. Observations: 122     Method:             REML      
+No. Groups:       61      Scale:              0.6986    
+Min. group size:  2       Log-Likelihood:     -169.4039 
+Max. group size:  2       Converged:          Yes       
+Mean group size:  2.0                                   
+--------------------------------------------------------
+              Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+--------------------------------------------------------
+Intercept      0.216    0.198  1.091 0.275 -0.172  0.604
+Sex[T.M]       0.208    0.211  0.982 0.326 -0.207  0.622
+Group[T.SZ]   -0.716    0.224 -3.193 0.001 -1.156 -0.276
+Age           -0.021    0.115 -0.187 0.852 -0.247  0.204
+FD            -0.029    0.086 -0.337 0.736 -0.197  0.139
+Group Var      0.224    0.179                           
+========================================================
+
+MODEL: Iothers_WB ~ Age + Sex + FD + TPANSS + ATPdose + (1|subject) 
+
+         Mixed Linear Model Regression Results
+========================================================
+Model:            MixedLM Dependent Variable: Iothers_WB
+No. Observations: 56      Method:             REML      
+No. Groups:       28      Scale:              0.8559    
+Min. group size:  2       Log-Likelihood:     -78.2279  
+Max. group size:  2       Converged:          Yes       
+Mean group size:  2.0                                   
+--------------------------------------------------------
+              Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+--------------------------------------------------------
+Intercept     -0.419    0.246 -1.703 0.089 -0.900  0.063
+Sex[T.M]       0.586    0.297  1.970 0.049  0.003  1.169
+Age           -0.076    0.129 -0.587 0.557 -0.329  0.177
+FD             0.141    0.128  1.099 0.272 -0.111  0.393
+TPANSS        -0.286    0.129 -2.217 0.027 -0.539 -0.033
+ATPdose       -0.259    0.136 -1.905 0.057 -0.526  0.007
+Group Var      0.000    0.205                           
+========================================================
+
+MODEL: Iothers_WB ~ Age + Sex + FD + TP + TN + TG + ATPdose + (1|subject) 
+
+         Mixed Linear Model Regression Results
+========================================================
+Model:            MixedLM Dependent Variable: Iothers_WB
+No. Observations: 56      Method:             REML      
+No. Groups:       28      Scale:              0.7730    
+Min. group size:  2       Log-Likelihood:     -76.6096  
+Max. group size:  2       Converged:          Yes       
+Mean group size:  2.0                                   
+--------------------------------------------------------
+              Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+--------------------------------------------------------
+Intercept     -0.430    0.234 -1.836 0.066 -0.889  0.029
+Sex[T.M]       0.602    0.284  2.122 0.034  0.046  1.159
+Age           -0.141    0.126 -1.115 0.265 -0.389  0.107
+FD             0.073    0.129  0.564 0.573 -0.180  0.325
+TP             0.012    0.144  0.080 0.936 -0.271  0.295
+TN            -0.521    0.164 -3.181 0.001 -0.842 -0.200
+TG             0.126    0.178  0.708 0.479 -0.223  0.474
+ATPdose       -0.214    0.128 -1.676 0.094 -0.464  0.036
+Group Var      0.000    0.198                           
+========================================================
+
+MODEL: Iothers_VIS ~ Age + Sex + FD + Group + (1|subject) 
+
+          Mixed Linear Model Regression Results
+=========================================================
+Model:            MixedLM Dependent Variable: Iothers_VIS
+No. Observations: 122     Method:             REML       
+No. Groups:       61      Scale:              0.8075     
+Min. group size:  2       Log-Likelihood:     -173.6058  
+Max. group size:  2       Converged:          Yes        
+Mean group size:  2.0                                    
+---------------------------------------------------------
+               Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+---------------------------------------------------------
+Intercept       0.411    0.197  2.082 0.037  0.024  0.798
+Sex[T.M]       -0.248    0.211 -1.174 0.240 -0.661  0.166
+Group[T.SZ]    -0.505    0.224 -2.261 0.024 -0.944 -0.067
+Age            -0.104    0.115 -0.903 0.366 -0.328  0.121
+FD              0.067    0.090  0.744 0.457 -0.109  0.243
+Group Var       0.166    0.165                           
+=========================================================
+
+MODEL: Iothers_VIS ~ Age + Sex + FD + TPANSS + ATPdose + (1|subject) 
+
+          Mixed Linear Model Regression Results
+=========================================================
+Model:            MixedLM Dependent Variable: Iothers_VIS
+No. Observations: 56      Method:             REML       
+No. Groups:       28      Scale:              0.6652     
+Min. group size:  2       Log-Likelihood:     -80.3706   
+Max. group size:  2       Converged:          Yes        
+Mean group size:  2.0                                    
+----------------------------------------------------------
+           Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+----------------------------------------------------------
+Intercept   0.224     0.305   0.733  0.464  -0.375   0.822
+Sex[T.M]   -0.313     0.368  -0.851  0.394  -1.035   0.408
+Age         0.040     0.162   0.244  0.807  -0.279   0.358
+FD         -0.006     0.126  -0.044  0.965  -0.252   0.241
+TPANSS     -0.304     0.137  -2.219  0.026  -0.572  -0.035
+ATPdose    -0.131     0.140  -0.938  0.348  -0.406   0.143
+Group Var   0.344     0.355                               
+=========================================================
+
+MODEL: Iothers_VIS ~ Age + Sex + FD + TP + TN + TG + ATPdose + (1|subject) 
+
+          Mixed Linear Model Regression Results
+=========================================================
+Model:            MixedLM Dependent Variable: Iothers_VIS
+No. Observations: 56      Method:             REML       
+No. Groups:       28      Scale:              0.6799     
+Min. group size:  2       Log-Likelihood:     -81.5163   
+Max. group size:  2       Converged:          Yes        
+Mean group size:  2.0                                    
+----------------------------------------------------------
+           Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+----------------------------------------------------------
+Intercept   0.232     0.308   0.754  0.451  -0.371   0.835
+Sex[T.M]   -0.325     0.371  -0.875  0.382  -1.052   0.403
+Age         0.026     0.166   0.158  0.874  -0.300   0.353
+FD         -0.029     0.132  -0.219  0.827  -0.288   0.230
+TP         -0.154     0.153  -1.002  0.317  -0.454   0.147
+TN         -0.322     0.186  -1.733  0.083  -0.686   0.042
+TG          0.058     0.197   0.296  0.767  -0.328   0.444
+ATPdose    -0.120     0.141  -0.847  0.397  -0.396   0.157
+Group Var   0.343     0.358                               
+=========================================================
+
+MODEL: Iothers_SOM ~ Age + Sex + FD + Group + (1|subject) 
+
+          Mixed Linear Model Regression Results
+=========================================================
+Model:            MixedLM Dependent Variable: Iothers_SOM
+No. Observations: 122     Method:             REML       
+No. Groups:       61      Scale:              0.6081     
+Min. group size:  2       Log-Likelihood:     -160.4955  
+Max. group size:  2       Converged:          Yes        
+Mean group size:  2.0                                    
+---------------------------------------------------------
+               Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+---------------------------------------------------------
+Intercept       0.302    0.182  1.658 0.097 -0.055  0.659
+Sex[T.M]        0.264    0.195  1.358 0.175 -0.117  0.646
+Group[T.SZ]    -0.966    0.206 -4.684 0.000 -1.371 -0.562
+Age             0.042    0.106  0.393 0.694 -0.166  0.249
+FD              0.018    0.084  0.213 0.831 -0.146  0.182
+Group Var       0.181    0.170                           
+=========================================================
+
+MODEL: Iothers_SOM ~ Age + Sex + FD + TPANSS + ATPdose + (1|subject) 
+
+          Mixed Linear Model Regression Results
+=========================================================
+Model:            MixedLM Dependent Variable: Iothers_SOM
+No. Observations: 56      Method:             REML       
+No. Groups:       28      Scale:              0.6375     
+Min. group size:  2       Log-Likelihood:     -79.8157   
+Max. group size:  2       Converged:          Yes        
+Mean group size:  2.0                                    
+----------------------------------------------------------
+           Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+----------------------------------------------------------
+Intercept  -0.236     0.306  -0.770  0.441  -0.835   0.364
+Sex[T.M]    0.330     0.369   0.895  0.371  -0.393   1.053
+Age         0.048     0.162   0.296  0.768  -0.270   0.366
+FD          0.143     0.129   1.110  0.267  -0.109   0.395
+TPANSS     -0.303     0.126  -2.405  0.016  -0.550  -0.056
+ATPdose    -0.015     0.140  -0.104  0.917  -0.289   0.260
+Group Var   0.358     0.357                               
+=========================================================
+
+MODEL: Iothers_SOM ~ Age + Sex + FD + TP + TN + TG + ATPdose + (1|subject) 
+
+          Mixed Linear Model Regression Results
+=========================================================
+Model:            MixedLM Dependent Variable: Iothers_SOM
+No. Observations: 56      Method:             REML       
+No. Groups:       28      Scale:              0.4885     
+Min. group size:  2       Log-Likelihood:     -76.7609   
+Max. group size:  2       Converged:          Yes        
+Mean group size:  2.0                                    
+----------------------------------------------------------
+           Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+----------------------------------------------------------
+Intercept  -0.246     0.298  -0.828  0.408  -0.830   0.337
+Sex[T.M]    0.345     0.359   0.962  0.336  -0.358   1.048
+Age        -0.034     0.161  -0.211  0.833  -0.350   0.282
+FD          0.013     0.129   0.104  0.917  -0.240   0.266
+TP          0.026     0.139   0.187  0.851  -0.246   0.298
+TN         -0.626     0.165  -3.781  0.000  -0.950  -0.301
+TG          0.155     0.181   0.857  0.391  -0.200   0.510
+ATPdose     0.013     0.125   0.106  0.915  -0.232   0.259
+Group Var   0.400     0.427                               
+=========================================================
+
+MODEL: Iothers_DORSATT ~ Age + Sex + FD + Group + (1|subject) 
+
+            Mixed Linear Model Regression Results
+=============================================================
+Model:            MixedLM Dependent Variable: Iothers_DORSATT
+No. Observations: 122     Method:             REML           
+No. Groups:       61      Scale:              0.9121         
+Min. group size:  2       Log-Likelihood:     -171.4209      
+Max. group size:  2       Converged:          Yes            
+Mean group size:  2.0                                        
+--------------------------------------------------------------
+               Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+--------------------------------------------------------------
+Intercept       0.496     0.178   2.784  0.005   0.147   0.845
+Sex[T.M]       -0.238     0.190  -1.250  0.211  -0.611   0.135
+Group[T.SZ]    -0.691     0.202  -3.426  0.001  -1.086  -0.296
+Age            -0.213     0.104  -2.060  0.039  -0.417  -0.010
+FD              0.105     0.089   1.181  0.237  -0.069   0.279
+Group Var       0.007     0.126                               
+=============================================================
+
+MODEL: Iothers_DORSATT ~ Age + Sex + FD + TPANSS + ATPdose + (1|subject) 
+
+            Mixed Linear Model Regression Results
+=============================================================
+Model:            MixedLM Dependent Variable: Iothers_DORSATT
+No. Observations: 56      Method:             REML           
+No. Groups:       28      Scale:              0.7649         
+Min. group size:  2       Log-Likelihood:     -77.5094       
+Max. group size:  2       Converged:          Yes            
+Mean group size:  2.0                                        
+--------------------------------------------------------------
+               Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+--------------------------------------------------------------
+Intercept       0.182     0.253   0.719  0.472  -0.314   0.677
+Sex[T.M]       -0.254     0.305  -0.833  0.405  -0.852   0.344
+Age            -0.389     0.133  -2.918  0.004  -0.651  -0.128
+FD              0.049     0.124   0.397  0.692  -0.193   0.291
+TPANSS         -0.355     0.126  -2.824  0.005  -0.601  -0.109
+ATPdose         0.066     0.130   0.508  0.612  -0.189   0.321
+Group Var       0.074     0.207                               
+=============================================================
+
+MODEL: Iothers_DORSATT ~ Age + Sex + FD + TP + TN + TG + ATPdose + (1|subject) 
+
+            Mixed Linear Model Regression Results
+=============================================================
+Model:            MixedLM Dependent Variable: Iothers_DORSATT
+No. Observations: 56      Method:             REML           
+No. Groups:       28      Scale:              0.7876         
+Min. group size:  2       Log-Likelihood:     -79.2062       
+Max. group size:  2       Converged:          Yes            
+Mean group size:  2.0                                        
+--------------------------------------------------------------
+               Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+--------------------------------------------------------------
+Intercept       0.175     0.259   0.677  0.499  -0.332   0.682
+Sex[T.M]       -0.245     0.313  -0.784  0.433  -0.858   0.368
+Age            -0.388     0.140  -2.774  0.006  -0.663  -0.114
+FD              0.053     0.130   0.412  0.680  -0.201   0.308
+TP             -0.091     0.151  -0.599  0.549  -0.387   0.206
+TN             -0.083     0.173  -0.480  0.631  -0.423   0.257
+TG             -0.248     0.189  -1.314  0.189  -0.619   0.122
+ATPdose         0.061     0.133   0.456  0.648  -0.200   0.322
+Group Var       0.082     0.213                               
+=============================================================
+
+MODEL: Iothers_VENTATT ~ Age + Sex + FD + Group + (1|subject) 
+
+            Mixed Linear Model Regression Results
+=============================================================
+Model:            MixedLM Dependent Variable: Iothers_VENTATT
+No. Observations: 122     Method:             REML           
+No. Groups:       61      Scale:              0.7367         
+Min. group size:  2       Log-Likelihood:     -163.9839      
+Max. group size:  2       Converged:          Yes            
+Mean group size:  2.0                                        
+--------------------------------------------------------------
+               Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+--------------------------------------------------------------
+Intercept       0.429     0.175   2.455  0.014   0.087   0.772
+Sex[T.M]        0.113     0.187   0.606  0.545  -0.253   0.480
+Group[T.SZ]    -1.024     0.198  -5.171  0.000  -1.412  -0.636
+Age            -0.090     0.102  -0.886  0.375  -0.290   0.109
+FD             -0.004     0.083  -0.044  0.965  -0.166   0.159
+Group Var       0.079     0.136                               
+=============================================================
+
+MODEL: Iothers_VENTATT ~ Age + Sex + FD + TPANSS + ATPdose + (1|subject) 
+
+            Mixed Linear Model Regression Results
+=============================================================
+Model:            MixedLM Dependent Variable: Iothers_VENTATT
+No. Observations: 56      Method:             REML           
+No. Groups:       28      Scale:              0.8816         
+Min. group size:  2       Log-Likelihood:     -79.2943       
+Max. group size:  2       Converged:          Yes            
+Mean group size:  2.0                                        
+--------------------------------------------------------------
+               Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+--------------------------------------------------------------
+Intercept      -0.192     0.252  -0.760  0.447  -0.686   0.303
+Sex[T.M]        0.268     0.305   0.880  0.379  -0.329   0.866
+Age            -0.111     0.133  -0.833  0.405  -0.371   0.150
+FD              0.010     0.129   0.075  0.941  -0.243   0.262
+TPANSS         -0.417     0.130  -3.213  0.001  -0.671  -0.163
+ATPdose         0.040     0.133   0.302  0.762  -0.221   0.302
+Group Var       0.012     0.189                               
+=============================================================
+
+MODEL: Iothers_VENTATT ~ Age + Sex + FD + TP + TN + TG + ATPdose + (1|subject) 
+
+            Mixed Linear Model Regression Results
+=============================================================
+Model:            MixedLM Dependent Variable: Iothers_VENTATT
+No. Observations: 56      Method:             REML           
+No. Groups:       28      Scale:              0.8347         
+Min. group size:  2       Log-Likelihood:     -80.3465       
+Max. group size:  2       Converged:          Yes            
+Mean group size:  2.0                                        
+--------------------------------------------------------------
+               Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+--------------------------------------------------------------
+Intercept      -0.191     0.263  -0.724  0.469  -0.707   0.326
+Sex[T.M]        0.267     0.319   0.838  0.402  -0.357   0.892
+Age            -0.137     0.143  -0.957  0.339  -0.418   0.144
+FD             -0.022     0.134  -0.165  0.869  -0.285   0.241
+TP             -0.137     0.162  -0.844  0.399  -0.454   0.181
+TN             -0.395     0.186  -2.123  0.034  -0.759  -0.030
+TG             -0.018     0.192  -0.094  0.925  -0.395   0.359
+ATPdose         0.063     0.136   0.459  0.646  -0.204   0.329
+Group Var       0.076     0.234                               
+=============================================================
+
+MODEL: Iothers_LIMBIC ~ Age + Sex + FD + Group + (1|subject) 
+
+           Mixed Linear Model Regression Results
+============================================================
+Model:            MixedLM Dependent Variable: Iothers_LIMBIC
+No. Observations: 122     Method:             REML          
+No. Groups:       61      Scale:              0.9050        
+Min. group size:  2       Log-Likelihood:     -175.9643     
+Max. group size:  2       Converged:          Yes           
+Mean group size:  2.0                                       
+-------------------------------------------------------------
+              Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+-------------------------------------------------------------
+Intercept      0.213     0.194   1.099  0.272  -0.167   0.593
+Sex[T.M]       0.030     0.207   0.147  0.883  -0.375   0.436
+Group[T.SZ]   -0.473     0.219  -2.158  0.031  -0.903  -0.043
+Age           -0.117     0.113  -1.038  0.299  -0.338   0.104
+FD             0.038     0.092   0.411  0.681  -0.143   0.219
+Group Var      0.095     0.151                               
+============================================================
+
+MODEL: Iothers_LIMBIC ~ Age + Sex + FD + TPANSS + ATPdose + (1|subject) 
+
+           Mixed Linear Model Regression Results
+============================================================
+Model:            MixedLM Dependent Variable: Iothers_LIMBIC
+No. Observations: 56      Method:             REML          
+No. Groups:       28      Scale:              1.0632        
+Min. group size:  2       Log-Likelihood:     -83.6501      
+Max. group size:  2       Converged:          Yes           
+Mean group size:  2.0                                       
+-------------------------------------------------------------
+              Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+-------------------------------------------------------------
+Intercept     -0.218     0.274  -0.795  0.426  -0.754   0.319
+Sex[T.M]       0.305     0.331   0.920  0.357  -0.344   0.953
+Age            0.032     0.144   0.219  0.827  -0.251   0.314
+FD             0.133     0.143   0.930  0.352  -0.148   0.415
+TPANSS        -0.096     0.163  -0.587  0.557  -0.416   0.224
+ATPdose       -0.125     0.164  -0.764  0.445  -0.446   0.196
+Group Var      0.000     0.294                               
+============================================================
+
+MODEL: Iothers_LIMBIC ~ Age + Sex + FD + TP + TN + TG + ATPdose + (1|subject) 
+
+           Mixed Linear Model Regression Results
+============================================================
+Model:            MixedLM Dependent Variable: Iothers_LIMBIC
+No. Observations: 56      Method:             REML          
+No. Groups:       28      Scale:              1.0832        
+Min. group size:  2       Log-Likelihood:     -84.7071      
+Max. group size:  2       Converged:          Yes           
+Mean group size:  2.0                                       
+-------------------------------------------------------------
+              Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+-------------------------------------------------------------
+Intercept     -0.199     0.278  -0.715  0.474  -0.742   0.345
+Sex[T.M]       0.278     0.336   0.827  0.408  -0.381   0.937
+Age            0.069     0.150   0.458  0.647  -0.225   0.363
+FD             0.167     0.149   1.122  0.262  -0.125   0.459
+TP            -0.178     0.190  -0.933  0.351  -0.551   0.195
+TN             0.057     0.197   0.292  0.770  -0.328   0.443
+TG            -0.019     0.210  -0.091  0.927  -0.430   0.392
+ATPdose       -0.142     0.163  -0.871  0.384  -0.460   0.177
+Group Var      0.000     0.323                               
+============================================================
+
+MODEL: Iothers_FP ~ Age + Sex + FD + Group + (1|subject) 
+
+         Mixed Linear Model Regression Results
+========================================================
+Model:            MixedLM Dependent Variable: Iothers_FP
+No. Observations: 122     Method:             REML      
+No. Groups:       61      Scale:              0.9307    
+Min. group size:  2       Log-Likelihood:     -172.1894 
+Max. group size:  2       Converged:          Yes       
+Mean group size:  2.0                                   
+--------------------------------------------------------
+              Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+--------------------------------------------------------
+Intercept      0.425    0.179  2.381 0.017  0.075  0.775
+Sex[T.M]      -0.302    0.191 -1.582 0.114 -0.676  0.072
+Group[T.SZ]   -0.462    0.202 -2.284 0.022 -0.858 -0.065
+Age            0.041    0.104  0.393 0.694 -0.163  0.245
+FD            -0.083    0.089 -0.927 0.354 -0.258  0.092
+Group Var      0.000    0.127                           
+========================================================
+
+MODEL: Iothers_FP ~ Age + Sex + FD + TPANSS + ATPdose + (1|subject) 
+
+         Mixed Linear Model Regression Results
+========================================================
+Model:            MixedLM Dependent Variable: Iothers_FP
+No. Observations: 56      Method:             REML      
+No. Groups:       28      Scale:              0.6672    
+Min. group size:  2       Log-Likelihood:     -76.7722  
+Max. group size:  2       Converged:          Yes       
+Mean group size:  2.0                                   
+--------------------------------------------------------
+              Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+--------------------------------------------------------
+Intercept      0.154    0.263  0.584 0.559 -0.362  0.670
+Sex[T.M]      -0.215    0.318 -0.677 0.498 -0.838  0.408
+Age           -0.093    0.140 -0.666 0.505 -0.366  0.181
+FD             0.012    0.121  0.099 0.921 -0.226  0.250
+TPANSS        -0.534    0.136 -3.916 0.000 -0.801 -0.267
+ATPdose       -0.083    0.129 -0.643 0.520 -0.336  0.170
+Group Var      0.166    0.272                           
+========================================================
+
+MODEL: Iothers_FP ~ Age + Sex + FD + TP + TN + TG + ATPdose + (1|subject) 
+
+         Mixed Linear Model Regression Results
+========================================================
+Model:            MixedLM Dependent Variable: Iothers_FP
+No. Observations: 56      Method:             REML      
+No. Groups:       28      Scale:              0.6736    
+Min. group size:  2       Log-Likelihood:     -78.3455  
+Max. group size:  2       Converged:          Yes       
+Mean group size:  2.0                                   
+--------------------------------------------------------
+              Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+--------------------------------------------------------
+Intercept      0.165    0.271  0.610 0.542 -0.365  0.696
+Sex[T.M]      -0.231    0.327 -0.707 0.480 -0.872  0.410
+Age           -0.069    0.146 -0.471 0.637 -0.356  0.218
+FD             0.037    0.126  0.289 0.773 -0.211  0.284
+TP            -0.272    0.149 -1.832 0.067 -0.564  0.019
+TN            -0.150    0.172 -0.875 0.382 -0.487  0.186
+TG            -0.253    0.189 -1.335 0.182 -0.623  0.118
+ATPdose       -0.088    0.132 -0.669 0.503 -0.347  0.170
+Group Var      0.188    0.284                           
+========================================================
+
+MODEL: Iothers_DMN ~ Age + Sex + FD + Group + (1|subject) 
+
+          Mixed Linear Model Regression Results
+=========================================================
+Model:            MixedLM Dependent Variable: Iothers_DMN
+No. Observations: 122     Method:             REML       
+No. Groups:       61      Scale:              0.9868     
+Min. group size:  2       Log-Likelihood:     -175.6186  
+Max. group size:  2       Converged:          Yes        
+Mean group size:  2.0                                    
+---------------------------------------------------------
+               Coef.  Std.Err.   z    P>|z| [0.025 0.975]
+---------------------------------------------------------
+Intercept       0.182    0.184  0.992 0.321 -0.178  0.543
+Sex[T.M]        0.039    0.197  0.199 0.842 -0.346  0.425
+Group[T.SZ]    -0.423    0.208 -2.032 0.042 -0.831 -0.015
+Age             0.005    0.107  0.050 0.960 -0.204  0.215
+FD             -0.075    0.093 -0.809 0.418 -0.258  0.107
+Group Var       0.000    0.131                           
+=========================================================
+
+MODEL: Iothers_DMN ~ Age + Sex + FD + TPANSS + ATPdose + (1|subject) 
+
+          Mixed Linear Model Regression Results
+=========================================================
+Model:            MixedLM Dependent Variable: Iothers_DMN
+No. Observations: 56      Method:             REML       
+No. Groups:       28      Scale:              0.8936     
+Min. group size:  2       Log-Likelihood:     -79.3053   
+Max. group size:  2       Converged:          Yes        
+Mean group size:  2.0                                    
+----------------------------------------------------------
+           Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+----------------------------------------------------------
+Intercept  -0.380     0.250  -1.517  0.129  -0.871   0.111
+Sex[T.M]    0.532     0.303   1.757  0.079  -0.061   1.125
+Age         0.138     0.132   1.044  0.297  -0.121   0.396
+FD         -0.074     0.132  -0.560  0.575  -0.333   0.185
+TPANSS     -0.359     0.137  -2.616  0.009  -0.628  -0.090
+ATPdose    -0.036     0.135  -0.268  0.788  -0.301   0.228
+Group Var   0.000     0.231                               
+=========================================================
+
+MODEL: Iothers_DMN ~ Age + Sex + FD + TP + TN + TG + ATPdose + (1|subject) 
+
+          Mixed Linear Model Regression Results
+=========================================================
+Model:            MixedLM Dependent Variable: Iothers_DMN
+No. Observations: 56      Method:             REML       
+No. Groups:       28      Scale:              0.9227     
+Min. group size:  2       Log-Likelihood:     -80.8576   
+Max. group size:  2       Converged:          Yes        
+Mean group size:  2.0                                    
+----------------------------------------------------------
+           Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+----------------------------------------------------------
+Intercept  -0.368     0.255  -1.440  0.150  -0.868   0.133
+Sex[T.M]    0.515     0.309   1.665  0.096  -0.091   1.121
+Age         0.146     0.139   1.053  0.292  -0.126   0.418
+FD         -0.070     0.136  -0.514  0.607  -0.337   0.197
+TP         -0.213     0.159  -1.338  0.181  -0.525   0.099
+TN         -0.220     0.204  -1.075  0.282  -0.620   0.181
+TG         -0.042     0.238  -0.177  0.860  -0.509   0.425
+ATPdose    -0.034     0.142  -0.238  0.812  -0.312   0.244
+Group Var   0.000     0.312                               
+=========================================================
+
+MODEL: Iothers_subcort ~ Age + Sex + FD + Group + (1|subject) 
+
+            Mixed Linear Model Regression Results
+=============================================================
+Model:            MixedLM Dependent Variable: Iothers_subcort
+No. Observations: 122     Method:             REML           
+No. Groups:       61      Scale:              0.9453         
+Min. group size:  2       Log-Likelihood:     -177.7059      
+Max. group size:  2       Converged:          Yes            
+Mean group size:  2.0                                        
+--------------------------------------------------------------
+               Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+--------------------------------------------------------------
+Intercept       0.139     0.195   0.714  0.475  -0.243   0.522
+Sex[T.M]       -0.196     0.209  -0.942  0.346  -0.605   0.212
+Group[T.SZ]    -0.022     0.221  -0.097  0.922  -0.455   0.412
+Age             0.059     0.114   0.524  0.601  -0.163   0.282
+FD              0.011     0.093   0.116  0.907  -0.172   0.194
+Group Var       0.084     0.149                               
+=============================================================
+
+MODEL: Iothers_subcort ~ Age + Sex + FD + TPANSS + ATPdose + (1|subject) 
+
+            Mixed Linear Model Regression Results
+=============================================================
+Model:            MixedLM Dependent Variable: Iothers_subcort
+No. Observations: 56      Method:             REML           
+No. Groups:       28      Scale:              0.9820         
+Min. group size:  2       Log-Likelihood:     -81.6635       
+Max. group size:  2       Converged:          Yes            
+Mean group size:  2.0                                        
+--------------------------------------------------------------
+               Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+--------------------------------------------------------------
+Intercept       0.167     0.263   0.636  0.525  -0.349   0.683
+Sex[T.M]       -0.234     0.319  -0.735  0.462  -0.859   0.390
+Age             0.059     0.138   0.427  0.669  -0.212   0.330
+FD             -0.109     0.136  -0.796  0.426  -0.376   0.159
+TPANSS         -0.205     0.137  -1.494  0.135  -0.473   0.064
+ATPdose        -0.169     0.147  -1.148  0.251  -0.457   0.119
+Group Var       0.000     0.230                               
+=============================================================
+
+MODEL: Iothers_subcort ~ Age + Sex + FD + TP + TN + TG + ATPdose + (1|subject) 
+
+            Mixed Linear Model Regression Results
+=============================================================
+Model:            MixedLM Dependent Variable: Iothers_subcort
+No. Observations: 56      Method:             REML           
+No. Groups:       28      Scale:              1.0225         
+Min. group size:  2       Log-Likelihood:     -83.3238       
+Max. group size:  2       Converged:          Yes            
+Mean group size:  2.0                                        
+--------------------------------------------------------------
+               Coef.   Std.Err.    z     P>|z|  [0.025  0.975]
+--------------------------------------------------------------
+Intercept       0.169     0.270   0.626  0.531  -0.360   0.698
+Sex[T.M]       -0.237     0.327  -0.724  0.469  -0.878   0.405
+Age             0.059     0.146   0.404  0.686  -0.227   0.344
+FD             -0.110     0.142  -0.771  0.441  -0.389   0.169
+TP             -0.086     0.168  -0.508  0.611  -0.415   0.244
+TN             -0.111     0.187  -0.596  0.551  -0.477   0.255
+TG             -0.063     0.207  -0.306  0.760  -0.469   0.343
+ATPdose        -0.167     0.151  -1.109  0.267  -0.463   0.128
+Group Var       0.000     0.240                               
+=============================================================
+
