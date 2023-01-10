@@ -1,0 +1,88 @@
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:     deltaDevfHC_signed   R-squared:                       0.042
+Model:                            OLS   Adj. R-squared:                 -0.027
+Method:                 Least Squares   F-statistic:                    0.6095
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.658
+Time:                        12:18:08   Log-Likelihood:                -85.256
+No. Observations:                  61   AIC:                             180.5
+Df Residuals:                      56   BIC:                             191.1
+Df Model:                           4                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept      -0.3122      0.269     -1.161      0.250      -0.851       0.226
+Sex[T.M]        0.2318      0.290      0.799      0.428      -0.349       0.813
+Group[T.SZ]     0.3256      0.303      1.075      0.287      -0.281       0.932
+Age             0.1030      0.160      0.646      0.521      -0.217       0.423
+FDmax           0.1127      0.139      0.809      0.422      -0.167       0.392
+==============================================================================
+Omnibus:                        0.983   Durbin-Watson:                   2.138
+Prob(Omnibus):                  0.612   Jarque-Bera (JB):                0.902
+Skew:                           0.053   Prob(JB):                        0.637
+Kurtosis:                       2.414   Cond. No.                         4.03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:     deltaDevfHC_signed   R-squared:                       0.205
+Model:                            OLS   Adj. R-squared:                  0.024
+Method:                 Least Squares   F-statistic:                     1.132
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.373
+Time:                        12:18:09   Log-Likelihood:                -36.526
+No. Observations:                  28   AIC:                             85.05
+Df Residuals:                      22   BIC:                             93.05
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+=====================================================================================
+                        coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------------
+Intercept             0.0063      0.388      0.016      0.987      -0.799       0.811
+Sex[T.M]             -0.0089      0.474     -0.019      0.985      -0.992       0.974
+Age                  -0.2057      0.220     -0.935      0.360      -0.662       0.250
+FDmax                -0.0222      0.209     -0.106      0.916      -0.455       0.411
+deltaATP_signed       0.1660      0.206      0.806      0.429      -0.261       0.593
+deltaPANSS_signed     0.4906      0.218      2.254      0.035       0.039       0.942
+==============================================================================
+Omnibus:                        0.538   Durbin-Watson:                   1.937
+Prob(Omnibus):                  0.764   Jarque-Bera (JB):                0.614
+Skew:                           0.064   Prob(JB):                        0.736
+Kurtosis:                       2.286   Cond. No.                         4.09
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:     deltaDevfHC_signed   R-squared:                       0.273
+Model:                            OLS   Adj. R-squared:                  0.018
+Method:                 Least Squares   F-statistic:                     1.073
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.416
+Time:                        12:18:09   Log-Likelihood:                -35.268
+No. Observations:                  28   AIC:                             86.54
+Df Residuals:                      20   BIC:                             97.19
+Df Model:                           7                                         
+Covariance Type:            nonrobust                                         
+===================================================================================
+                      coef    std err          t      P>|t|      [0.025      0.975]
+-----------------------------------------------------------------------------------
+Intercept          -0.0009      0.406     -0.002      0.998      -0.848       0.846
+Sex[T.M]            0.0012      0.502      0.002      0.998      -1.045       1.048
+Age                -0.1507      0.224     -0.671      0.510      -0.619       0.318
+FDmax               0.0619      0.219      0.283      0.780      -0.394       0.518
+deltaATP_signed     0.1665      0.208      0.801      0.433      -0.267       0.600
+deltaTP_signed      0.1280      0.219      0.585      0.565      -0.328       0.584
+deltaTN_signed      0.5121      0.229      2.238      0.037       0.035       0.989
+deltaTG_signed      0.0507      0.251      0.202      0.842      -0.473       0.575
+==============================================================================
+Omnibus:                        0.363   Durbin-Watson:                   1.931
+Prob(Omnibus):                  0.834   Jarque-Bera (JB):                0.401
+Skew:                          -0.238   Prob(JB):                        0.818
+Kurtosis:                       2.658   Cond. No.                         4.51
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.

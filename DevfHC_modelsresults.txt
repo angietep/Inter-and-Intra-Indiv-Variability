@@ -1,0 +1,67 @@
+MODEL: DevfromHealth_value ~ Age + FD + Sex + Group + (1|subject) 
+
+              Mixed Linear Model Regression Results
+=================================================================
+Model:            MixedLM Dependent Variable: DevfromHealth_value
+No. Observations: 122     Method:             REML               
+No. Groups:       61      Scale:              0.7070             
+Min. group size:  2       Log-Likelihood:     -172.9669          
+Max. group size:  2       Converged:          Yes                
+Mean group size:  2.0                                            
+-------------------------------------------------------------------
+               Coef.    Std.Err.     z      P>|z|   [0.025   0.975]
+-------------------------------------------------------------------
+Intercept      -0.152      0.209   -0.727   0.467   -0.563    0.258
+Sex[T.M]       -0.136      0.224   -0.610   0.542   -0.575    0.302
+Group[T.SZ]     0.491      0.237    2.071   0.038    0.026    0.957
+Age             0.033      0.122    0.275   0.783   -0.205    0.272
+FD              0.027      0.088    0.307   0.759   -0.145    0.199
+Group Var       0.288      0.199                                   
+=================================================================
+
+MODEL: DevfromHealth_value ~ Age + Sex + FD + TPANSS + ATPdose + (1|subject) 
+
+              Mixed Linear Model Regression Results
+=================================================================
+Model:            MixedLM Dependent Variable: DevfromHealth_value
+No. Observations: 56      Method:             REML               
+No. Groups:       28      Scale:              0.9312             
+Min. group size:  2       Log-Likelihood:     -80.3358           
+Max. group size:  2       Converged:          Yes                
+Mean group size:  2.0                                            
+-------------------------------------------------------------------
+               Coef.    Std.Err.     z      P>|z|   [0.025   0.975]
+-------------------------------------------------------------------
+Intercept       0.288      0.256    1.124   0.261   -0.214    0.790
+Sex[T.M]       -0.403      0.310   -1.301   0.193   -1.011    0.204
+Age             0.096      0.135    0.709   0.478   -0.169    0.360
+FD             -0.169      0.134   -1.264   0.206   -0.432    0.093
+TPANSS          0.197      0.132    1.489   0.136   -0.062    0.456
+ATPdose         0.264      0.141    1.878   0.060   -0.011    0.539
+Group Var       0.000      0.201                                   
+=================================================================
+
+MODEL: DevfromHealth_value ~ Age + Sex + FD + TP + TN + TG + ATPdose + (1|subject) 
+
+              Mixed Linear Model Regression Results
+=================================================================
+Model:            MixedLM Dependent Variable: DevfromHealth_value
+No. Observations: 56      Method:             REML               
+No. Groups:       28      Scale:              0.8285             
+Min. group size:  2       Log-Likelihood:     -78.2724           
+Max. group size:  2       Converged:          Yes                
+Mean group size:  2.0                                            
+-------------------------------------------------------------------
+               Coef.    Std.Err.     z      P>|z|   [0.025   0.975]
+-------------------------------------------------------------------
+Intercept       0.292      0.243    1.203   0.229   -0.183    0.767
+Sex[T.M]       -0.409      0.294   -1.391   0.164   -0.984    0.167
+Age             0.157      0.131    1.201   0.230   -0.099    0.414
+FD             -0.101      0.133   -0.759   0.448   -0.362    0.160
+TP              0.007      0.150    0.049   0.961   -0.286    0.301
+TN              0.536      0.168    3.183   0.001    0.206    0.865
+TG             -0.250      0.184   -1.362   0.173   -0.611    0.110
+ATPdose         0.216      0.132    1.638   0.101   -0.042    0.474
+Group Var       0.000      0.196                                   
+=================================================================
+

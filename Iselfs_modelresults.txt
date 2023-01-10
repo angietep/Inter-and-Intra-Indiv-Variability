@@ -1,0 +1,819 @@
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               Iself_WB   R-squared:                       0.089
+Model:                            OLS   Adj. R-squared:                  0.006
+Method:                 Least Squares   F-statistic:                     1.070
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.387
+Time:                        12:17:50   Log-Likelihood:                -83.724
+No. Observations:                  61   AIC:                             179.4
+Df Residuals:                      55   BIC:                             192.1
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept       0.2994      0.265      1.132      0.263      -0.231       0.829
+Sex[T.M]       -0.1328      0.286     -0.464      0.644      -0.706       0.440
+Group[T.SZ]    -0.4317      0.298     -1.447      0.154      -1.029       0.166
+Age            -0.1594      0.157     -1.014      0.315      -0.474       0.156
+FDmax          -0.2345      0.137     -1.709      0.093      -0.509       0.040
+DBS             0.0304      0.129      0.235      0.815      -0.229       0.289
+==============================================================================
+Omnibus:                        2.813   Durbin-Watson:                   1.355
+Prob(Omnibus):                  0.245   Jarque-Bera (JB):                2.650
+Skew:                           0.499   Prob(JB):                        0.266
+Kurtosis:                       2.784   Cond. No.                         4.03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               Iself_WB   R-squared:                       0.233
+Model:                            OLS   Adj. R-squared:                  0.014
+Method:                 Least Squares   F-statistic:                     1.063
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.415
+Time:                        12:17:50   Log-Likelihood:                -36.018
+No. Observations:                  28   AIC:                             86.04
+Df Residuals:                      21   BIC:                             95.36
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.0478      0.418     -0.114      0.910      -0.916       0.821
+Sex[T.M]       0.0669      0.520      0.129      0.899      -1.014       1.148
+Age           -0.2098      0.227     -0.925      0.365      -0.681       0.262
+FDmax         -0.1155      0.217     -0.532      0.600      -0.567       0.336
+DBS            0.1852      0.227      0.814      0.425      -0.288       0.658
+deltaATP       0.3332      0.205      1.629      0.118      -0.092       0.759
+deltaPANSS    -0.1886      0.214     -0.883      0.387      -0.633       0.255
+==============================================================================
+Omnibus:                        1.573   Durbin-Watson:                   1.909
+Prob(Omnibus):                  0.455   Jarque-Bera (JB):                1.442
+Skew:                           0.460   Prob(JB):                        0.486
+Kurtosis:                       2.376   Cond. No.                         4.65
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               Iself_WB   R-squared:                       0.319
+Model:                            OLS   Adj. R-squared:                  0.032
+Method:                 Least Squares   F-statistic:                     1.112
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.398
+Time:                        12:17:50   Log-Likelihood:                -34.353
+No. Observations:                  28   AIC:                             86.71
+Df Residuals:                      19   BIC:                             98.70
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.2702      0.441     -0.613      0.547      -1.193       0.652
+Sex[T.M]       0.3783      0.557      0.679      0.505      -0.788       1.544
+Age           -0.2536      0.239     -1.059      0.303      -0.755       0.248
+FDmax         -0.0852      0.223     -0.382      0.707      -0.552       0.382
+DBS            0.2363      0.229      1.033      0.315      -0.243       0.715
+deltaATP       0.4565      0.220      2.078      0.051      -0.003       0.916
+deltaTP        0.1311      0.216      0.607      0.551      -0.321       0.583
+deltaTN       -0.0599      0.212     -0.282      0.781      -0.504       0.384
+deltaTG       -0.3846      0.254     -1.517      0.146      -0.915       0.146
+==============================================================================
+Omnibus:                        3.402   Durbin-Watson:                   1.986
+Prob(Omnibus):                  0.183   Jarque-Bera (JB):                1.465
+Skew:                           0.097   Prob(JB):                        0.481
+Kurtosis:                       1.897   Cond. No.                         5.46
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              Iself_VIS   R-squared:                       0.168
+Model:                            OLS   Adj. R-squared:                  0.093
+Method:                 Least Squares   F-statistic:                     2.226
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):             0.0645
+Time:                        12:17:50   Log-Likelihood:                -80.934
+No. Observations:                  61   AIC:                             173.9
+Df Residuals:                      55   BIC:                             186.5
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept       0.2763      0.253      1.094      0.279      -0.230       0.783
+Sex[T.M]       -0.4097      0.273     -1.500      0.139      -0.957       0.138
+Group[T.SZ]    -0.0157      0.285     -0.055      0.956      -0.587       0.555
+Age            -0.2731      0.150     -1.819      0.074      -0.574       0.028
+FDmax           0.0323      0.131      0.247      0.806      -0.230       0.295
+DBS            -0.2526      0.123     -2.046      0.046      -0.500      -0.005
+==============================================================================
+Omnibus:                        1.548   Durbin-Watson:                   1.856
+Prob(Omnibus):                  0.461   Jarque-Bera (JB):                0.976
+Skew:                          -0.293   Prob(JB):                        0.614
+Kurtosis:                       3.202   Cond. No.                         4.03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              Iself_VIS   R-squared:                       0.340
+Model:                            OLS   Adj. R-squared:                  0.152
+Method:                 Least Squares   F-statistic:                     1.807
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.146
+Time:                        12:17:50   Log-Likelihood:                -33.903
+No. Observations:                  28   AIC:                             81.81
+Df Residuals:                      21   BIC:                             91.13
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.3539      0.387      0.914      0.371      -0.451       1.159
+Sex[T.M]      -0.4955      0.482     -1.028      0.316      -1.498       0.507
+Age           -0.0967      0.210     -0.460      0.650      -0.534       0.340
+FDmax         -0.0556      0.201     -0.276      0.785      -0.474       0.363
+DBS           -0.2179      0.211     -1.033      0.313      -0.657       0.221
+deltaATP       0.4743      0.190      2.500      0.021       0.080       0.869
+deltaPANSS    -0.1251      0.198     -0.632      0.534      -0.537       0.287
+==============================================================================
+Omnibus:                       17.740   Durbin-Watson:                   1.856
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               20.910
+Skew:                          -1.616   Prob(JB):                     2.88e-05
+Kurtosis:                       5.735   Cond. No.                         4.65
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              Iself_VIS   R-squared:                       0.368
+Model:                            OLS   Adj. R-squared:                  0.102
+Method:                 Least Squares   F-statistic:                     1.383
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.266
+Time:                        12:17:50   Log-Likelihood:                -33.305
+No. Observations:                  28   AIC:                             84.61
+Df Residuals:                      19   BIC:                             96.60
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.3474      0.424      0.818      0.423      -0.541       1.236
+Sex[T.M]      -0.4864      0.537     -0.906      0.376      -1.610       0.637
+Age           -0.2129      0.231     -0.923      0.368      -0.696       0.270
+FDmax         -0.1295      0.215     -0.602      0.554      -0.579       0.320
+DBS           -0.1913      0.220     -0.868      0.396      -0.653       0.270
+deltaATP       0.4779      0.212      2.259      0.036       0.035       0.921
+deltaTP        0.1348      0.208      0.648      0.524      -0.300       0.570
+deltaTN       -0.1550      0.204     -0.759      0.457      -0.583       0.273
+deltaTG       -0.0085      0.244     -0.035      0.972      -0.520       0.503
+==============================================================================
+Omnibus:                       16.608   Durbin-Watson:                   1.961
+Prob(Omnibus):                  0.000   Jarque-Bera (JB):               18.780
+Skew:                          -1.536   Prob(JB):                     8.36e-05
+Kurtosis:                       5.580   Cond. No.                         5.46
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              Iself_SOM   R-squared:                       0.113
+Model:                            OLS   Adj. R-squared:                  0.032
+Method:                 Least Squares   F-statistic:                     1.396
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.240
+Time:                        12:17:50   Log-Likelihood:                -82.912
+No. Observations:                  61   AIC:                             177.8
+Df Residuals:                      55   BIC:                             190.5
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept       0.3167      0.261      1.213      0.230      -0.206       0.840
+Sex[T.M]       -0.0184      0.282     -0.065      0.948      -0.584       0.547
+Group[T.SZ]    -0.6193      0.294     -2.104      0.040      -1.209      -0.029
+Age            -0.0998      0.155     -0.644      0.523      -0.411       0.211
+FDmax          -0.1523      0.135     -1.125      0.266      -0.424       0.119
+DBS             0.0758      0.128      0.595      0.554      -0.180       0.331
+==============================================================================
+Omnibus:                        3.115   Durbin-Watson:                   1.759
+Prob(Omnibus):                  0.211   Jarque-Bera (JB):                2.784
+Skew:                          -0.522   Prob(JB):                        0.249
+Kurtosis:                       2.922   Cond. No.                         4.03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              Iself_SOM   R-squared:                       0.136
+Model:                            OLS   Adj. R-squared:                 -0.111
+Method:                 Least Squares   F-statistic:                    0.5495
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.765
+Time:                        12:17:50   Log-Likelihood:                -37.689
+No. Observations:                  28   AIC:                             89.38
+Df Residuals:                      21   BIC:                             98.70
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.0623      0.443     -0.141      0.889      -0.984       0.859
+Sex[T.M]       0.0873      0.552      0.158      0.876      -1.060       1.235
+Age           -0.0323      0.241     -0.134      0.895      -0.533       0.468
+FDmax         -0.0890      0.231     -0.386      0.703      -0.568       0.390
+DBS            0.0758      0.241      0.314      0.757      -0.426       0.578
+deltaATP       0.3210      0.217      1.478      0.154      -0.131       0.773
+deltaPANSS    -0.1070      0.227     -0.472      0.642      -0.578       0.364
+==============================================================================
+Omnibus:                        0.492   Durbin-Watson:                   1.811
+Prob(Omnibus):                  0.782   Jarque-Bera (JB):                0.619
+Skew:                          -0.222   Prob(JB):                        0.734
+Kurtosis:                       2.423   Cond. No.                         4.65
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              Iself_SOM   R-squared:                       0.223
+Model:                            OLS   Adj. R-squared:                 -0.105
+Method:                 Least Squares   F-statistic:                    0.6804
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.703
+Time:                        12:17:50   Log-Likelihood:                -36.204
+No. Observations:                  28   AIC:                             90.41
+Df Residuals:                      19   BIC:                             102.4
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.2659      0.471     -0.565      0.579      -1.251       0.719
+Sex[T.M]       0.3722      0.595      0.625      0.539      -0.873       1.618
+Age           -0.0947      0.256     -0.370      0.715      -0.630       0.441
+FDmax         -0.0732      0.238     -0.307      0.762      -0.572       0.426
+DBS            0.1296      0.245      0.530      0.602      -0.382       0.641
+deltaATP       0.4184      0.235      1.783      0.091      -0.073       0.910
+deltaTP        0.1399      0.230      0.607      0.551      -0.343       0.622
+deltaTN       -0.1458      0.227     -0.643      0.528      -0.620       0.329
+deltaTG       -0.2710      0.271     -1.001      0.330      -0.838       0.296
+==============================================================================
+Omnibus:                        0.193   Durbin-Watson:                   1.632
+Prob(Omnibus):                  0.908   Jarque-Bera (JB):                0.318
+Skew:                          -0.170   Prob(JB):                        0.853
+Kurtosis:                       2.604   Cond. No.                         5.46
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:          Iself_DORSATT   R-squared:                       0.098
+Model:                            OLS   Adj. R-squared:                  0.015
+Method:                 Least Squares   F-statistic:                     1.188
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.327
+Time:                        12:17:50   Log-Likelihood:                -83.426
+No. Observations:                  61   AIC:                             178.9
+Df Residuals:                      55   BIC:                             191.5
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept       0.3074      0.263      1.168      0.248      -0.220       0.835
+Sex[T.M]       -0.1019      0.285     -0.358      0.721      -0.672       0.468
+Group[T.SZ]    -0.4891      0.297     -1.648      0.105      -1.084       0.106
+Age            -0.3311      0.156     -2.117      0.039      -0.645      -0.018
+FDmax          -0.1392      0.137     -1.019      0.313      -0.413       0.134
+DBS            -0.0846      0.129     -0.658      0.514      -0.342       0.173
+==============================================================================
+Omnibus:                        0.922   Durbin-Watson:                   2.325
+Prob(Omnibus):                  0.631   Jarque-Bera (JB):                0.830
+Skew:                          -0.276   Prob(JB):                        0.660
+Kurtosis:                       2.853   Cond. No.                         4.03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:          Iself_DORSATT   R-squared:                       0.336
+Model:                            OLS   Adj. R-squared:                  0.146
+Method:                 Least Squares   F-statistic:                     1.772
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.154
+Time:                        12:17:50   Log-Likelihood:                -33.994
+No. Observations:                  28   AIC:                             81.99
+Df Residuals:                      21   BIC:                             91.31
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.0677      0.388      0.174      0.863      -0.740       0.876
+Sex[T.M]      -0.0948      0.484     -0.196      0.846      -1.100       0.911
+Age           -0.5468      0.211     -2.593      0.017      -0.985      -0.108
+FDmax         -0.0869      0.202     -0.430      0.671      -0.507       0.333
+DBS            0.1506      0.212      0.712      0.484      -0.289       0.591
+deltaATP       0.1747      0.190      0.918      0.369      -0.221       0.571
+deltaPANSS    -0.1509      0.199     -0.760      0.456      -0.564       0.262
+==============================================================================
+Omnibus:                        1.003   Durbin-Watson:                   2.160
+Prob(Omnibus):                  0.606   Jarque-Bera (JB):                0.486
+Skew:                          -0.322   Prob(JB):                        0.784
+Kurtosis:                       3.046   Cond. No.                         4.65
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:          Iself_DORSATT   R-squared:                       0.428
+Model:                            OLS   Adj. R-squared:                  0.188
+Method:                 Least Squares   F-statistic:                     1.780
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.144
+Time:                        12:17:50   Log-Likelihood:                -31.900
+No. Observations:                  28   AIC:                             81.80
+Df Residuals:                      19   BIC:                             93.79
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.0565      0.404     -0.140      0.890      -0.901       0.788
+Sex[T.M]       0.0791      0.510      0.155      0.879      -0.989       1.147
+Age           -0.4238      0.219     -1.932      0.068      -0.883       0.035
+FDmax          0.0169      0.204      0.083      0.935      -0.411       0.445
+DBS            0.1771      0.210      0.845      0.409      -0.262       0.616
+deltaATP       0.2671      0.201      1.327      0.200      -0.154       0.688
+deltaTP       -0.2567      0.198     -1.299      0.210      -0.670       0.157
+deltaTN        0.0511      0.194      0.263      0.795      -0.356       0.458
+deltaTG       -0.3125      0.232     -1.345      0.194      -0.799       0.174
+==============================================================================
+Omnibus:                        0.673   Durbin-Watson:                   1.886
+Prob(Omnibus):                  0.714   Jarque-Bera (JB):                0.690
+Skew:                          -0.323   Prob(JB):                        0.708
+Kurtosis:                       2.582   Cond. No.                         5.46
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:          Iself_VENTATT   R-squared:                       0.083
+Model:                            OLS   Adj. R-squared:                 -0.000
+Method:                 Least Squares   F-statistic:                    0.9959
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.429
+Time:                        12:17:50   Log-Likelihood:                -83.912
+No. Observations:                  61   AIC:                             179.8
+Df Residuals:                      55   BIC:                             192.5
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept       0.2183      0.265      0.823      0.414      -0.313       0.750
+Sex[T.M]       -0.0048      0.287     -0.017      0.987      -0.580       0.570
+Group[T.SZ]    -0.4374      0.299     -1.462      0.149      -1.037       0.162
+Age            -0.1447      0.158     -0.918      0.363      -0.461       0.171
+FDmax          -0.1946      0.138     -1.414      0.163      -0.470       0.081
+DBS             0.0958      0.130      0.739      0.463      -0.164       0.356
+==============================================================================
+Omnibus:                        0.363   Durbin-Watson:                   1.875
+Prob(Omnibus):                  0.834   Jarque-Bera (JB):                0.499
+Skew:                          -0.159   Prob(JB):                        0.779
+Kurtosis:                       2.691   Cond. No.                         4.03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:          Iself_VENTATT   R-squared:                       0.387
+Model:                            OLS   Adj. R-squared:                  0.212
+Method:                 Least Squares   F-statistic:                     2.209
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):             0.0829
+Time:                        12:17:50   Log-Likelihood:                -32.881
+No. Observations:                  28   AIC:                             79.76
+Df Residuals:                      21   BIC:                             89.09
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.4199      0.373     -1.125      0.273      -1.196       0.356
+Sex[T.M]       0.5878      0.465      1.265      0.220      -0.379       1.554
+Age           -0.0750      0.203     -0.370      0.715      -0.496       0.346
+FDmax          0.0911      0.194      0.469      0.644      -0.313       0.495
+DBS            0.0449      0.203      0.221      0.828      -0.378       0.468
+deltaATP       0.4142      0.183      2.264      0.034       0.034       0.795
+deltaPANSS    -0.4886      0.191     -2.559      0.018      -0.886      -0.092
+==============================================================================
+Omnibus:                        0.146   Durbin-Watson:                   2.398
+Prob(Omnibus):                  0.930   Jarque-Bera (JB):                0.364
+Skew:                          -0.013   Prob(JB):                        0.834
+Kurtosis:                       2.442   Cond. No.                         4.65
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:          Iself_VENTATT   R-squared:                       0.581
+Model:                            OLS   Adj. R-squared:                  0.404
+Method:                 Least Squares   F-statistic:                     3.287
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):             0.0158
+Time:                        12:17:50   Log-Likelihood:                -27.567
+No. Observations:                  28   AIC:                             73.13
+Df Residuals:                      19   BIC:                             85.12
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.7275      0.346     -2.104      0.049      -1.451      -0.004
+Sex[T.M]       1.0185      0.437      2.330      0.031       0.103       1.934
+Age           -0.1242      0.188     -0.661      0.516      -0.518       0.269
+FDmax          0.1278      0.175      0.730      0.474      -0.239       0.494
+DBS            0.1666      0.180      0.928      0.365      -0.209       0.543
+deltaATP       0.6077      0.172      3.525      0.002       0.247       0.968
+deltaTP       -0.1117      0.169     -0.659      0.517      -0.466       0.243
+deltaTN       -0.3251      0.167     -1.952      0.066      -0.674       0.023
+deltaTG       -0.6033      0.199     -3.032      0.007      -1.020      -0.187
+==============================================================================
+Omnibus:                        0.967   Durbin-Watson:                   2.079
+Prob(Omnibus):                  0.617   Jarque-Bera (JB):                0.971
+Skew:                          -0.333   Prob(JB):                        0.615
+Kurtosis:                       2.376   Cond. No.                         5.46
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:           Iself_LIMBIC   R-squared:                       0.038
+Model:                            OLS   Adj. R-squared:                 -0.049
+Method:                 Least Squares   F-statistic:                    0.4352
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.822
+Time:                        12:17:50   Log-Likelihood:                -85.372
+No. Observations:                  61   AIC:                             182.7
+Df Residuals:                      55   BIC:                             195.4
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept       0.0980      0.272      0.361      0.720      -0.447       0.643
+Sex[T.M]        0.1150      0.294      0.392      0.697      -0.474       0.704
+Group[T.SZ]    -0.3526      0.306     -1.151      0.255      -0.967       0.262
+Age             0.0164      0.161      0.102      0.919      -0.307       0.340
+FDmax           0.1147      0.141      0.814      0.419      -0.168       0.397
+DBS            -0.0337      0.133     -0.254      0.801      -0.300       0.232
+==============================================================================
+Omnibus:                        0.415   Durbin-Watson:                   2.182
+Prob(Omnibus):                  0.813   Jarque-Bera (JB):                0.579
+Skew:                          -0.119   Prob(JB):                        0.748
+Kurtosis:                       2.586   Cond. No.                         4.03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:           Iself_LIMBIC   R-squared:                       0.220
+Model:                            OLS   Adj. R-squared:                 -0.003
+Method:                 Least Squares   F-statistic:                    0.9846
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.460
+Time:                        12:17:50   Log-Likelihood:                -36.260
+No. Observations:                  28   AIC:                             86.52
+Df Residuals:                      21   BIC:                             95.85
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.4904      0.421     -1.164      0.257      -1.366       0.385
+Sex[T.M]       0.6866      0.524      1.310      0.204      -0.404       1.777
+Age            0.0534      0.229      0.234      0.818      -0.422       0.529
+FDmax          0.2229      0.219      1.018      0.320      -0.233       0.678
+DBS           -0.2541      0.229     -1.107      0.281      -0.731       0.223
+deltaATP       0.3278      0.206      1.588      0.127      -0.101       0.757
+deltaPANSS     0.1876      0.215      0.871      0.394      -0.260       0.636
+==============================================================================
+Omnibus:                        0.086   Durbin-Watson:                   2.429
+Prob(Omnibus):                  0.958   Jarque-Bera (JB):                0.286
+Skew:                          -0.083   Prob(JB):                        0.867
+Kurtosis:                       2.534   Cond. No.                         4.65
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:           Iself_LIMBIC   R-squared:                       0.233
+Model:                            OLS   Adj. R-squared:                 -0.090
+Method:                 Least Squares   F-statistic:                    0.7220
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.671
+Time:                        12:17:50   Log-Likelihood:                -36.014
+No. Observations:                  28   AIC:                             90.03
+Df Residuals:                      19   BIC:                             102.0
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.4336      0.468     -0.927      0.365      -1.412       0.545
+Sex[T.M]       0.6070      0.591      1.027      0.317      -0.630       1.844
+Age            0.1261      0.254      0.496      0.625      -0.406       0.658
+FDmax          0.2562      0.237      1.082      0.293      -0.239       0.752
+DBS           -0.2666      0.243     -1.098      0.286      -0.775       0.242
+deltaATP       0.2794      0.233      1.199      0.245      -0.208       0.767
+deltaTP       -0.1694      0.229     -0.740      0.468      -0.649       0.310
+deltaTN       -0.0420      0.225     -0.187      0.854      -0.513       0.429
+deltaTG        0.1950      0.269      0.725      0.477      -0.368       0.758
+==============================================================================
+Omnibus:                        0.676   Durbin-Watson:                   2.763
+Prob(Omnibus):                  0.713   Jarque-Bera (JB):                0.753
+Skew:                           0.253   Prob(JB):                        0.686
+Kurtosis:                       2.375   Cond. No.                         5.46
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               Iself_FP   R-squared:                       0.269
+Model:                            OLS   Adj. R-squared:                  0.203
+Method:                 Least Squares   F-statistic:                     4.050
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):            0.00336
+Time:                        12:17:50   Log-Likelihood:                -76.995
+No. Observations:                  61   AIC:                             166.0
+Df Residuals:                      55   BIC:                             178.7
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept       0.3930      0.237      1.659      0.103      -0.082       0.868
+Sex[T.M]       -0.1306      0.256     -0.510      0.612      -0.644       0.382
+Group[T.SZ]    -0.6249      0.267     -2.339      0.023      -1.160      -0.090
+Age            -0.2273      0.141     -1.615      0.112      -0.509       0.055
+FDmax          -0.4492      0.123     -3.656      0.001      -0.695      -0.203
+DBS            -0.0811      0.116     -0.701      0.486      -0.313       0.151
+==============================================================================
+Omnibus:                        6.965   Durbin-Watson:                   2.035
+Prob(Omnibus):                  0.031   Jarque-Bera (JB):                6.079
+Skew:                          -0.692   Prob(JB):                       0.0478
+Kurtosis:                       3.689   Cond. No.                         4.03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               Iself_FP   R-squared:                       0.410
+Model:                            OLS   Adj. R-squared:                  0.241
+Method:                 Least Squares   F-statistic:                     2.432
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):             0.0607
+Time:                        12:17:50   Log-Likelihood:                -32.343
+No. Observations:                  28   AIC:                             78.69
+Df Residuals:                      21   BIC:                             88.01
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.1012      0.366     -0.276      0.785      -0.863       0.660
+Sex[T.M]       0.1416      0.456      0.311      0.759      -0.806       1.090
+Age           -0.3956      0.199     -1.990      0.060      -0.809       0.018
+FDmax         -0.3262      0.190     -1.713      0.102      -0.722       0.070
+DBS           -0.0693      0.199     -0.347      0.732      -0.484       0.346
+deltaATP       0.4054      0.179      2.259      0.035       0.032       0.779
+deltaPANSS     0.1246      0.187      0.665      0.513      -0.265       0.514
+==============================================================================
+Omnibus:                        0.289   Durbin-Watson:                   2.369
+Prob(Omnibus):                  0.866   Jarque-Bera (JB):                0.002
+Skew:                           0.018   Prob(JB):                        0.999
+Kurtosis:                       3.006   Cond. No.                         4.65
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               Iself_FP   R-squared:                       0.465
+Model:                            OLS   Adj. R-squared:                  0.240
+Method:                 Least Squares   F-statistic:                     2.065
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):             0.0930
+Time:                        12:17:50   Log-Likelihood:                -30.972
+No. Observations:                  28   AIC:                             79.94
+Df Residuals:                      19   BIC:                             91.93
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.1877      0.391     -0.481      0.636      -1.005       0.630
+Sex[T.M]       0.2627      0.494      0.532      0.601      -0.771       1.296
+Age           -0.4815      0.212     -2.269      0.035      -0.926      -0.037
+FDmax         -0.3482      0.198     -1.761      0.094      -0.762       0.066
+DBS           -0.0607      0.203     -0.299      0.768      -0.485       0.364
+deltaATP       0.4169      0.195      2.141      0.045       0.009       0.824
+deltaTP        0.2759      0.191      1.443      0.165      -0.124       0.676
+deltaTN       -0.0671      0.188     -0.357      0.725      -0.461       0.327
+deltaTG        0.0154      0.225      0.069      0.946      -0.455       0.486
+==============================================================================
+Omnibus:                        0.760   Durbin-Watson:                   2.435
+Prob(Omnibus):                  0.684   Jarque-Bera (JB):                0.115
+Skew:                           0.095   Prob(JB):                        0.944
+Kurtosis:                       3.250   Cond. No.                         5.46
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              Iself_DMN   R-squared:                       0.180
+Model:                            OLS   Adj. R-squared:                  0.105
+Method:                 Least Squares   F-statistic:                     2.413
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):             0.0476
+Time:                        12:17:50   Log-Likelihood:                -80.507
+No. Observations:                  61   AIC:                             173.0
+Df Residuals:                      55   BIC:                             185.7
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept       0.2497      0.251      0.995      0.324      -0.253       0.753
+Sex[T.M]        0.0918      0.271      0.338      0.736      -0.452       0.635
+Group[T.SZ]    -0.6301      0.283     -2.227      0.030      -1.197      -0.063
+Age            -0.1489      0.149     -0.999      0.322      -0.448       0.150
+FDmax          -0.3092      0.130     -2.376      0.021      -0.570      -0.048
+DBS            -0.0432      0.123     -0.353      0.726      -0.289       0.202
+==============================================================================
+Omnibus:                        0.456   Durbin-Watson:                   2.025
+Prob(Omnibus):                  0.796   Jarque-Bera (JB):                0.365
+Skew:                          -0.184   Prob(JB):                        0.833
+Kurtosis:                       2.907   Cond. No.                         4.03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              Iself_DMN   R-squared:                       0.279
+Model:                            OLS   Adj. R-squared:                  0.073
+Method:                 Least Squares   F-statistic:                     1.354
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.278
+Time:                        12:17:50   Log-Likelihood:                -35.151
+No. Observations:                  28   AIC:                             84.30
+Df Residuals:                      21   BIC:                             93.63
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.5817      0.405     -1.437      0.165      -1.424       0.260
+Sex[T.M]       0.8144      0.504      1.616      0.121      -0.234       1.862
+Age            0.2654      0.220      1.208      0.241      -0.192       0.722
+FDmax         -0.1736      0.211     -0.825      0.419      -0.611       0.264
+DBS           -0.2372      0.221     -1.076      0.294      -0.696       0.221
+deltaATP       0.3214      0.198      1.620      0.120      -0.091       0.734
+deltaPANSS    -0.1610      0.207     -0.778      0.445      -0.592       0.269
+==============================================================================
+Omnibus:                        0.100   Durbin-Watson:                   2.472
+Prob(Omnibus):                  0.951   Jarque-Bera (JB):                0.322
+Skew:                          -0.001   Prob(JB):                        0.851
+Kurtosis:                       2.475   Cond. No.                         4.65
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:              Iself_DMN   R-squared:                       0.428
+Model:                            OLS   Adj. R-squared:                  0.187
+Method:                 Least Squares   F-statistic:                     1.776
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.145
+Time:                        12:17:50   Log-Likelihood:                -31.914
+No. Observations:                  28   AIC:                             81.83
+Df Residuals:                      19   BIC:                             93.82
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept     -0.8346      0.404     -2.066      0.053      -1.680       0.011
+Sex[T.M]       1.1684      0.511      2.288      0.034       0.100       2.237
+Age            0.1679      0.219      0.765      0.454      -0.291       0.627
+FDmax         -0.1657      0.204     -0.810      0.428      -0.594       0.262
+DBS           -0.1812      0.210     -0.864      0.399      -0.620       0.258
+deltaATP       0.4485      0.201      2.227      0.038       0.027       0.870
+deltaTP        0.2716      0.198      1.373      0.186      -0.142       0.686
+deltaTN       -0.0957      0.194     -0.492      0.628      -0.503       0.311
+deltaTG       -0.3797      0.232     -1.634      0.119      -0.866       0.107
+==============================================================================
+Omnibus:                        2.269   Durbin-Watson:                   2.286
+Prob(Omnibus):                  0.322   Jarque-Bera (JB):                1.435
+Skew:                          -0.290   Prob(JB):                        0.488
+Kurtosis:                       2.055   Cond. No.                         5.46
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:          Iself_subcort   R-squared:                       0.091
+Model:                            OLS   Adj. R-squared:                  0.008
+Method:                 Least Squares   F-statistic:                     1.101
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.370
+Time:                        12:17:50   Log-Likelihood:                -83.645
+No. Observations:                  61   AIC:                             179.3
+Df Residuals:                      55   BIC:                             192.0
+Df Model:                           5                                         
+Covariance Type:            nonrobust                                         
+===============================================================================
+                  coef    std err          t      P>|t|      [0.025      0.975]
+-------------------------------------------------------------------------------
+Intercept       0.2863      0.264      1.084      0.283      -0.243       0.816
+Sex[T.M]       -0.3547      0.286     -1.242      0.219      -0.927       0.218
+Group[T.SZ]    -0.1092      0.298     -0.367      0.715      -0.706       0.488
+Age             0.1578      0.157      1.005      0.319      -0.157       0.472
+FDmax          -0.0286      0.137     -0.209      0.835      -0.303       0.246
+DBS            -0.0964      0.129     -0.747      0.458      -0.355       0.162
+==============================================================================
+Omnibus:                        1.854   Durbin-Watson:                   2.207
+Prob(Omnibus):                  0.396   Jarque-Bera (JB):                1.753
+Skew:                          -0.321   Prob(JB):                        0.416
+Kurtosis:                       2.473   Cond. No.                         4.03
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:          Iself_subcort   R-squared:                       0.252
+Model:                            OLS   Adj. R-squared:                  0.038
+Method:                 Least Squares   F-statistic:                     1.177
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.356
+Time:                        12:17:50   Log-Likelihood:                -35.671
+No. Observations:                  28   AIC:                             85.34
+Df Residuals:                      21   BIC:                             94.67
+Df Model:                           6                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.1706      0.412      0.414      0.683      -0.687       1.028
+Sex[T.M]      -0.2388      0.513     -0.465      0.647      -1.306       0.829
+Age            0.2342      0.224      1.046      0.307      -0.231       0.700
+FDmax         -0.0184      0.214     -0.086      0.932      -0.464       0.428
+DBS           -0.4632      0.225     -2.062      0.052      -0.930       0.004
+deltaATP      -0.0057      0.202     -0.028      0.978      -0.426       0.415
+deltaPANSS     0.1446      0.211      0.686      0.500      -0.294       0.583
+==============================================================================
+Omnibus:                        6.571   Durbin-Watson:                   2.600
+Prob(Omnibus):                  0.037   Jarque-Bera (JB):                2.013
+Skew:                          -0.152   Prob(JB):                        0.365
+Kurtosis:                       1.722   Cond. No.                         4.65
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:          Iself_subcort   R-squared:                       0.251
+Model:                            OLS   Adj. R-squared:                 -0.065
+Method:                 Least Squares   F-statistic:                    0.7947
+Date:                Tue, 10 Jan 2023   Prob (F-statistic):              0.614
+Time:                        12:17:50   Log-Likelihood:                -35.689
+No. Observations:                  28   AIC:                             89.38
+Df Residuals:                      19   BIC:                             101.4
+Df Model:                           8                                         
+Covariance Type:            nonrobust                                         
+==============================================================================
+                 coef    std err          t      P>|t|      [0.025      0.975]
+------------------------------------------------------------------------------
+Intercept      0.1662      0.462      0.360      0.723      -0.801       1.134
+Sex[T.M]      -0.2327      0.584     -0.398      0.695      -1.456       0.990
+Age            0.2942      0.251      1.172      0.256      -0.231       0.820
+FDmax          0.0234      0.234      0.100      0.922      -0.466       0.513
+DBS           -0.4635      0.240     -1.931      0.069      -0.966       0.039
+deltaATP      -0.0212      0.230     -0.092      0.928      -0.503       0.461
+deltaTP       -0.1220      0.226     -0.539      0.596      -0.596       0.352
+deltaTN       -0.0498      0.223     -0.224      0.825      -0.516       0.416
+deltaTG        0.0923      0.266      0.347      0.732      -0.464       0.649
+==============================================================================
+Omnibus:                        4.108   Durbin-Watson:                   2.679
+Prob(Omnibus):                  0.128   Jarque-Bera (JB):                1.632
+Skew:                          -0.140   Prob(JB):                        0.442
+Kurtosis:                       1.851   Cond. No.                         5.46
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
