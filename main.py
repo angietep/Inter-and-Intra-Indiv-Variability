@@ -195,14 +195,14 @@ def getIself(FCtrt):
 os.chdir('/Users/angeles/Documents/GitHub/Iself_Iothers/')
 
 #%behav data
-table_CL = pd.read_csv('tabla_CL.csv')
+table_CL = pd.read_csv('Data/tabla_CL.csv')
 
 #Functional connectomes
-FC=sio.loadmat('FCtrtDiCER1_SZCL_SCh400Nt7TianS2_vox275.mat')
+FC=sio.loadmat('Data/FCtrtDiCER1_SZCL_SCh400Nt7TianS2_vox275.mat')
 FCtrt_SZ_CL_nofish=np.array(FC['FCtrt_SZ_CL'])
 FCtrt_SZ_CL= fisher(FCtrt_SZ_CL_nofish)
 
-FC=sio.loadmat('FCtrtDiCER1_HCCL_SCh400Nt7TianS2_vox275.mat')
+FC=sio.loadmat('Data/FCtrtDiCER1_HCCL_SCh400Nt7TianS2_vox275.mat')
 FCtrt_HC_CL_nofish=np.array(FC['FCtrt_HC_CL'])
 FCtrt_HC_CL= fisher(FCtrt_HC_CL_nofish)
 
@@ -488,7 +488,7 @@ uncorrected_p=np.zeros(9)
 uncorrected_p_PANSS=np.zeros(9)
 uncorrected_p_ATP=np.zeros(9)
 
-f = open("Iselfs_modelresults.txt", "w")
+f = open("Results/Iselfs_modelresults.txt", "w")
 
 name = 'Iself_WB'
 model = smf.ols((name +' ~ Age + Sex + FDmax + DBS + Group'), data=SZandHC_df_zscore).fit()
@@ -601,7 +601,7 @@ uncorrected_p_ATP=np.zeros(9)
 
 #model: smf.mixedlm (Yvar ~ Age + ... + Group, data = Iothers_df, groups=Iothers_df["ID"])
     
-f = open("Iothers_modelsresults.txt", "w")
+f = open("Results/Iothers_modelsresults.txt", "w")
 
 print("MODEL: Iothers_WB ~ Age + Sex + FD + Group + (1|subject) \n", file = f)
 md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + Group", \
@@ -728,7 +728,7 @@ plt.show()
 #%% MODEL: DevfHC and deltaDevfHC
  # Mixed effects: two measures per subject
     
-f = open("DevfHC_modelsresults.txt", "w")
+f = open("Results/DevfHC_modelsresults.txt", "w")
 
 print("MODEL: DevfromHealth_value ~ Age + FD + Sex + Group + (1|subject) \n", file = f)
 md = smf.mixedlm("DevfromHealth_value ~ Age + Sex + FD + Group", \
@@ -753,7 +753,7 @@ print(mdf.summary(), file =f )
 f.close()
 
 
-f = open("deltaDevfHC_modelsresults.txt", "w")
+f = open("Results/deltaDevfHC_modelsresults.txt", "w")
 
 name = 'deltaDevfHC_signed'
 model = smf.ols((name +' ~ Age + Sex + FDmax + Group'), data=SZandHC_df_zscore).fit()
