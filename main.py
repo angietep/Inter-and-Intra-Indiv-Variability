@@ -195,7 +195,7 @@ def getIself(FCtrt):
 os.chdir('/Users/angeles/Documents/GitHub/Iself_Iothers/')
 
 #%behav data
-table_CL = pd.read_csv('Data/tabla_CL.csv')
+table_CL = pd.read_csv('Data/SubjectsData.csv')
 
 #Functional connectomes
 FC=sio.loadmat('Data/FCtrtDiCER1_SZCL_SCh400Nt7TianS2_vox275.mat')
@@ -232,7 +232,7 @@ ATLAS={'VIS': np.ix_(np.concatenate((np.arange(0,31,1),np.arange(200,230,1))),np
 
 HC_df= table_CL.loc[table_CL['ID'].isin(subjHC_CL)].reset_index()
 SZ_df=table_CL.loc[table_CL['ID'].isin(subjSZ_CL)].reset_index()
-#del table_CL
+del table_CL
 
 HC_df.loc[:, ('FDmax')] = HC_df.loc[:,("FD1", "FD2")].max(axis=1)
 HC_df.loc[:,('Group')] = 'HC'
