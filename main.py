@@ -28,7 +28,7 @@ from statsmodels.stats.outliers_influence import variance_inflation_factor
 from statsmodels.tools.tools import add_constant
 
 
-def getDevfHC(*args): #(FCtrt,FCtrtHC) corr(FC_subji_Sess1, meanFC_group_Sess1)
+def getDevfHC_corrmean(*args): #(FCtrt,FCtrtHC) corr(FC_subji_Sess1, meanFC_group_Sess1)
 
     FCtrt = args[0]
         
@@ -77,7 +77,7 @@ def getDevfHC(*args): #(FCtrt,FCtrtHC) corr(FC_subji_Sess1, meanFC_group_Sess1)
                 
     return DevFromHealth_S1, DevFromHealth_S2
 
-def getDevfHC_new(*args): #(FCtrt,FCtrtHC) #mean(corr(FC_subji_sess1,FC_subjk_sess1))
+def getDevfHC_meancorr(*args): #(FCtrt,FCtrtHC) #mean(corr(FC_subji_sess1,FC_subjk_sess1))
  #Iothers against HC group
     FCtrt = args[0]
         
@@ -192,42 +192,33 @@ def getIself(FCtrt):
 
 #%% Initialize and load data 
 
-#TO RUN matlab .m functions
-#eng = matlab.engine.start_matlab()
-#path = '/Volumes/WD_Elements/CODE/Functions'# specify your path
-#eng.addpath(path, nargout= 0)
+os.chdir('/Users/angeles/Documents/GitHub/Iself_Iothers/')
 
-os.chdir('/Volumes/WD_Elements/CODE/Part2_Fingerprint/1_INDIVIDUAL_fingerprint')
-
-parentdir='/Volumes/WD_Elements/';
-parentdatadir='/Volumes/TOSHIBA/';
-datadir_CL=parentdatadir + 'DATA/Reprepro/'
-#%assumed structure: *datadir*/C/C01/Sess1/EPI/EPI_preprocessed/ICA-AROMA+2P/epi_prepro.nii
-atlasdir = parentdatadir + 'DATA/ATLAS/'
-#%atlasname='Schaefer400_7Ntw_TianSubcortex_S2.nii'; 
-atlasname='Schaefer400_7Ntw_TianSubcortex_S2_2_75.nii.gz'
 #%behav data
-table_CL = pd.read_csv(parentdir+'CODE/Part2_Fingerprint/tabla_CL.csv')
-#table_Iselfs=pd.read_csv(parentdir+'CODE/Part2_Fingerprint/1_INDIVIDUAL_fingerprint/T_Rstat.csv')
+table_CL = pd.read_csv('tabla_CL.csv')
 
+#Functional connectomes
+FC=sio.loadmat('FCtrtDiCER1_SZCL_SCh400Nt7TianS2_vox275.mat')
+FCtrt_SZ_CL_nofish=np.array(FC['FCtrt_SZ_CL'])
+FCtrt_SZ_CL= fisher(FCtrt_SZ_CL_nofish)
 
-#SESS1&2 32 subjects CHILE (C28,C41,C48 exclude for bad-looking FC??)
+FC=sio.loadmat('FCtrtDiCER1_HCCL_SCh400Nt7TianS2_vox275.mat')
+FCtrt_HC_CL_nofish=np.array(FC['FCtrt_HC_CL'])
+FCtrt_HC_CL= fisher(FCtrt_HC_CL_nofish)
+
+#lists of subjects from FCs
 subjHC_CL=['C01','C02','C03','C04','C05','C07','C11','C15','C16', \
            'C18','C19','C20','C21','C24','C25','C27','C28','C30', \
            'C31','C32','C36','C41','C42','C43','C46','C47','C48', \
            'C50','C51','C52','C53','C57']
-#SESS1&2 30 subjects CHILE (1435 exclude for bad-looking FC??)
+    
 subjSZ_CL=['1401','1402','1405','1407','1413','1418','1420','1421', \
            '1423','1424','1425','1426','1428','1430','1433','1434', \
            '1435','1436','1437','1441','1442','1443','1445','1446', \
            '1449','1457','1458','1461','1465','1466']
+ 
 
-    
-#SZandHC_df=pd.read_csv('Iselfs_dataframe.csv')
-    
-
-# define SUBNETWORKS
-# Schaefer400 7Networks + 32 subcort Tian
+# SUBNETWORKS: Schaefer400 7Networks + 32 subcort Tian
 
 ATLAS={'VIS': np.ix_(np.concatenate((np.arange(0,31,1),np.arange(200,230,1))),np.concatenate((np.arange(0,31,1),np.arange(200,230,1)))), #[1:31,201:230];  MATLAB idx
        'SOM': np.ix_(np.concatenate((np.arange(31,68,1),np.arange(230,270,1))),np.concatenate((np.arange(31,68,1),np.arange(230,270,1)))), #[32:68,231:270];
@@ -241,7 +232,7 @@ ATLAS={'VIS': np.ix_(np.concatenate((np.arange(0,31,1),np.arange(200,230,1))),np
 
 HC_df= table_CL.loc[table_CL['ID'].isin(subjHC_CL)].reset_index()
 SZ_df=table_CL.loc[table_CL['ID'].isin(subjSZ_CL)].reset_index()
-del table_CL
+#del table_CL
 
 HC_df.loc[:, ('FDmax')] = HC_df.loc[:,("FD1", "FD2")].max(axis=1)
 HC_df.loc[:,('Group')] = 'HC'
@@ -249,50 +240,14 @@ HC_df.loc[:,('Group')] = 'HC'
 SZ_df.loc[:,"FDmax"] = SZ_df.loc[:,("FD1", "FD2")].max(axis=1)
 SZ_df.loc[:,'Group'] = 'SZ'
 
-FC=sio.loadmat('FCtrtDiCER1_SZCL_SCh400Nt7TianS2_vox275.mat')
-FCtrt_SZ_CL_nofish=np.array(FC['FCtrt_SZ_CL'])
-FCtrt_SZ_CL= fisher(FCtrt_SZ_CL_nofish)
-
-FC=sio.loadmat('FCtrtDiCER1_HCCL_SCh400Nt7TianS2_vox275.mat')
-FCtrt_HC_CL_nofish=np.array(FC['FCtrt_HC_CL'])
-FCtrt_HC_CL= fisher(FCtrt_HC_CL_nofish)
-
-
-# maskut=np.triu_indices(FCtrt_SZ_CL.shape[0],k=1)
-
-# allFC_SZ_fish=np.reshape(FCtrt_SZ_CL[maskut], (432*431//2)*60) # N(N-1)/2 * Nsubjects
-# allFC_HC_fish=np.reshape(FCtrt_HC_CL[maskut], (432*431//2)*64)
-
-# allFC_SZ_nofish=np.reshape(FCtrt_SZ_CL_nofish[maskut], (432*431//2)*60)
-# allFC_HC_nofish=np.reshape(FCtrt_HC_CL_nofish[maskut], (432*431//2)*64)
-
-# stats.kstest(allFC_HC_fish,"norm")
-# stats.kstest(allFC_HC_nofish,"norm")
-# stats.kstest(allFC_SZ_fish,"norm")
-# stats.kstest(allFC_SZ_nofish,"norm")
-
-# stats.shapiro(FCtrt_HC_CL_nofish)
-# stats.shapiro(FCtrt_HC_CL)
-# stats.shapiro(FCtrt_SZ_CL_nofish)
-# stats.shapiro(FCtrt_SZ_CL)
-
-# fig = sm.qqplot(allFC_HC_fish, line='45')
-# plt.show()
-
-# plt.figure()
-# sns.histplot(allFC_SZ_nofish,color="m")
-# sns.histplot(allFC_HC_nofish, color="c")
-# sns.histplot(allFC_SZ_fish,color="r")
-# sns.histplot(allFC_HC_fish)
-# plt.show()
 #%% get Iselfs, Iothers and DevfHC (Whole Brain)  
 
-print("DevfHC")
-[DevFromHealth_S1_HC, DevFromHealth_S2_HC] =getDevfHC(FCtrt_HC_CL)              
-[DevFromHealth_S1_SZ, DevFromHealth_S2_SZ] =getDevfHC(FCtrt_SZ_CL, FCtrt_HC_CL)              
-print("DevfHC new")
-[DevFromHealth_new_S1_HC, DevFromHealth_new_S2_HC] =getDevfHC_new(FCtrt_HC_CL)              
-[DevFromHealth_new_S1_SZ, DevFromHealth_new_S2_SZ] =getDevfHC_new(FCtrt_SZ_CL, FCtrt_HC_CL)    
+print("DevfHC_corrmean")
+[DevFromHealth_S1_HC, DevFromHealth_S2_HC] =getDevfHC_corrmean(FCtrt_HC_CL)              
+[DevFromHealth_S1_SZ, DevFromHealth_S2_SZ] =getDevfHC_corrmean(FCtrt_SZ_CL, FCtrt_HC_CL)              
+print("DevfHC meancorr")
+[DevFromHealth_meancorr_S1_HC, DevFromHealth_meancorr_S2_HC] =getDevfHC_meancorr(FCtrt_HC_CL)              
+[DevFromHealth_meancorr_S1_SZ, DevFromHealth_meancorr_S2_SZ] =getDevfHC_meancorr(FCtrt_SZ_CL, FCtrt_HC_CL)    
 print("Iothers")
 [Iothers_S1_HC, Iothers_S2_HC] =getIothers(FCtrt_HC_CL)              
 [Iothers_S1_SZ, Iothers_S2_SZ] =getIothers(FCtrt_SZ_CL)          
@@ -300,35 +255,12 @@ print("Iselfs")
 Iselfs_SZ =getIself(FCtrt_SZ_CL)          
 Iselfs_HC =getIself(FCtrt_HC_CL)          
 
-"""
-plt.figure()
-sns.histplot(DevFromHealth_S1_HC,color="m")
-sns.histplot(DevFromHealth_new_S1_HC, color="c")
-sns.histplot(DevFromHealth_S2_HC, color="b")
-sns.histplot(DevFromHealth_new_S2_HC,color="r")
-plt.show()   
-
-plt.figure()
-sns.histplot(DevFromHealth_S1_SZ,color="m")
-sns.histplot(DevFromHealth_new_S1_SZ, color="c")
-sns.histplot(DevFromHealth_S2_SZ, color="b")
-sns.histplot(DevFromHealth_new_S2_SZ,color="r")
-plt.show()   
-
-plt.figure()
-sns.histplot(Iothers_S1_SZ,color="m")
-sns.histplot(Iothers_S1_HC, color="c")
-sns.histplot(fisher_inv(Iothers_S1_HC), color="b")
-sns.histplot(fisher_inv(Iothers_S1_SZ),color="r")
-plt.show()   
-"""
-
-HC_df.loc[:,'DevFromHealth_S1'] = DevFromHealth_new_S1_HC.tolist() 
-HC_df.loc[:,'DevFromHealth_S2'] = DevFromHealth_new_S2_HC.tolist()
-SZ_df.loc[:,'DevFromHealth_S1'] = DevFromHealth_new_S1_SZ.tolist()
-SZ_df.loc[:,'DevFromHealth_S2'] = DevFromHealth_new_S2_SZ.tolist()
+HC_df.loc[:,'DevFromHealth_S1'] = DevFromHealth_meancorr_S1_HC.tolist() 
+HC_df.loc[:,'DevFromHealth_S2'] = DevFromHealth_meancorr_S2_HC.tolist()
+SZ_df.loc[:,'DevFromHealth_S1'] = DevFromHealth_meancorr_S1_SZ.tolist()
+SZ_df.loc[:,'DevFromHealth_S2'] = DevFromHealth_meancorr_S2_SZ.tolist()
 del DevFromHealth_S1_HC, DevFromHealth_S2_HC, DevFromHealth_S1_SZ, DevFromHealth_S2_SZ
-del DevFromHealth_new_S1_HC, DevFromHealth_new_S1_SZ, DevFromHealth_new_S2_HC, DevFromHealth_new_S2_SZ
+del DevFromHealth_meancorr_S1_HC, DevFromHealth_meancorr_S1_SZ, DevFromHealth_meancorr_S2_HC, DevFromHealth_meancorr_S2_SZ
 
 HC_df.loc[:,'Iothers_S1_WB'] = Iothers_S1_HC.tolist() #Whole Brain
 HC_df.loc[:,'Iothers_S2_WB'] = Iothers_S2_HC.tolist()        
@@ -339,7 +271,7 @@ del Iothers_S1_HC, Iothers_S2_HC, Iothers_S1_SZ, Iothers_S2_SZ
 HC_df.loc[:,'Iself_WB'] = Iselfs_HC.tolist()        
 SZ_df.loc[:,'Iself_WB'] = Iselfs_SZ.tolist()
 del Iselfs_HC, Iselfs_SZ
-#%% Iothers and Iselfs subnetworks 
+#%% get Iothers and Iselfs subnetworks 
 
 for idx, network in enumerate(ATLAS.keys()):
     print (f'Subnetwork {network}')
@@ -370,7 +302,7 @@ for idx, network in enumerate(ATLAS.keys()):
     del Iself_HC_ntw, Iself_SZ_ntw, Iothers_S1_HC, Iothers_S2_HC, Iothers_S1_SZ, Iothers_S2_SZ, name_s1, name_s2, name_Iself, FCtrt_HC_ntw, FCtrt_SZ_ntw
 del idx, network
 
-#%% Combine DataFrames
+#%% Organize DataFrames
 
 #CONCATENATE DF
 
@@ -405,7 +337,7 @@ SZ_only = SZandHC_df[(SZandHC_df.Group == 'SZ')]
 SZ_only = SZ_only.drop(SZ_only[SZ_only.deltaATP.isna()].index)
 
 
-#%% Create Repeated Measures DF
+#%% Create Repeated Measures DFs
 
 #####################
 ### Repeated measures HC vs SZ
@@ -506,7 +438,7 @@ del TP_rep, TN_rep, TG_rep, ATP_rep, Iothers_subnet_df
 
 
 #%% Standardize dataframes
-# HC and SZ
+
 Numvars_z = SZandHC_df.drop(columns=["Group","ID","Sex"]
                            +list(SZandHC_df.filter(regex='^ATP')) #ATPdose, ATPdose2
                            +list(SZandHC_df.filter(regex='^delta')) # deltaPANSS,deltaATP
@@ -532,190 +464,7 @@ Numvars_z = SZ_RepeatedMeasures_df.drop(columns=["Group","ID","Sex","Sess"]).app
 SZ_RepeatedMeasures_df_zscore = pd.concat([SZ_RepeatedMeasures_df[["Group","ID","Sex","Sess"]], Numvars_z], axis=1)
 del Numvars_z
 
-#%% Clinical heterogeneity?
-
-df_sess1=SZ_only[["TP","TN","TG","TPANSS"]]
-df_sess2=SZ_only[["TP2","TN2","TG2","TPANSS2"]]
-df_repmes=SZ_RepeatedMeasures_df[["TP","TN","TG","Sess"]]
-
-
-# set figure size
-
-plt.figure(figsize=(10,7))
-
-
-# Generate a mask to onlyshow the upper triangle
-mask = np.tril(np.ones_like(df_sess2.corr(), dtype=bool))
-# generate heatmap
-sns.heatmap(df_sess2.corr(), annot=True, mask=mask, vmin=-1, vmax=1)
-
-# Generate a mask to onlyshow the bottom triangle
-mask = np.triu(np.ones_like(df_sess1.corr(), dtype=bool))
-# generate heatmap
-sns.heatmap(df_sess1.corr(), annot=True, mask=mask, vmin=-1, vmax=1, cbar= False)
-
-
-plt.title('Pearson\'s correlations of PANSS subscales \n Session 1 bottom / Session 2 top')
-plt.show()
-
-
-
-
-# compute the vif for all given features
-def compute_vif(considered_features):
-    
-    X = df_sess2[considered_features]
-    # the calculation of variance inflation requires a constant
-    X['intercept'] = 1
-    
-    # create dataframe to store vif values
-    vif = pd.DataFrame()
-    vif["Variable"] = X.columns
-    vif["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
-    vif = vif[vif['Variable']!='intercept']
-    return vif
-
-# features to consider removing
-considered_features = ['TP2', 'TN2', 'TG2']
-
-
-# compute vif 
-vif = compute_vif(considered_features).sort_values('VIF', ascending=False)
-
-#%% deltaPANSS vs DBS
-
-p = ( ggplot (SZ_only) +
- aes(x="DBS", y="deltaPANSS") +
- labs(x="Days Between Sessions", y="deltaPANSS (Total score)") +
- geom_smooth(method= 'lm') +
- geom_point()
- )
-p.draw(show=True)
-
-(r, pval)=stats.pearsonr(SZ_only.DBS, SZ_only.deltaPANSS)
-
-
-p = ( ggplot (SZ_only) +
- aes(x="DBS", y="deltaATP") +
- labs(x="Days Between Sessions", y="deltaAP") +
- geom_smooth(method= 'lm') +
- geom_point()
- )
-p.draw(show=True)
-
-(r,pval)=stats.pearsonr(SZ_only.DBS, SZ_only.deltaATP)
-
-
-
-def compute_vif(considered_features):
-    
-    X = SZ_only[considered_features]
-    # the calculation of variance inflation requires a constant
-    X['intercept'] = 1
-    
-    # create dataframe to store vif values
-    vif = pd.DataFrame()
-    vif["Variable"] = X.columns
-    vif["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
-    vif = vif[vif['Variable']!='intercept']
-    return vif
-
-
-considered_features = ['deltaPANSS', 'deltaATP', 'DBS','Age','FDmax']
-vif = compute_vif(considered_features).sort_values('VIF', ascending=False)
-
-
-
-#%% Significant corr PLOTs
-
-p = ( ggplot (SZ_RepeatedMeasures_df) +
- aes(x="TPANSS", y="Iothers_WB") +
- labs(x="PANSS Total Score") +
- geom_smooth(method= 'lm') +
- geom_point()
- )
-p.draw(show=True)
-
-
-p = ( ggplot (SZ_RepeatedMeasures_df) +
- aes(x="ATPdose", y="Iothers_WB") +
- labs(x="AP dose (CPZ eq)") +
- geom_smooth(method= 'lm') +
- geom_point()
- )
-p.draw(show=True)
-
-
-#%% Iothers per subject plots
-p = ( ggplot (SZ_RepeatedMeasures_df) +
- aes(x="ID", y="Iothers_WB", color="Sex") +
- geom_point() +
- geom_boxplot()
- )
-p.draw(show=True)
-
-
-
-
-#%% Pairplots 
-def corrfunc(x, y, **kws):
-    (r, p) = stats.pearsonr(x, y)  
-    ax = plt.gca()
-    print(ax.get_position().ymax)
-    ax.annotate("r = {:.2f} ".format(r),
-                xy=(.05, .8), xycoords=ax.transAxes)
-    ax.annotate("p = {:.3f}".format(p),
-                xy=(.05, .6), xycoords=ax.transAxes)
-  
-sns.set(font_scale=2)
-g = sns.pairplot(df_repmes, kind="reg", diag_kind="hist", hue = "Sess", markers=["o", "D"])
-#g.map(corrfunc)
-
-ax=plt.gca()
-
-new_title = ''
-g._legend.set_title(new_title)
-# replace labels
-new_labels = ['Session 1', 'Session 2']
-for t, l in zip(g._legend.texts, new_labels):
-    t.set_text(l)
-
-
-
-
-#plt.show()    
-    
-
-p = stats.pearsonr(SZ_only.TP, SZ_only.TN)
-print (f"TP-TN: {p}")
-p = stats.pearsonr(SZ_only.TP, SZ_only.TG)
-print (f"TP-TG: {p}")
-p = stats.pearsonr(SZ_only.TP, SZ_only.TPANSS)
-print (f"TP-Total: {p}")
-p = stats.pearsonr(SZ_only.TN, SZ_only.TG)
-print (f"TN-TG: {p}")
-p = stats.pearsonr(SZ_only.TN, SZ_only.TPANSS)
-print (f"TN-Total: {p}")
-p = stats.pearsonr(SZ_only.TG, SZ_only.TPANSS)
-print (f"TG-Total: {p}")
-
-p = stats.pearsonr(SZ_only.TP2, SZ_only.TN2)
-print (f"TP2-TN2: {p}")
-p = stats.pearsonr(SZ_only.TP2, SZ_only.TG2)
-print (f"TP2-TG2: {p}")
-p = stats.pearsonr(SZ_only.TP2, SZ_only.TPANSS2)
-print (f"TP2-Total2: {p}")
-p = stats.pearsonr(SZ_only.TN2, SZ_only.TG2)
-print (f"TN2-TG2: {p}")
-p = stats.pearsonr(SZ_only.TN2, SZ_only.TPANSS2)
-print (f"TN2-Total2: {p}")
-p = stats.pearsonr(SZ_only.TG2, SZ_only.TPANSS2)
-print (f"TG2-Total2: {p}")
-
-
-
-
-#%% Results table: Iselfs & Iothers
+#%% Results table: mean + std Iselfs & Iothers
 
 mIself_SZ = SZ_df.Iself_WB.mean()
 stdIself_SZ = SZ_df.Iself_WB.std()
@@ -726,11 +475,13 @@ stdIself_HC = HC_df.Iself_WB.std()
 mDevfHC_S1_SZ = SZ_df.DevFromHealth_S1.mean()
 stdDevfHC_S1_SZ = SZ_df.DevFromHealth_S1.std()
 
+#Similarly for Iothers ....
+
 
 stats.ttest_ind(SZ_df.Iself_WB,HC_df.Iself_WB)
 stats.ttest_ind(SZ_df.DevFromHealth_S2,HC_df.DevFromHealth_S2)
 
-#%% Iself GLM:  
+#%% MODEL: Iself 
     
 # Make text file with model summaries (including Group as variable)    
 uncorrected_p=np.zeros(9)
@@ -842,7 +593,7 @@ filename = '/Users/angeles/Desktop/Iself_plot1000.jpg'
 #plt.savefig(filename, dpi=1000)
 plt.show()
 
-#%% Iothers GLM:
+#%% MODEL: Iothers
 
 uncorrected_p_GROUP=np.zeros(9)
 uncorrected_p_PANSS=np.zeros(9)
@@ -974,10 +725,8 @@ for idx, network in enumerate(ATLAS.keys()):
 filename = '/Users/angeles/Desktop/Iothers_plot1000.jpg'
 #plt.savefig(filename, dpi=1000)
 plt.show()
-#%% DevfHC Repeated measures GLM:
+#%% MODEL: DevfHC and deltaDevfHC
  # Mixed effects: two measures per subject
-
-    #model: smf.mixedlm (Yvar ~ Age + ... + Group, data = Iothers_df, groups=Iothers_df["ID"])
     
 f = open("DevfHC_modelsresults.txt", "w")
 
@@ -1004,18 +753,6 @@ print(mdf.summary(), file =f )
 f.close()
 
 
-p = ( ggplot (SZ_RepeatedMeasures_df) +
- aes(x="TN", y="DevfromHealth_value") +
- labs() +
- geom_smooth(method= 'lm') +
- geom_point()
- )
-p.draw(show=True)
-
-#%% delta DevfHC GLM:  
-    
-# Make text file with model summaries (including Group as variable)    
-
 f = open("deltaDevfHC_modelsresults.txt", "w")
 
 name = 'deltaDevfHC_signed'
@@ -1029,6 +766,85 @@ model = smf.ols((name +' ~ Age + Sex + FDmax + deltaATP_signed + deltaTP_signed 
 print(model.summary(), file = f) 
     
 f.close()
+
+
+#%% PLOT: deltaDevfHC fitted vs actual ---deltaPANSS
+name = 'deltaDevfHC_signed'
+model = smf.ols((name +' ~ Age + Sex + FDmax + deltaATP_signed + deltaPANSS_signed'), data=SZ_only).fit()  #
+
+df= pd.DataFrame(model.fittedvalues,columns=['deltaDevfHC_fitted'])
+df['deltaDevfHC_actual']=SZ_only.deltaDevfHC_signed
+df['deltaPANSS_signed']=SZ_only.deltaPANSS_signed
+
+
+p = ( ggplot (df) +
+ aes(x="deltaDevfHC_fitted", y="deltaDevfHC_actual") +
+ labs(x='fitted deltaDevfHC', y='actual deltaDevfHC') +
+ geom_point(aes(fill = 'deltaPANSS_signed'), colour='black', size = 4) +
+ geom_abline(intercept = 0, slope = 1) +
+ theme(text = element_text(size = 16)) 
+ )
+p.draw(show=True)
+
+#%% PLOT: Iothers fitted vs actual ---TotalPANSS and APdose
+
+md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + TPANSS + ATPdose", \
+                 data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
+mdf = md.fit()  #method=["lbfgs"]  method="bfgs" or method="cg"
+
+df= pd.DataFrame(mdf.fittedvalues,columns=['IothersWB_fitted'])
+df['IothersWB_actual']=SZ_RepeatedMeasures_df.Iothers_WB
+df['TotalPANSS']=SZ_RepeatedMeasures_df.TPANSS
+df['APdose']=SZ_RepeatedMeasures_df.ATPdose
+
+
+p = ( ggplot (df) +
+ aes(x="IothersWB_fitted", y="IothersWB_actual") +
+ labs(x='fitted Iothers (WB)', y='actual Iothers (WB)') +
+ geom_point(aes(fill = 'TotalPANSS'), colour='black', size = 4) +
+ geom_abline(intercept = 0, slope = 1) +
+ theme(text = element_text(size = 16)) 
+ )
+p.draw(show=True)
+
+
+p = ( ggplot (df) +
+ aes(x="IothersWB_fitted", y="IothersWB_actual") +
+ labs(x='fitted Iothers (WB)', y='actual Iothers (WB)') +
+ geom_point(aes(fill = 'APdose'), colour='black', size = 4) +
+ geom_abline(intercept = 0, slope = 1) + 
+ theme(text = element_text(size = 16))     
+ )
+p.draw(show=True)
+
+#%% EXTRA PLOTS: Significant correlations
+
+p = ( ggplot (SZ_RepeatedMeasures_df) +
+ aes(x="TPANSS", y="Iothers_WB") +
+ labs(x="PANSS Total Score") +
+ geom_smooth(method= 'lm') +
+ geom_point()
+ )
+p.draw(show=True)
+
+
+p = ( ggplot (SZ_RepeatedMeasures_df) +
+ aes(x="ATPdose", y="Iothers_WB") +
+ labs(x="AP dose (CPZ eq)") +
+ geom_smooth(method= 'lm') +
+ geom_point()
+ )
+p.draw(show=True)
+
+
+p = ( ggplot (SZ_RepeatedMeasures_df) +
+ aes(x="TN", y="DevfromHealth_value") +
+ labs() +
+ geom_smooth(method= 'lm') +
+ geom_point()
+ )
+p.draw(show=True)
+
 
 
 p = ( ggplot (SZ_only) +
@@ -1049,8 +865,7 @@ p = ( ggplot (SZ_only) +
 p.draw(show=True)
 
 
-
-#%% PLOTS: corr con variables clinicas
+#%% EXTRA PLOTS: corr Residuals vs clinical variables
 labels = ["HC","FEP"]
 
 name = 'Iothers_WB'
@@ -1083,12 +898,7 @@ sm.graphics.beanplot(Resid, ax=ax, labels=labels, plot_opts=plot_opts,  \
 ax.set_xlabel("Group")
 ax.set_ylabel("Residuals \n (Iothers ~ Age + Sex + FD)")
 ax.set_title("Iothers_WholeBrain")
-#ax.text(.5,.5,"p value: {:.3f}".format(Text[1]))  
-#SE ME PONE EL TEXTO EN CUALQUIER LADO. NDEAH!
 
-    # plt.show()
-#filename = '/Users/angeles/Desktop/Iothers_plot1000.jpg'
-#plt.savefig(filename, dpi=1000)
 
 
 md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD +  ATPdose", \
@@ -1146,8 +956,7 @@ sm.graphics.beanplot(Iself, ax=ax, labels=labels, plot_opts=plot_opts, \
 ax.set_xlabel("Group")
 ax.set_ylabel("Residuals \n (Iself ~ Age + Sex + FD + DBS)")
 ax.set_title("Iself_WholeBrain")
-#ax.text(.5,.5,"p value: {:.3f}".format(Text[1]))  
-#SE ME PONE EL TEXTO EN CUALQUIER LADO. NDEAH!
+
 
 name = 'Iself_WB'
 model = smf.ols((name +' ~ Age + Sex + FDmax + DBS + deltaPANSS'), data=SZ_only).fit()  #
@@ -1161,13 +970,11 @@ ax.set_ylabel("Residuals \n (Iself ~ Age + Sex + FD + DBS + deltaPANSS)")
 ax.set_title("Iself vs delta AP dose")
 
 
-SZ_only28=SZ_only[~SZ_only.ATPdose2.isna()]  
-
 name = 'Iself_WB'
-model = smf.ols((name +' ~ Age + Sex + FDmax + DBS + deltaATP'), data=SZ_only28).fit()  #
+model = smf.ols((name +' ~ Age + Sex + FDmax + DBS + deltaATP'), data=SZ_only).fit()  #
 
 fig = plt.figure()
-x=SZ_only28.deltaPANSS
+x=SZ_only.deltaPANSS
 y= model.resid
 ax=sns.regplot(x, y)
 ax.set_xlabel("delta PANSS")
@@ -1237,6 +1044,167 @@ ax.set_xlabel("TPANSS")
 ax.set_ylabel("Residuals \n (DevHFC~ Age + Sex + FD + APdose)")
 ax.set_title("DevHFC vs PANSS total")
 
+
+#%% EXTRA: deltaPANSS vs DBS
+
+p = ( ggplot (SZ_only) +
+ aes(x="DBS", y="deltaPANSS") +
+ labs(x="Days Between Sessions", y="deltaPANSS (Total score)") +
+ geom_smooth(method= 'lm') +
+ geom_point()
+ )
+p.draw(show=True)
+
+(r, pval)=stats.pearsonr(SZ_only.DBS, SZ_only.deltaPANSS)
+
+
+p = ( ggplot (SZ_only) +
+ aes(x="DBS", y="deltaATP") +
+ labs(x="Days Between Sessions", y="deltaAP") +
+ geom_smooth(method= 'lm') +
+ geom_point()
+ )
+p.draw(show=True)
+
+(r,pval)=stats.pearsonr(SZ_only.DBS, SZ_only.deltaATP)
+
+
+
+def compute_vif(considered_features):
+    
+    X = SZ_only[considered_features]
+    # the calculation of variance inflation requires a constant
+    X['intercept'] = 1
+    
+    # create dataframe to store vif values
+    vif = pd.DataFrame()
+    vif["Variable"] = X.columns
+    vif["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+    vif = vif[vif['Variable']!='intercept']
+    return vif
+
+
+considered_features = ['deltaPANSS', 'deltaATP', 'DBS','Age','FDmax']
+vif = compute_vif(considered_features).sort_values('VIF', ascending=False)
+
+
+
+
+
+#%% EXTRA: Iothers per subject plots
+p = ( ggplot (SZ_RepeatedMeasures_df) +
+ aes(x="ID", y="Iothers_WB", color="Sex") +
+ geom_point() +
+ geom_boxplot()
+ )
+p.draw(show=True)
+
+
+
+#%% EXTRA: Clinical heterogeneity?
+
+df_sess1=SZ_only[["TP","TN","TG","TPANSS"]]
+df_sess2=SZ_only[["TP2","TN2","TG2","TPANSS2"]]
+df_repmes=SZ_RepeatedMeasures_df[["TP","TN","TG","Sess"]]
+
+
+# set figure size
+
+plt.figure(figsize=(10,7))
+
+
+# Generate a mask to onlyshow the upper triangle
+mask = np.tril(np.ones_like(df_sess2.corr(), dtype=bool))
+# generate heatmap
+sns.heatmap(df_sess2.corr(), annot=True, mask=mask, vmin=-1, vmax=1)
+
+# Generate a mask to onlyshow the bottom triangle
+mask = np.triu(np.ones_like(df_sess1.corr(), dtype=bool))
+# generate heatmap
+sns.heatmap(df_sess1.corr(), annot=True, mask=mask, vmin=-1, vmax=1, cbar= False)
+
+
+plt.title('Pearson\'s correlations of PANSS subscales \n Session 1 bottom / Session 2 top')
+plt.show()
+
+
+# compute the vif for all given features
+def compute_vif(considered_features):
+    
+    X = df_sess2[considered_features]
+    # the calculation of variance inflation requires a constant
+    X['intercept'] = 1
+    
+    # create dataframe to store vif values
+    vif = pd.DataFrame()
+    vif["Variable"] = X.columns
+    vif["VIF"] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+    vif = vif[vif['Variable']!='intercept']
+    return vif
+
+# features to consider removing
+considered_features = ['TP2', 'TN2', 'TG2']
+
+
+# compute vif 
+vif = compute_vif(considered_features).sort_values('VIF', ascending=False)
+
+
+
+#%%         Pairplots 
+def corrfunc(x, y, **kws):
+    (r, p) = stats.pearsonr(x, y)  
+    ax = plt.gca()
+    print(ax.get_position().ymax)
+    ax.annotate("r = {:.2f} ".format(r),
+                xy=(.05, .8), xycoords=ax.transAxes)
+    ax.annotate("p = {:.3f}".format(p),
+                xy=(.05, .6), xycoords=ax.transAxes)
+  
+sns.set(font_scale=2)
+g = sns.pairplot(df_repmes, kind="reg", diag_kind="hist", hue = "Sess", markers=["o", "D"])
+#g.map(corrfunc)
+
+ax=plt.gca()
+
+new_title = ''
+g._legend.set_title(new_title)
+# replace labels
+new_labels = ['Session 1', 'Session 2']
+for t, l in zip(g._legend.texts, new_labels):
+    t.set_text(l)
+
+
+
+
+#plt.show()    
+    
+
+p = stats.pearsonr(SZ_only.TP, SZ_only.TN)
+print (f"TP-TN: {p}")
+p = stats.pearsonr(SZ_only.TP, SZ_only.TG)
+print (f"TP-TG: {p}")
+p = stats.pearsonr(SZ_only.TP, SZ_only.TPANSS)
+print (f"TP-Total: {p}")
+p = stats.pearsonr(SZ_only.TN, SZ_only.TG)
+print (f"TN-TG: {p}")
+p = stats.pearsonr(SZ_only.TN, SZ_only.TPANSS)
+print (f"TN-Total: {p}")
+p = stats.pearsonr(SZ_only.TG, SZ_only.TPANSS)
+print (f"TG-Total: {p}")
+
+p = stats.pearsonr(SZ_only.TP2, SZ_only.TN2)
+print (f"TP2-TN2: {p}")
+p = stats.pearsonr(SZ_only.TP2, SZ_only.TG2)
+print (f"TP2-TG2: {p}")
+p = stats.pearsonr(SZ_only.TP2, SZ_only.TPANSS2)
+print (f"TP2-Total2: {p}")
+p = stats.pearsonr(SZ_only.TN2, SZ_only.TG2)
+print (f"TN2-TG2: {p}")
+p = stats.pearsonr(SZ_only.TN2, SZ_only.TPANSS2)
+print (f"TN2-Total2: {p}")
+p = stats.pearsonr(SZ_only.TG2, SZ_only.TPANSS2)
+print (f"TG2-Total2: {p}")
 
 
 
