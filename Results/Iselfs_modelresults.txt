@@ -4,7 +4,7 @@ Dep. Variable:               Iself_WB   R-squared:                       0.089
 Model:                            OLS   Adj. R-squared:                  0.006
 Method:                 Least Squares   F-statistic:                     1.070
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.387
-Time:                        12:48:20   Log-Likelihood:                -83.724
+Time:                        12:56:07   Log-Likelihood:                -83.724
 No. Observations:                  61   AIC:                             179.4
 Df Residuals:                      55   BIC:                             192.1
 Df Model:                           5                                         
@@ -33,7 +33,7 @@ Dep. Variable:               Iself_WB   R-squared:                       0.233
 Model:                            OLS   Adj. R-squared:                  0.014
 Method:                 Least Squares   F-statistic:                     1.063
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.415
-Time:                        12:48:20   Log-Likelihood:                -36.018
+Time:                        12:56:07   Log-Likelihood:                -36.018
 No. Observations:                  28   AIC:                             86.04
 Df Residuals:                      21   BIC:                             95.36
 Df Model:                           6                                         
@@ -63,7 +63,7 @@ Dep. Variable:               Iself_WB   R-squared:                       0.319
 Model:                            OLS   Adj. R-squared:                  0.032
 Method:                 Least Squares   F-statistic:                     1.112
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.398
-Time:                        12:48:20   Log-Likelihood:                -34.353
+Time:                        12:56:07   Log-Likelihood:                -34.353
 No. Observations:                  28   AIC:                             86.71
 Df Residuals:                      19   BIC:                             98.70
 Df Model:                           8                                         
@@ -95,7 +95,7 @@ Dep. Variable:              Iself_VIS   R-squared:                       0.168
 Model:                            OLS   Adj. R-squared:                  0.093
 Method:                 Least Squares   F-statistic:                     2.226
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):             0.0645
-Time:                        12:48:20   Log-Likelihood:                -80.934
+Time:                        12:56:07   Log-Likelihood:                -80.934
 No. Observations:                  61   AIC:                             173.9
 Df Residuals:                      55   BIC:                             186.5
 Df Model:                           5                                         
@@ -124,7 +124,7 @@ Dep. Variable:              Iself_VIS   R-squared:                       0.340
 Model:                            OLS   Adj. R-squared:                  0.152
 Method:                 Least Squares   F-statistic:                     1.807
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.146
-Time:                        12:48:20   Log-Likelihood:                -33.903
+Time:                        12:56:07   Log-Likelihood:                -33.903
 No. Observations:                  28   AIC:                             81.81
 Df Residuals:                      21   BIC:                             91.13
 Df Model:                           6                                         
@@ -154,7 +154,7 @@ Dep. Variable:              Iself_VIS   R-squared:                       0.368
 Model:                            OLS   Adj. R-squared:                  0.102
 Method:                 Least Squares   F-statistic:                     1.383
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.266
-Time:                        12:48:20   Log-Likelihood:                -33.305
+Time:                        12:56:07   Log-Likelihood:                -33.305
 No. Observations:                  28   AIC:                             84.61
 Df Residuals:                      19   BIC:                             96.60
 Df Model:                           8                                         
@@ -186,7 +186,7 @@ Dep. Variable:              Iself_SOM   R-squared:                       0.113
 Model:                            OLS   Adj. R-squared:                  0.032
 Method:                 Least Squares   F-statistic:                     1.396
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.240
-Time:                        12:48:20   Log-Likelihood:                -82.912
+Time:                        12:56:07   Log-Likelihood:                -82.912
 No. Observations:                  61   AIC:                             177.8
 Df Residuals:                      55   BIC:                             190.5
 Df Model:                           5                                         
@@ -215,7 +215,7 @@ Dep. Variable:              Iself_SOM   R-squared:                       0.136
 Model:                            OLS   Adj. R-squared:                 -0.111
 Method:                 Least Squares   F-statistic:                    0.5495
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.765
-Time:                        12:48:20   Log-Likelihood:                -37.689
+Time:                        12:56:07   Log-Likelihood:                -37.689
 No. Observations:                  28   AIC:                             89.38
 Df Residuals:                      21   BIC:                             98.70
 Df Model:                           6                                         
@@ -245,7 +245,7 @@ Dep. Variable:              Iself_SOM   R-squared:                       0.223
 Model:                            OLS   Adj. R-squared:                 -0.105
 Method:                 Least Squares   F-statistic:                    0.6804
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.703
-Time:                        12:48:20   Log-Likelihood:                -36.204
+Time:                        12:56:07   Log-Likelihood:                -36.204
 No. Observations:                  28   AIC:                             90.41
 Df Residuals:                      19   BIC:                             102.4
 Df Model:                           8                                         
@@ -277,7 +277,7 @@ Dep. Variable:          Iself_DORSATT   R-squared:                       0.098
 Model:                            OLS   Adj. R-squared:                  0.015
 Method:                 Least Squares   F-statistic:                     1.188
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.327
-Time:                        12:48:20   Log-Likelihood:                -83.426
+Time:                        12:56:07   Log-Likelihood:                -83.426
 No. Observations:                  61   AIC:                             178.9
 Df Residuals:                      55   BIC:                             191.5
 Df Model:                           5                                         
@@ -306,7 +306,7 @@ Dep. Variable:          Iself_DORSATT   R-squared:                       0.336
 Model:                            OLS   Adj. R-squared:                  0.146
 Method:                 Least Squares   F-statistic:                     1.772
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.154
-Time:                        12:48:20   Log-Likelihood:                -33.994
+Time:                        12:56:07   Log-Likelihood:                -33.994
 No. Observations:                  28   AIC:                             81.99
 Df Residuals:                      21   BIC:                             91.31
 Df Model:                           6                                         
@@ -336,7 +336,7 @@ Dep. Variable:          Iself_DORSATT   R-squared:                       0.428
 Model:                            OLS   Adj. R-squared:                  0.188
 Method:                 Least Squares   F-statistic:                     1.780
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.144
-Time:                        12:48:20   Log-Likelihood:                -31.900
+Time:                        12:56:07   Log-Likelihood:                -31.900
 No. Observations:                  28   AIC:                             81.80
 Df Residuals:                      19   BIC:                             93.79
 Df Model:                           8                                         
@@ -368,7 +368,7 @@ Dep. Variable:          Iself_VENTATT   R-squared:                       0.083
 Model:                            OLS   Adj. R-squared:                 -0.000
 Method:                 Least Squares   F-statistic:                    0.9959
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.429
-Time:                        12:48:20   Log-Likelihood:                -83.912
+Time:                        12:56:07   Log-Likelihood:                -83.912
 No. Observations:                  61   AIC:                             179.8
 Df Residuals:                      55   BIC:                             192.5
 Df Model:                           5                                         
@@ -397,7 +397,7 @@ Dep. Variable:          Iself_VENTATT   R-squared:                       0.387
 Model:                            OLS   Adj. R-squared:                  0.212
 Method:                 Least Squares   F-statistic:                     2.209
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):             0.0829
-Time:                        12:48:20   Log-Likelihood:                -32.881
+Time:                        12:56:07   Log-Likelihood:                -32.881
 No. Observations:                  28   AIC:                             79.76
 Df Residuals:                      21   BIC:                             89.09
 Df Model:                           6                                         
@@ -427,7 +427,7 @@ Dep. Variable:          Iself_VENTATT   R-squared:                       0.581
 Model:                            OLS   Adj. R-squared:                  0.404
 Method:                 Least Squares   F-statistic:                     3.287
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):             0.0158
-Time:                        12:48:20   Log-Likelihood:                -27.567
+Time:                        12:56:07   Log-Likelihood:                -27.567
 No. Observations:                  28   AIC:                             73.13
 Df Residuals:                      19   BIC:                             85.12
 Df Model:                           8                                         
@@ -459,7 +459,7 @@ Dep. Variable:           Iself_LIMBIC   R-squared:                       0.038
 Model:                            OLS   Adj. R-squared:                 -0.049
 Method:                 Least Squares   F-statistic:                    0.4352
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.822
-Time:                        12:48:20   Log-Likelihood:                -85.372
+Time:                        12:56:07   Log-Likelihood:                -85.372
 No. Observations:                  61   AIC:                             182.7
 Df Residuals:                      55   BIC:                             195.4
 Df Model:                           5                                         
@@ -488,7 +488,7 @@ Dep. Variable:           Iself_LIMBIC   R-squared:                       0.220
 Model:                            OLS   Adj. R-squared:                 -0.003
 Method:                 Least Squares   F-statistic:                    0.9846
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.460
-Time:                        12:48:20   Log-Likelihood:                -36.260
+Time:                        12:56:07   Log-Likelihood:                -36.260
 No. Observations:                  28   AIC:                             86.52
 Df Residuals:                      21   BIC:                             95.85
 Df Model:                           6                                         
@@ -518,7 +518,7 @@ Dep. Variable:           Iself_LIMBIC   R-squared:                       0.233
 Model:                            OLS   Adj. R-squared:                 -0.090
 Method:                 Least Squares   F-statistic:                    0.7220
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.671
-Time:                        12:48:20   Log-Likelihood:                -36.014
+Time:                        12:56:07   Log-Likelihood:                -36.014
 No. Observations:                  28   AIC:                             90.03
 Df Residuals:                      19   BIC:                             102.0
 Df Model:                           8                                         
@@ -550,7 +550,7 @@ Dep. Variable:               Iself_FP   R-squared:                       0.269
 Model:                            OLS   Adj. R-squared:                  0.203
 Method:                 Least Squares   F-statistic:                     4.050
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):            0.00336
-Time:                        12:48:20   Log-Likelihood:                -76.995
+Time:                        12:56:07   Log-Likelihood:                -76.995
 No. Observations:                  61   AIC:                             166.0
 Df Residuals:                      55   BIC:                             178.7
 Df Model:                           5                                         
@@ -579,7 +579,7 @@ Dep. Variable:               Iself_FP   R-squared:                       0.410
 Model:                            OLS   Adj. R-squared:                  0.241
 Method:                 Least Squares   F-statistic:                     2.432
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):             0.0607
-Time:                        12:48:20   Log-Likelihood:                -32.343
+Time:                        12:56:07   Log-Likelihood:                -32.343
 No. Observations:                  28   AIC:                             78.69
 Df Residuals:                      21   BIC:                             88.01
 Df Model:                           6                                         
@@ -609,7 +609,7 @@ Dep. Variable:               Iself_FP   R-squared:                       0.465
 Model:                            OLS   Adj. R-squared:                  0.240
 Method:                 Least Squares   F-statistic:                     2.065
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):             0.0930
-Time:                        12:48:20   Log-Likelihood:                -30.972
+Time:                        12:56:07   Log-Likelihood:                -30.972
 No. Observations:                  28   AIC:                             79.94
 Df Residuals:                      19   BIC:                             91.93
 Df Model:                           8                                         
@@ -641,7 +641,7 @@ Dep. Variable:              Iself_DMN   R-squared:                       0.180
 Model:                            OLS   Adj. R-squared:                  0.105
 Method:                 Least Squares   F-statistic:                     2.413
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):             0.0476
-Time:                        12:48:20   Log-Likelihood:                -80.507
+Time:                        12:56:07   Log-Likelihood:                -80.507
 No. Observations:                  61   AIC:                             173.0
 Df Residuals:                      55   BIC:                             185.7
 Df Model:                           5                                         
@@ -670,7 +670,7 @@ Dep. Variable:              Iself_DMN   R-squared:                       0.279
 Model:                            OLS   Adj. R-squared:                  0.073
 Method:                 Least Squares   F-statistic:                     1.354
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.278
-Time:                        12:48:20   Log-Likelihood:                -35.151
+Time:                        12:56:07   Log-Likelihood:                -35.151
 No. Observations:                  28   AIC:                             84.30
 Df Residuals:                      21   BIC:                             93.63
 Df Model:                           6                                         
@@ -700,7 +700,7 @@ Dep. Variable:              Iself_DMN   R-squared:                       0.428
 Model:                            OLS   Adj. R-squared:                  0.187
 Method:                 Least Squares   F-statistic:                     1.776
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.145
-Time:                        12:48:20   Log-Likelihood:                -31.914
+Time:                        12:56:07   Log-Likelihood:                -31.914
 No. Observations:                  28   AIC:                             81.83
 Df Residuals:                      19   BIC:                             93.82
 Df Model:                           8                                         
@@ -732,7 +732,7 @@ Dep. Variable:          Iself_subcort   R-squared:                       0.091
 Model:                            OLS   Adj. R-squared:                  0.008
 Method:                 Least Squares   F-statistic:                     1.101
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.370
-Time:                        12:48:21   Log-Likelihood:                -83.645
+Time:                        12:56:07   Log-Likelihood:                -83.645
 No. Observations:                  61   AIC:                             179.3
 Df Residuals:                      55   BIC:                             192.0
 Df Model:                           5                                         
@@ -761,7 +761,7 @@ Dep. Variable:          Iself_subcort   R-squared:                       0.252
 Model:                            OLS   Adj. R-squared:                  0.038
 Method:                 Least Squares   F-statistic:                     1.177
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.356
-Time:                        12:48:21   Log-Likelihood:                -35.671
+Time:                        12:56:07   Log-Likelihood:                -35.671
 No. Observations:                  28   AIC:                             85.34
 Df Residuals:                      21   BIC:                             94.67
 Df Model:                           6                                         
@@ -791,7 +791,7 @@ Dep. Variable:          Iself_subcort   R-squared:                       0.251
 Model:                            OLS   Adj. R-squared:                 -0.065
 Method:                 Least Squares   F-statistic:                    0.7947
 Date:                Wed, 25 Jan 2023   Prob (F-statistic):              0.614
-Time:                        12:48:21   Log-Likelihood:                -35.689
+Time:                        12:56:07   Log-Likelihood:                -35.689
 No. Observations:                  28   AIC:                             89.38
 Df Residuals:                      19   BIC:                             101.4
 Df Model:                           8                                         
