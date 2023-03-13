@@ -4,10 +4,16 @@
 Created on Thu Feb  3 12:49:29 2022
 
 @author: angeles
+
+DATA
+Functional connectomes and behavioral data used in this work 
+is available in Zenodo doi.org/10.5281/zenodo.7569166 
+
 """
 
 
 #%% Import and define
+#################################
 
 import pandas as pd
 import scipy.io as sio   #to import matlab data
@@ -191,18 +197,19 @@ def getIself(FCtrt):
     
 
 #%% Initialize and load data 
+################################
 
 os.chdir('/Users/angeles/Documents/GitHub/Iself_Iothers/')
 
 #%behav data
-table_CL = pd.read_csv('Data/SubjectsData.csv')
+table_CL = pd.read_csv('/Users/angeles/Documents/Data/SubjectsData.csv')
 
 #Functional connectomes
-FC=sio.loadmat('Data/FCtrtDiCER1_SZCL_SCh400Nt7TianS2_vox275.mat')
+FC=sio.loadmat('/Users/angeles/Documents/Data/FCtrtDiCER1_SZCL_SCh400Nt7TianS2_vox275.mat')
 FCtrt_SZ_CL_nofish=np.array(FC['FCtrt_SZ_CL'])
 FCtrt_SZ_CL= fisher(FCtrt_SZ_CL_nofish)
 
-FC=sio.loadmat('Data/FCtrtDiCER1_HCCL_SCh400Nt7TianS2_vox275.mat')
+FC=sio.loadmat('/Users/angeles/Documents/Data/FCtrtDiCER1_HCCL_SCh400Nt7TianS2_vox275.mat')
 FCtrt_HC_CL_nofish=np.array(FC['FCtrt_HC_CL'])
 FCtrt_HC_CL= fisher(FCtrt_HC_CL_nofish)
 
@@ -241,6 +248,8 @@ SZ_df.loc[:,"FDmax"] = SZ_df.loc[:,("FD1", "FD2")].max(axis=1)
 SZ_df.loc[:,'Group'] = 'SZ'
 
 #%% get Iselfs, Iothers and DevfHC (Whole Brain)  
+###################################################
+
 
 print("DevfHC_corrmean")
 [DevFromHealth_S1_HC, DevFromHealth_S2_HC] =getDevfHC_corrmean(FCtrt_HC_CL)              
@@ -272,6 +281,7 @@ HC_df.loc[:,'Iself_WB'] = Iselfs_HC.tolist()
 SZ_df.loc[:,'Iself_WB'] = Iselfs_SZ.tolist()
 del Iselfs_HC, Iselfs_SZ
 #%% get Iothers and Iselfs subnetworks 
+###########################################
 
 for idx, network in enumerate(ATLAS.keys()):
     print (f'Subnetwork {network}')
@@ -303,6 +313,7 @@ for idx, network in enumerate(ATLAS.keys()):
 del idx, network
 
 #%% Organize DataFrames
+##############################
 
 #CONCATENATE DF
 
@@ -338,10 +349,9 @@ SZ_only = SZ_only.drop(SZ_only[SZ_only.deltaATP.isna()].index)
 
 
 #%% Create Repeated Measures DFs
+######################################
 
-#####################
-### Repeated measures HC vs SZ
-#####################
+# Repeated measures HC vs SZ
 """
 #Dos IOTHERS/DevfHC POR SUJETO: 
     #ID     Yvar
@@ -381,9 +391,8 @@ for idx, network in enumerate(ATLAS.keys()):
 
 del Iothers_rep, DevHealth_rep, FD_rep, Iothers_subnet_df
 
-#################
+
 #### SZ ONLY
-#################
 
 Iothers_rep = pd.melt(SZ_only, id_vars=["ID","Age", "DBS", "Sex", "Group"], \
                              value_vars=["Iothers_S1_WB","Iothers_S2_WB"], \
@@ -438,6 +447,7 @@ del TP_rep, TN_rep, TG_rep, ATP_rep, Iothers_subnet_df
 
 
 #%% Standardize dataframes
+#################################
 
 Numvars_z = SZandHC_df.drop(columns=["Group","ID","Sex"]
                            +list(SZandHC_df.filter(regex='^ATP')) #ATPdose, ATPdose2
@@ -465,6 +475,7 @@ SZ_RepeatedMeasures_df_zscore = pd.concat([SZ_RepeatedMeasures_df[["Group","ID",
 del Numvars_z
 
 #%% Results table: mean + std Iselfs & Iothers
+#################################################
 
 mIself_SZ = SZ_df.Iself_WB.mean()
 stdIself_SZ = SZ_df.Iself_WB.std()
@@ -482,7 +493,8 @@ stats.ttest_ind(SZ_df.Iself_WB,HC_df.Iself_WB)
 stats.ttest_ind(SZ_df.DevFromHealth_S2,HC_df.DevFromHealth_S2)
 
 #%% MODEL: Iself 
-    
+#########################
+
 # Make text file with model summaries (including Group as variable)    
 uncorrected_p=np.zeros(9)
 uncorrected_p_PANSS=np.zeros(9)
@@ -525,6 +537,7 @@ p_corrPANSS=multitest.fdrcorrection(uncorrected_p_PANSS[1:], alpha=0.05, method=
 p_corrATP=multitest.fdrcorrection(uncorrected_p_ATP[1:], alpha=0.05, method='indep', is_sorted=False)[1]
 
 #%%     # Plot residuals (model without Group as variable)
+############################################################
 
 name = 'Iself_WB'
 model = smf.ols((name +' ~ Age + Sex + FDmax + DBS '), data=SZandHC_df_zscore).fit()
@@ -563,9 +576,6 @@ ax.set_ylabel("Residuals", fontsize=30)
 ax.set_title("Iself_WholeBrain", fontsize=30)
 ax.tick_params(axis='both', which='major', labelsize=25)
 
-#ax.text(.5,.5,"p value: {:.3f}".format(Text[1]))  
-#SE ME PONE EL TEXTO EN CUALQUIER LADO. NDEAH!
-
 for idx, network in enumerate(ATLAS.keys()):
     name = 'Iself_' + network
     model= smf.ols( (name +' ~ Age + Sex + FDmax + DBS '), data=SZandHC_df_zscore).fit()
@@ -589,11 +599,12 @@ for idx, network in enumerate(ATLAS.keys()):
     ax.tick_params(axis='both', which='major', labelsize=25)
 
 
-filename = '/Users/angeles/Desktop/Iself_plot1000.jpg'
+filename = '/Users/angeles/Desktop/Iself_plot300.jpg'
 #plt.savefig(filename, dpi=1000)
 plt.show()
 
 #%% MODEL: Iothers
+###############################
 
 uncorrected_p_GROUP=np.zeros(9)
 uncorrected_p_PANSS=np.zeros(9)
@@ -657,6 +668,7 @@ p_corrATP=multitest.fdrcorrection(uncorrected_p_ATP[1:], alpha=0.05, method='ind
 
 
 #%%     # Plot residuals (model without Group as variable)
+##########################################################
 
 name = 'Iothers_WB'
 md = smf.mixedlm(name+" ~ Age + Sex + FD ", \
@@ -727,6 +739,8 @@ filename = '/Users/angeles/Desktop/Iothers_plot1000.jpg'
 plt.show()
 #%% MODEL: DevfHC and deltaDevfHC
  # Mixed effects: two measures per subject
+#########################################################
+
     
 f = open("Results/DevfHC_modelsresults.txt", "w")
 
@@ -769,6 +783,8 @@ f.close()
 
 
 #%% PLOT: deltaDevfHC fitted vs actual ---deltaPANSS
+######################################################
+
 name = 'deltaDevfHC_signed'
 model = smf.ols((name +' ~ Age + Sex + FDmax + deltaATP_signed + deltaPANSS_signed'), data=SZ_only).fit()  #
 
@@ -786,7 +802,12 @@ p = ( ggplot (df) +
  )
 p.draw(show=True)
 
+filename = 'deltaDevfHC_plot300.jpg'
+ggsave(plot = p, filename = filename, path = '/Users/angeles/Desktop/', dpi=300)
+
+
 #%% PLOT: Iothers fitted vs actual ---TotalPANSS and APdose
+##############################################################
 
 md = smf.mixedlm("Iothers_WB ~ Age + Sex + FD + TPANSS + ATPdose", \
                  data= SZ_RepeatedMeasures_df, groups=SZ_RepeatedMeasures_df["ID"])  
@@ -806,6 +827,9 @@ p = ( ggplot (df) +
  theme(text = element_text(size = 16)) 
  )
 p.draw(show=True)
+filename = 'IothersPANSS_plot300.jpg'
+ggsave(plot = p, filename = filename, path = '/Users/angeles/Desktop/', dpi=300)
+
 
 
 p = ( ggplot (df) +
@@ -816,6 +840,8 @@ p = ( ggplot (df) +
  theme(text = element_text(size = 16))     
  )
 p.draw(show=True)
+filename = 'IothersAPdose_plot300.jpg'
+ggsave(plot = p, filename = filename, path = '/Users/angeles/Desktop/', dpi=300)
 
 #%% EXTRA PLOTS: Significant correlations
 
@@ -866,6 +892,8 @@ p.draw(show=True)
 
 
 #%% EXTRA PLOTS: corr Residuals vs clinical variables
+#####################################################
+
 labels = ["HC","FEP"]
 
 name = 'Iothers_WB'
@@ -1046,6 +1074,7 @@ ax.set_title("DevHFC vs PANSS total")
 
 
 #%% EXTRA: deltaPANSS vs DBS
+###############################
 
 p = ( ggplot (SZ_only) +
  aes(x="DBS", y="deltaPANSS") +
@@ -1092,6 +1121,7 @@ vif = compute_vif(considered_features).sort_values('VIF', ascending=False)
 
 
 #%% EXTRA: Iothers per subject plots
+
 p = ( ggplot (SZ_RepeatedMeasures_df) +
  aes(x="ID", y="Iothers_WB", color="Sex") +
  geom_point() +
